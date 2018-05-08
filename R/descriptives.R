@@ -1,4 +1,14 @@
-mean_sd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
+#'Compute mean and sd and put together with the +- symbol.
+#'
+#'@param x Data for computation.
+#'@param roundDig Number of relevant digigts for roundR.
+#'@param drop0 Should trailing zeros be dropped?
+#'@param groupvar Optional grouping variable for subgroups.
+#'@param range Should min and max be included in output?
+#'@param rangesep How should min/max be separated from mean+-sd?
+#'Default ARRR is my shortcut for newline ^p later in Word.
+#'@export
+meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
                  range=F,rangesep='ARRR') {
   out<-''
   if(length(na.omit(x))>0) {
@@ -29,14 +39,61 @@ mean_sd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
   return(out)
 }
 
-mean_se<-function(x,mult=1) {
+#'Compute median and quartiles and put together.
+#'
+#'@param x Data for computation.
+#'@param nround Number of digits for fixed round.
+#'@param probs Quantiles to compute.
+#'@param qtype Type of quantiles.
+#'@param roundDig Number of relevant digigts for roundR.
+#'@param drop0 Should trailing zeros be dropped?
+#'@param groupvar Optional grouping variable for subgroups.
+#'@param range Should min and max be included in output?
+#'@param rangesep How should min/max be separated from mean+-sd?
+#'Default ARRR is my shortcut for newline ^p later in Word.
+#'@export
+median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
+                              qtype=8,roundDig=2,drop0=F,
+                       groupvar=NULL,range=F,rangesep='ARRR') {
+  out <- ' '
+  if(length(na.omit(x))>0) {
+    if(is.null(groupvar)) {
+      quart<-matrix(
+        stats::quantile(x,probs=c(probs,0,1),na.rm=T,type=qtype),
+        ncol=length(probs)+2)
+    } else {
+      quart<-matrix(
+        unlist(
+          by(x,groupvar,quantile,probs=c(probs,0,1),na.rm=T,
+             librtype=qtype)),
+        ncol=length(probs)+2,byrow=T)
+    }
+    if(is.null(nround)) {
+      quart<-roundR(quart,level=roundDig,drop0=drop0)
+    } else {
+      quart<-round(quart,nround)
+    }
+    out<-paste(quart[,2],' (',quart[,1],'/',quart[,3],')',sep='')
+    if(range) {
+      out<-paste0(out,rangesep,' [',
+                  apply(matrix(quart[,4:5],ncol=2),1,paste,
+                        collapse=' -> '),']')
+    }
+  }
+  return(out)
+}
+
+
+#'@export
+meanse<-function(x,mult=1) {
   m<-mean(x,na.rm=T)
-  s<-plotrix::std.error(x)
+  s<-plotrix::std.error(x,na.rm = T)
   out<-c(m,m-s*mult,m+s*mult)
   names(out)<-c('y','ymin','ymax')
   return(out)
 }
 
+#'@export
 torso<-function(inputDF,rows2return=3) {
   if (is.data.frame(inputDF)|is.matrix(inputDF)) {
     rows<-nrow(inputDF)
@@ -58,10 +115,12 @@ torso<-function(inputDF,rows2return=3) {
   return(outputDF)
 }
 
+#'@export
 se_median<-function(x) {
   mad(x,na.rm=T)/sqrt(length(na.omit(x)))
 }
 
+#'@export
 median_cl_boot <- function(x, conf = 0.95) {
   lconf <- (1 - conf)/2
   uconf <- 1 - lconf
@@ -74,6 +133,7 @@ median_cl_boot <- function(x, conf = 0.95) {
              ymax = quantile(bt$t, uconf))
 }
 
+#'@export
 cat_desc_stats<-function(quelle,trenner='ARRR',
                          return_level=T,ndigit=0) {
   if(!is.factor(quelle)) {
@@ -105,6 +165,7 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
   }
 }
 
+#'@export
 var_coeff<-function(x) {
   return(sd(x,na.rm=T)/mean(x,na.rm=T))
 }

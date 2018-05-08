@@ -1,4 +1,14 @@
-# basics
+#'Automatic rounding to a reasonable length, based on largest number
+#'
+#'\code{roundR} returns a matrix of rounded numbers.
+#'
+#'@param roundin A vector or matrix of numbers.
+#'@param smooth A logical specifying if you want rounding before the dot
+#'(e.g. 12345 to 12300).
+#'@param level A number specifying number of relevant digits to keep.
+#'@param textout A logical if output is converted to text.
+#'@param drop0 A logical if trailing zeros should be dropped
+#' @export
 roundR <- function(roundin,smooth=F,level=2, textout=T,drop0=F){
   if (!is.matrix(roundin))
   {
@@ -33,6 +43,13 @@ roundR <- function(roundin,smooth=F,level=2, textout=T,drop0=F){
   return(roundout)
 }
 
+#'Convert significance levels to symbols
+#'
+#'\code{markSign} returns a single text element.
+#'
+#'@param SignIn A single p-value.
+#'@param plabel A translation table, predefined with the usual symbols
+#'@export
 markSign<-function(SignIn,plabel=c('n.s.','+','*','**','***')) {
   SignIn <- as.numeric(SignIn)
   SignOut<-' '
@@ -46,6 +63,18 @@ markSign<-function(SignIn,plabel=c('n.s.','+','*','**','***')) {
   return(SignOut)
 }
 
+#'Re-format p-values
+#'
+#'\code{roundR} simplifies p-values by rounding to the maximum of p or a
+#'predefined level. Optionally < or = can be added, as well as
+#'symbols according to significance level.
+#'
+#'@param pIn A numeric vector or matrix with p-values.
+#'@param ndigits Number of digits.
+#'@param text Should output be casted to character?
+#'@param pretext Should = or < be added before p?
+#'@param mark Should significance level be added after p?
+#'@export
 formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F) {
   formatp<-''
   if(is.numeric(pIn)) {
@@ -81,6 +110,7 @@ formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F) {
   return(formatp);
 }
 
+#'@export
 DelEmptyCols<-function(df_in,minValid=1) {
   empties<-NA
   for (col_i in 1:ncol(df_in)) {
@@ -93,6 +123,7 @@ DelEmptyCols<-function(df_in,minValid=1) {
   return(df_in)
 }
 
+#'@export
 DelEmptyRows<-function(df_in,minValid=0,zero=F) {
   empties<-numeric(0)
   for (row_i in 1:nrow(df_in)) {
@@ -113,6 +144,7 @@ DelEmptyRows<-function(df_in,minValid=0,zero=F) {
   return(df_in)
 }
 
+#'@export
 FindVars<-function(varnames,allnames=colnames(rawdata),
                    exact=F,exclude=NA) {
   vars<-numeric()
@@ -137,6 +169,7 @@ FindVars<-function(varnames,allnames=colnames(rawdata),
   }
 }
 
+#'@export
 print_kable<-function(t,nrows=30,caption='',
                              ncols=100,...) {
   # require(knitr)
@@ -155,10 +188,21 @@ print_kable<-function(t,nrows=30,caption='',
   }
 }
 
+#'Shortcut for colnames()
+#'
+#'\code{cn} lists colnames, by default for variable rawdata.
+#'
+#'@param data Data structure to read colnames from.
+#'@export
 cn<-function(data=rawdata) {
   colnames(data)
 }
 
+#'Add backticks to names
+#'
+#'\code{bt} adds leading and trailing backticks to make illegal variable names
+#'usable.
+#'@export
 bt<-function(x) {
   return(paste0('`',x,'`'))
 }

@@ -1,3 +1,4 @@
+#'@export
 pairwise_fisher_test <- function(x,group,adjmethod='fdr',plevel=.05,
                                  symbols=c('b','c','d','e','f','g'),
                                  ref=F) {
@@ -47,6 +48,7 @@ pairwise_fisher_test <- function(x,group,adjmethod='fdr',plevel=.05,
               sign_colwise=sign_colwise))
 }
 
+#'@export
 pairwise_ordcat_test <- function(x,group,adjmethod='fdr',plevel=.05,
                                  symbols=letters[-1],
                                  ref=F, method='cmh') {
@@ -101,6 +103,7 @@ pairwise_ordcat_test <- function(x,group,adjmethod='fdr',plevel=.05,
               method=method))
 }
 
+#'@export
 ksnormal<-function(ksdata)
 {
   ksout<-ks.test(ksdata,'pnorm',mean(ksdata,na.rm=T),sd(ksdata,na.rm=T),exact=F)
