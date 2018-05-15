@@ -110,3 +110,41 @@ ksnormal<-function(ksdata)
   return(ksout)
 }
 
+#'Computation and formatting of CIs for glm
+#'
+#'\code{glmCI} returns a list with coefficient,CIs,
+#'and coef [CIs].
+#'
+#'@param model Output from glm .
+#'@param min Smallest OR to report.
+#'@param max Largest OR to report.
+#'@param cisep Separator between CI values.
+#'@param ndigit rounding level.
+#'@export
+glmCI<-function(model,min=.01,max=100, cisep='\u22ef',ndigit=2)
+{
+  glmReturn<-list(coeff=character(0),ci=character(0),
+                  c_ci=NA)
+  pvTmp<-labels(model$terms)
+  for (pv_i in 1:length(pvTmp))
+  {
+    rows<-grep(pvTmp[pv_i],names(model$coefficients))
+    coeffTmp<-as.character(as.vector(round(exp(model$coefficients[rows]),ndigit)))
+    coeffTmp[which(as.numeric(coeffTmp)<min)]<-paste0('<',min)
+    coeffTmp[which(as.numeric(coeffTmp)>max)]<-paste0('>',max)
+    glmReturn$coeff<-c(glmReturn$coeff,paste(coeffTmp,collapse='/'))
+    ciModel<-as.matrix(exp(confint(model)))
+    ciTmp<-character(0)
+    for (row_i in rows)
+    {
+      ciRow<-as.character(as.vector(round(ciModel[row_i,],ndigit)))
+      ciRow[which(as.numeric(ciRow)<min)]<-paste0('<',min)
+      ciRow[which(as.numeric(ciRow)>max)]<-paste0('>',max)
+      ciTmp<-paste(ciTmp,paste(ciRow,collapse=cisep),
+                   sep='/')
+    }
+    glmReturn$ci<-c(glmReturn$ci,gsub('^/','',ciTmp))
+  }
+  glmReturn$c_ci<-paste0(glmReturn$coeff,' (',glmReturn$ci,')')
+  return(glmReturn)
+}
