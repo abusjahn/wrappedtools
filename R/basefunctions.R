@@ -12,7 +12,7 @@
 roundR <- function(roundin,smooth=F,level=2, textout=T,drop0=F){
   if (!is.matrix(roundin))
   {
-    roundin<-matrix(roundin)
+    roundin<-matrix(as.numeric(roundin))
   }
   roundout<-roundin
   roundlevel<-0
@@ -65,15 +65,15 @@ markSign<-function(SignIn,plabel=c('n.s.','+','*','**','***')) {
 
 #'Re-format p-values
 #'
-#'\code{roundR} simplifies p-values by rounding to the maximum of p or a
+#'\code{formatP} simplifies p-values by rounding to the maximum of p or a
 #'predefined level. Optionally < or = can be added, as well as
 #'symbols according to significance level.
 #'
 #'@param pIn A numeric vector or matrix with p-values.
-#'@param ndigits Number of digits.
-#'@param text Should output be casted to character?
-#'@param pretext Should = or < be added before p?
-#'@param mark Should significance level be added after p?
+#'@param ndigits Number of digits (default=3).
+#'@param text Should output be casted to character default=T)?
+#'@param pretext Should = or < be added before p (default=F)?
+#'@param mark Should significance level be added after p (default=F)?
 #'@export
 formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F) {
   formatp<-''
@@ -144,6 +144,17 @@ DelEmptyRows<-function(df_in,minValid=0,zero=F) {
   return(df_in)
 }
 
+#'Find numeric index and names of column name patterns
+#'
+#'\code{FindVars} looks up columnames (by default for data-frame rawdata)
+#'based on parts of names, using regular expressions.
+#'exlusion rules may be specified as well.
+#'
+#'@param varnames Vector of pattern to look for.
+#'@param allnames Vector of values to detect pattern in;
+#'by default, colnames(rawdata).
+#'@param exact Partial matching or exact only?
+#'@param exclude Vector of pattern to exclude from found names.
 #'@export
 FindVars<-function(varnames,allnames=colnames(rawdata),
                    exact=F,exclude=NA) {
@@ -152,7 +163,7 @@ FindVars<-function(varnames,allnames=colnames(rawdata),
   if (exact==T) {
     for (i in 1:length(varnames))
     {vars<-c(vars,grep(paste0('^',varnames[i],'$'),allnames))}
-    return(unique(vars))
+    vars <- unique(vars)
   } else {
     for (i in 1:length(varnames))
     {vars<-c(vars,grep(varnames[i],allnames))}
@@ -165,8 +176,11 @@ FindVars<-function(varnames,allnames=colnames(rawdata),
       if(length(evars)>0)
       {vars<-vars[-evars]}
     }
-    return(unique(vars))
+    vars <- unique(vars)
   }
+  return(list(index=vars,
+              names=allnames[vars],
+              count=length(vars)))
 }
 
 #'@export
@@ -198,11 +212,15 @@ cn<-function(data=rawdata) {
   colnames(data)
 }
 
-#'Add backticks to names
+#'Add backticks to names or remove them
 #'
 #'\code{bt} adds leading and trailing backticks to make illegal variable names
-#'usable.
+#'usable. Optionally removes them.
 #'@export
-bt<-function(x) {
-  return(paste0('`',x,'`'))
+bt<-function(x,remove=F) {
+  if(remove){
+    return(gsub('`','',x))
+  } else {
+    return(paste0('`',x,'`'))
+  }
 }

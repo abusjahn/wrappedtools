@@ -148,3 +148,44 @@ glmCI<-function(model,min=.01,max=100, cisep='\u22ef',ndigit=2)
   glmReturn$c_ci<-paste0(glmReturn$coeff,' (',glmReturn$ci,')')
   return(glmReturn)
 }
+
+
+#'correlation matrix with p-values based on cor.test
+#'
+#'\code{cortestR} returns a data frame with coefficient,p-values,
+#'and significance symbols.
+#'
+#'@param cordata data frame or matrix with rawdata.
+#'@param method as in cor.test.
+#'@param digits rounding level for estimate.
+#'@param digits_p rounding level for p value.
+#'@param sign if 'symbol', add significance indicator.
+#'@export
+cortestR <- function(cordata,method='pearson',
+                     digits=3,digits_p=3,
+                     sign='symbol'){
+  n <- ncol(cordata)
+  corout <- as.data.frame(
+    matrix('&nbsp;',nrow = n,ncol = n))
+  colnames(corout) <- colnames(cordata)
+  rownames(corout) <- colnames(corout)
+  for(row_i in 1:n){
+    for(col_i in 1:row_i){
+      ct <- cor.test(cordata[,row_i],cordata[,col_i],
+                     method=method)
+      corout[row_i,col_i] <-
+        round(ct$estimate,digits)
+      if(row_i!=col_i){
+        if(sign=='symbol'){
+          corout[row_i,col_i] <- paste0( corout[row_i,col_i],
+                                         markSign(ct$p.value))
+        } else {
+          corout[row_i,col_i] <- paste0( corout[row_i,col_i], ' (',
+                                         formatP(ct$p.value,ndigits = digits_p),
+                                         ')')
+        }
+      }
+    }
+  }
+  return(corout)
+}

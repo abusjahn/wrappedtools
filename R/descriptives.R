@@ -45,7 +45,7 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
 #'@param nround Number of digits for fixed round.
 #'@param probs Quantiles to compute.
 #'@param qtype Type of quantiles.
-#'@param roundDig Number of relevant digigts for roundR.
+#'@param roundDig Number of relevant digits for roundR.
 #'@param drop0 Should trailing zeros be dropped?
 #'@param groupvar Optional grouping variable for subgroups.
 #'@param range Should min and max be included in output?
@@ -121,18 +121,25 @@ se_median<-function(x) {
 }
 
 #'@export
-median_cl_boot <- function(x, conf = 0.95) {
+median_cl_boot <- function(x, conf = 0.95, type='basic') {
+  x <- na.omit(x)
   lconf <- (1 - conf)/2
   uconf <- 1 - lconf
   # require(boot)
   bmedian <- function(x, ind) median(x[ind],na.rm=T)
   bt <- boot::boot(x, bmedian, 10000)
-  bb <- boot::boot.ci(bt, type = "perc")
+  bb <- boot::boot.ci(bt, type = type)
   data.frame(y = median(x,na.rm=T),
              ymin = quantile(bt$t, lconf),
              ymax = quantile(bt$t, uconf))
 }
 
+#'Compute absolute and relative frequencies.
+#'
+#'@param quelle Data for computation.
+#'@param trenner delimiter between results per level.
+#'@param return_level Should levels be reported?
+#'@param ndigits Digits for rounding of %.
 #'@export
 cat_desc_stats<-function(quelle,trenner='ARRR',
                          return_level=T,ndigit=0) {

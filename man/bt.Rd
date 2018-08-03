@@ -2,11 +2,11 @@
 % Please edit documentation in R/basefunctions.R
 \name{bt}
 \alias{bt}
-\title{Add backticks to names}
+\title{Add backticks to names or remove them}
 \usage{
-bt(x)
+bt(x, remove = F)
 }
 \description{
 \code{bt} adds leading and trailing backticks to make illegal variable names
-usable.
+usable. Optionally removes them.
 }

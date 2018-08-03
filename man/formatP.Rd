@@ -9,16 +9,16 @@ formatP(pIn, ndigits = 3, text = T, pretext = F, mark = F)
 \arguments{
 \item{pIn}{A numeric vector or matrix with p-values.}
 
-\item{ndigits}{Number of digits.}
+\item{ndigits}{Number of digits (default=3).}
 
-\item{text}{Should output be casted to character?}
+\item{text}{Should output be casted to character default=T)?}
 
-\item{pretext}{Should = or < be added before p?}
+\item{pretext}{Should = or < be added before p (default=F)?}
 
-\item{mark}{Should significance level be added after p?}
+\item{mark}{Should significance level be added after p (default=F)?}
 }
 \description{
-\code{roundR} simplifies p-values by rounding to the maximum of p or a
+\code{formatP} simplifies p-values by rounding to the maximum of p or a
 predefined level. Optionally < or = can be added, as well as
 symbols according to significance level.
 }

@@ -17,7 +17,7 @@ median_quart(x, nround = NULL, probs = c(0.25, 0.5, 0.75), qtype = 8,
 
 \item{qtype}{Type of quantiles.}
 
-\item{roundDig}{Number of relevant digigts for roundR.}
+\item{roundDig}{Number of relevant digits for roundR.}
 
 \item{drop0}{Should trailing zeros be dropped?}
 
