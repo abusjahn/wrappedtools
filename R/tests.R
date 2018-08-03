@@ -1,3 +1,4 @@
+#'@export
 pairwise_fisher_test <- function(x,group,adjmethod='fdr',plevel=.05,
                                  symbols=c('b','c','d','e','f','g'),
                                  ref=F) {
@@ -47,6 +48,7 @@ pairwise_fisher_test <- function(x,group,adjmethod='fdr',plevel=.05,
               sign_colwise=sign_colwise))
 }
 
+#'@export
 pairwise_ordcat_test <- function(x,group,adjmethod='fdr',plevel=.05,
                                  symbols=letters[-1],
                                  ref=F, method='cmh') {
@@ -101,9 +103,89 @@ pairwise_ordcat_test <- function(x,group,adjmethod='fdr',plevel=.05,
               method=method))
 }
 
+#'@export
 ksnormal<-function(ksdata)
 {
   ksout<-ks.test(ksdata,'pnorm',mean(ksdata,na.rm=T),sd(ksdata,na.rm=T),exact=F)
   return(ksout)
 }
 
+#'Computation and formatting of CIs for glm
+#'
+#'\code{glmCI} returns a list with coefficient,CIs,
+#'and coef [CIs].
+#'
+#'@param model Output from glm .
+#'@param min Smallest OR to report.
+#'@param max Largest OR to report.
+#'@param cisep Separator between CI values.
+#'@param ndigit rounding level.
+#'@export
+glmCI<-function(model,min=.01,max=100, cisep='\u22ef',ndigit=2)
+{
+  glmReturn<-list(coeff=character(0),ci=character(0),
+                  c_ci=NA)
+  pvTmp<-labels(model$terms)
+  for (pv_i in 1:length(pvTmp))
+  {
+    rows<-grep(pvTmp[pv_i],names(model$coefficients))
+    coeffTmp<-as.character(as.vector(round(exp(model$coefficients[rows]),ndigit)))
+    coeffTmp[which(as.numeric(coeffTmp)<min)]<-paste0('<',min)
+    coeffTmp[which(as.numeric(coeffTmp)>max)]<-paste0('>',max)
+    glmReturn$coeff<-c(glmReturn$coeff,paste(coeffTmp,collapse='/'))
+    ciModel<-as.matrix(exp(confint(model)))
+    ciTmp<-character(0)
+    for (row_i in rows)
+    {
+      ciRow<-as.character(as.vector(round(ciModel[row_i,],ndigit)))
+      ciRow[which(as.numeric(ciRow)<min)]<-paste0('<',min)
+      ciRow[which(as.numeric(ciRow)>max)]<-paste0('>',max)
+      ciTmp<-paste(ciTmp,paste(ciRow,collapse=cisep),
+                   sep='/')
+    }
+    glmReturn$ci<-c(glmReturn$ci,gsub('^/','',ciTmp))
+  }
+  glmReturn$c_ci<-paste0(glmReturn$coeff,' (',glmReturn$ci,')')
+  return(glmReturn)
+}
+
+
+#'correlation matrix with p-values based on cor.test
+#'
+#'\code{cortestR} returns a data frame with coefficient,p-values,
+#'and significance symbols.
+#'
+#'@param cordata data frame or matrix with rawdata.
+#'@param method as in cor.test.
+#'@param digits rounding level for estimate.
+#'@param digits_p rounding level for p value.
+#'@param sign if 'symbol', add significance indicator.
+#'@export
+cortestR <- function(cordata,method='pearson',
+                     digits=3,digits_p=3,
+                     sign='symbol'){
+  n <- ncol(cordata)
+  corout <- as.data.frame(
+    matrix('&nbsp;',nrow = n,ncol = n))
+  colnames(corout) <- colnames(cordata)
+  rownames(corout) <- colnames(corout)
+  for(row_i in 1:n){
+    for(col_i in 1:row_i){
+      ct <- cor.test(cordata[,row_i],cordata[,col_i],
+                     method=method)
+      corout[row_i,col_i] <-
+        round(ct$estimate,digits)
+      if(row_i!=col_i){
+        if(sign=='symbol'){
+          corout[row_i,col_i] <- paste0( corout[row_i,col_i],
+                                         markSign(ct$p.value))
+        } else {
+          corout[row_i,col_i] <- paste0( corout[row_i,col_i], ' (',
+                                         formatP(ct$p.value,ndigits = digits_p),
+                                         ')')
+        }
+      }
+    }
+  }
+  return(corout)
+}
