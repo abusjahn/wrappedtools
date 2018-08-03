@@ -137,9 +137,9 @@ median_cl_boot <- function(x, conf = 0.95, type='basic') {
 #'Compute absolute and relative frequencies.
 #'
 #'@param quelle Data for computation.
-#'@param trenner delimiter between results per level.
+#'@param trenner delimiter between results per level. ARRR is my placeholder for later replacement with ^p (newline) in Word
 #'@param return_level Should levels be reported?
-#'@param ndigits Digits for rounding of %.
+#'@param ndigit Digits for rounding of relative frequencies.
 #'@export
 cat_desc_stats<-function(quelle,trenner='ARRR',
                          return_level=T,ndigit=0) {

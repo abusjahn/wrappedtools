@@ -10,11 +10,11 @@ cat_desc_stats(quelle, trenner = "ARRR", return_level = T,
 \arguments{
 \item{quelle}{Data for computation.}
 
-\item{trenner}{delimiter between results per level.}
+\item{trenner}{delimiter between results per level. ARRR is my placeholder for later replacement with ^p (newline) in Word}
 
 \item{return_level}{Should levels be reported?}
 
-\item{ndigits}{Digits for rounding of %.}
+\item{ndigit}{Digits for rounding of relative frequencies.}
 }
 \description{
 Compute absolute and relative frequencies.

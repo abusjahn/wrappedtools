@@ -6,6 +6,11 @@
 \usage{
 bt(x, remove = F)
 }
+\arguments{
+\item{x}{Names to backtick}
+
+\item{remove}{Option to remove existing backticks, default=F}
+}
 \description{
 \code{bt} adds leading and trailing backticks to make illegal variable names
 usable. Optionally removes them.
