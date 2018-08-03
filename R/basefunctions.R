@@ -216,6 +216,9 @@ cn<-function(data=rawdata) {
 #'
 #'\code{bt} adds leading and trailing backticks to make illegal variable names
 #'usable. Optionally removes them.
+#'
+#'@param x Names to backtick
+#'@param remove Option to remove existing backticks, default=F
 #'@export
 bt<-function(x,remove=F) {
   if(remove){
