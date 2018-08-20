@@ -50,11 +50,13 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
 #'@param groupvar Optional grouping variable for subgroups.
 #'@param range Should min and max be included in output?
 #'@param rangesep How should min/max be separated from mean+-sd?
+#'@param rangearrow What is put between min -> max?
 #'Default ARRR is my shortcut for newline ^p later in Word.
 #'@export
 median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
                               qtype=8,roundDig=2,drop0=F,
-                       groupvar=NULL,range=F,rangesep='ARRR') {
+                       groupvar=NULL,range=F,rangesep='ARRR',
+                       rangearrow=' -> ') {
   out <- ' '
   if(length(na.omit(x))>0) {
     if(is.null(groupvar)) {
@@ -73,11 +75,11 @@ median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
     } else {
       quart<-round(quart,nround)
     }
-    out<-paste(quart[,2],' (',quart[,1],'/',quart[,3],')',sep='')
+    out<-glue::glue('{quart[,2]} ({quart[,1]}/{quart[,3]})')
     if(range) {
-      out<-paste0(out,rangesep,' [',
-                  apply(matrix(quart[,4:5],ncol=2),1,paste,
-                        collapse=' -> '),']')
+      out<-glue::glue('{out}{rangesep} [\\
+                  {apply(matrix(quart[,4:5],ncol=2),1,glue::glue_collapse,
+                        sep=rangearrow)}]')
     }
   }
   return(out)

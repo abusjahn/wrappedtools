@@ -82,11 +82,11 @@ formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F) {
       pIn<-matrix(pIn);
     }
     formatp<-apply(X=pIn,MARGIN=c(1,2),max,
-                   10**(-ndigits),na.rm=F);
-    formatp<-apply(X=formatp,MARGIN=c(1,2),round,ndigits);
-    formatp<-apply(formatp,MARGIN=c(1,2),
+                   10**(-ndigits),na.rm=F) %>%
+      apply(MARGIN=c(1,2),round,ndigits) %>%
+    apply(MARGIN=c(1,2),
                    formatC,format="f",
-                   digits=ndigits,drop0trailing =F);
+                   digits=ndigits,drop0trailing =F)
     if(pretext) {
       for (row_i in 1:nrow(pIn)) {
         for (col_i in 1:ncol(pIn)) {
