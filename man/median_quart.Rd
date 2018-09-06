@@ -6,7 +6,7 @@
 \usage{
 median_quart(x, nround = NULL, probs = c(0.25, 0.5, 0.75), qtype = 8,
   roundDig = 2, drop0 = F, groupvar = NULL, range = F,
-  rangesep = "ARRR")
+  rangesep = "ARRR", rangearrow = " -> ")
 }
 \arguments{
 \item{x}{Data for computation.}
@@ -25,7 +25,9 @@ median_quart(x, nround = NULL, probs = c(0.25, 0.5, 0.75), qtype = 8,
 
 \item{range}{Should min and max be included in output?}
 
-\item{rangesep}{How should min/max be separated from mean+-sd?
+\item{rangesep}{How should min/max be separated from mean+-sd?}
+
+\item{rangearrow}{What is put between min -> max?
 Default ARRR is my shortcut for newline ^p later in Word.}
 }
 \description{

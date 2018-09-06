@@ -153,7 +153,7 @@ DelEmptyRows<-function(df_in,minValid=0,zero=F) {
 #'@param varnames Vector of pattern to look for.
 #'@param allnames Vector of values to detect pattern in;
 #'by default, colnames(rawdata).
-#'@param exact Partial matching or exact only?
+#'@param exact Partial matching or exact only (adding ^ and $)?
 #'@param exclude Vector of pattern to exclude from found names.
 #'@export
 FindVars<-function(varnames,allnames=colnames(rawdata),
@@ -180,6 +180,7 @@ FindVars<-function(varnames,allnames=colnames(rawdata),
   }
   return(list(index=vars,
               names=allnames[vars],
+              # quo=
               count=length(vars)))
 }
 

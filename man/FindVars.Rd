@@ -13,7 +13,7 @@ FindVars(varnames, allnames = colnames(rawdata), exact = F,
 \item{allnames}{Vector of values to detect pattern in;
 by default, colnames(rawdata).}
 
-\item{exact}{Partial matching or exact only?}
+\item{exact}{Partial matching or exact only (adding ^ and $)?}
 
 \item{exclude}{Vector of pattern to exclude from found names.}
 }
