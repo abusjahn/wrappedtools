@@ -1,16 +1,17 @@
 Package: wrappedtools
 Type: Package
 Title: Usefull wrappers around commonly used functions
-Version: 0.1.3
+Version: 0.1.5
 Author: Andreas Busjahn 
 Maintainer: The package maintainer <andreas@busjahn.net>
-Description: Functions were mainly written for my own daily work,
-    but may be of use to others as well.
+Description: Functions were mainly written for my own daily work
+    or teaching, but may be of use to others as well.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: tidyverse,
     plotrix,
     boot,
-    knitr
+    knitr,
+    glue
 RoxygenNote: 6.1.0

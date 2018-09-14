@@ -144,28 +144,34 @@ median_cl_boot <- function(x, conf = 0.95, type='basic') {
 #'@param ndigit Digits for rounding of relative frequencies.
 #'@export
 cat_desc_stats<-function(quelle,trenner='ARRR',
-                         return_level=T,ndigit=0) {
+                         return_level=T,ndigit=0, groupvar=NULL) {
   if(!is.factor(quelle)) {
-    if(is.numeric(quelle)) {
-      quelle<-factor(quelle,
-                     levels=sort(unique(quelle)),
-                     labels=sort(unique(quelle)))
-    } else
-    {quelle<-factor(quelle)}
+    # if(is.numeric(quelle)) {
+    #   quelle<-factor(quelle,
+    #                  levels=sort(unique(quelle)),
+    #                  labels=sort(unique(quelle)))
+    # } else {
+    quelle<-factor(quelle)
   }
-  tableout<-table(quelle)
-  ptableout<- round(100*prop.table(tableout),ndigit)
-  level<-paste(levels(quelle),collapse = trenner)
-
-  #    level<-paste(names(tableout[1]))
-  zwert<-paste0(tableout[1],' (',ptableout[1],'%)')
-
-  if (length(tableout)>1) {
-    for (var_j in 2:length(tableout)) {
-      wert<-paste(paste0(tableout[var_j],' (',ptableout[var_j],'%)'),sep = trenner)
-      zwert<-paste(zwert,wert,sep = trenner)
-    }
+  level<-paste(levels(quelle),sep = '',collapse = trenner)
+  if(is.null(groupvar)) {
+    tableout<-matrix(table(quelle),
+                     nrow=length(levels(quelle)),
+                     byrow = F)
+    ptableout<- paste0(' (',round(100*prop.table(tableout),ndigit),')')
+  } else {
+    tableout <- matrix(unlist(by(quelle,groupvar,table)),
+                       nrow=length(levels(quelle)),
+                       byrow = F)
+    ptableout <- matrix(
+      paste0(' (',round(100*prop.table(tableout,margin = 2),ndigit),')'),
+      nrow=length(levels(quelle)),
+      byrow = F)
   }
+    zwert <- matrix(purrr::map2(tableout,ptableout,glue),
+                    nrow=length(levels(quelle)),
+                    byrow = F) %>%
+      apply(MARGIN = 2,FUN = glue_collapse,sep = trenner)
   levdesstats<-list(level=level, freq=zwert)
   if(return_level==T) {
     return(levdesstats)

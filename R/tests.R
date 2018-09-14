@@ -189,3 +189,93 @@ cortestR <- function(cordata,method='pearson',
   }
   return(corout)
 }
+
+#'Two independent sample t-test with decision for var.equal based on var.test
+#'
+#'@param cutoff is significance threshold for equal variances
+#'@export
+t_var_test <- function(data,formula,cutoff=.05, ...){
+  var.equal <- stats:::var.test.formula(formula=formula,data=data, ...)$p.value>cutoff
+  t_out <- stats:::t.test.formula(formula=formula,data=data,
+                                  var.equal = var.equal, ...)
+  return(t_out)
+}
+
+#'Comparison for columns of numbers for 2 groups
+#'
+#'@param gaussian logical specifying normal or ordinal values.
+#'@export
+compare2numvars <- function(data,testvars,groupvar,
+                           gaussian,round_p=3,round_desc=2,
+                           range=F,pretext=F,mark=F){
+  if(gaussian){
+    DESC <- meansd
+    COMP <- t_var_test
+  } else{
+    DESC <- median_quart
+    COMP <- stats:::wilcox.test.formula
+  }
+  # descnames <- names(formals(DESC))
+  # pnames <- names(formals(COMP))
+
+  data_l <- data %>%
+    dplyr::select(Group=groupvar, testvars) %>%
+    mutate(Group=factor(Group)) %>%
+    gather(key = Variable,value = Value,-Group) %>%
+    na.omit() %>%
+    as.tibble()
+  out <- data_l %>%
+    group_by(Variable) %>%
+    do(summarise(.data = ., desc_all=DESC(.$Value,
+                                          roundDig = round_desc,range=range),
+                 desc_groups=paste(try(
+                   DESC(x = .$Value,groupvar = .$Group,
+                        roundDig = round_desc, range=range)),
+                   collapse = ':'),
+                 p = formatP(try(
+                   COMP(data=.,formula = Value~Group)$p.value),
+                             ndigits = round_p,pretext = pretext, mark=mark))) %>%
+    separate(col = desc_groups,
+             into = glue::glue('{groupvar} {levels(data_l$Group)}'),
+             sep = ':')
+  return(out)
+  }
+
+compare2qualvars <- function(data,testvars,groupvar,
+                             round_p=3,round_desc=2,
+                             levelcol=F,pretext=F,mark=F){
+
+  freq <- map(data[testvars],.f = function(x) cat_desc_stats(x,return_level = F)) %>%
+    as.tibble() %>% t() %>% as.character()
+
+  levels <- map(data[testvars],.f = function(x) cat_desc_stats(x)$level) %>%
+    as.tibble() %>% t() %>% as.character()
+  # freqBYgroup <- apply(data[testvars],2,
+  #               FUN = function(x) by(x,data[groupvar],cat_desc_stats,
+  #                                    return_level = F)) %>% t()
+  freqBYgroup <- map(data[testvars],
+                     .f = function(x) cat_desc_stats(x,
+                                                     groupvar=data[[groupvar]],
+                                                     return_level = F))%>%
+    as.tibble() %>% t() %>% as.tibble()
+
+  # map(data[testvars],
+  #                  .f = function(x) cat_desc_stats(x,return_level = F))# %>%
+  # transpose() %>% as.tibble()
+  p <- map2(data[testvars],data[groupvar],
+            .f = function(x,y) formatP(try(
+              fisher.test(x = x,y = y)$p.value,silent=T),
+              mark = mark,pretext = pretext)) %>%
+    flatten_chr() %>% as.character()
+
+  colnames(freqBYgroup) <- glue('{groupvar} {levels(data[[groupvar]])}')
+  out <- tibble(Variable=testvars,desc_all=freq) %>%
+    cbind(freqBYgroup) %>% cbind(p)
+  if(levelcol){
+    out <- mutate(out,levels=levels) %>%
+      select(Variable,levels,everything())
+  } else{
+    out <- mutate(out,Variable=glue('{Variable} {levels}'))
+  }
+}
+

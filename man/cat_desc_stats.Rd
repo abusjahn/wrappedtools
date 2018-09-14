@@ -5,7 +5,7 @@
 \title{Compute absolute and relative frequencies.}
 \usage{
 cat_desc_stats(quelle, trenner = "ARRR", return_level = T,
-  ndigit = 0)
+  ndigit = 0, groupvar = NULL)
 }
 \arguments{
 \item{quelle}{Data for computation.}
