@@ -4,7 +4,7 @@
 \alias{t_var_test}
 \title{Two independent sample t-test with decision for var.equal based on var.test}
 \usage{
-t_var_test(data, formula, cutoff = 0.05, ...)
+t_var_test(data, formula, cutoff = 0.05)
 }
 \arguments{
 \item{cutoff}{is significance threshold for equal variances}

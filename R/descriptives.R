@@ -144,7 +144,8 @@ median_cl_boot <- function(x, conf = 0.95, type='basic') {
 #'@param ndigit Digits for rounding of relative frequencies.
 #'@export
 cat_desc_stats<-function(quelle,trenner='ARRR',
-                         return_level=T,ndigit=0, groupvar=NULL) {
+                         return_level=T,ndigit=0, groupvar=NULL,
+                         singleline=F) {
   if(!is.factor(quelle)) {
     # if(is.numeric(quelle)) {
     #   quelle<-factor(quelle,
@@ -153,25 +154,49 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
     # } else {
     quelle<-factor(quelle)
   }
-  level<-paste(levels(quelle),sep = '',collapse = trenner)
+  level<- levels(quelle) %>% as.tibble()
+  if(singleline){
+    level <- paste(levels(quelle),sep = '',collapse = trenner)
+  }
   if(is.null(groupvar)) {
     tableout<-matrix(table(quelle),
                      nrow=length(levels(quelle)),
                      byrow = F)
-    ptableout<- paste0(' (',round(100*prop.table(tableout),ndigit),')')
+    colnames(tableout) <- 'abs'
+    ptableout<- matrix(paste0(' (',
+                              round(100*prop.table(tableout),
+                                    ndigit),')'),
+                       nrow=length(levels(quelle)),
+                       byrow = F)
+    colnames(ptableout) <- 'rel'
   } else {
     tableout <- matrix(unlist(by(quelle,groupvar,table)),
                        nrow=length(levels(quelle)),
                        byrow = F)
+    colnames(tableout) <- glue::glue('abs{levels(factor(groupvar))}')
+
     ptableout <- matrix(
       paste0(' (',round(100*prop.table(tableout,margin = 2),ndigit),')'),
       nrow=length(levels(quelle)),
       byrow = F)
+    colnames(ptableout) <- glue::glue('rel{levels(factor(groupvar))}')
   }
-    zwert <- matrix(purrr::map2(tableout,ptableout,glue),
-                    nrow=length(levels(quelle)),
-                    byrow = F) %>%
-      apply(MARGIN = 2,FUN = glue_collapse,sep = trenner)
+    zwert <- purrr::map2(tableout,ptableout,glue::glue) %>%
+      as.character() %>%
+      matrix(
+        nrow=length(levels(quelle)),
+        byrow = F) %>% as.tibble()
+    if(is.null(groupvar)){
+      colnames(zwert) <- 'desc'
+    } else {
+    colnames(zwert) <- glue::glue('desc{levels(factor(groupvar))}')
+    }
+    if(singleline){
+      zwert <- map(zwert,
+                   .f =  function(x)
+                     glue::glue_collapse(x,sep = trenner)) %>%
+         as.tibble()
+    }
   levdesstats<-list(level=level, freq=zwert)
   if(return_level==T) {
     return(levdesstats)

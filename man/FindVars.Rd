@@ -5,7 +5,7 @@
 \title{Find numeric index and names of column name patterns}
 \usage{
 FindVars(varnames, allnames = colnames(rawdata), exact = F,
-  exclude = NA)
+  exclude = NA, casesensitive = T)
 }
 \arguments{
 \item{varnames}{Vector of pattern to look for.}

@@ -194,10 +194,17 @@ cortestR <- function(cordata,method='pearson',
 #'
 #'@param cutoff is significance threshold for equal variances
 #'@export
-t_var_test <- function(data,formula,cutoff=.05, ...){
-  var.equal <- stats:::var.test.formula(formula=formula,data=data, ...)$p.value>cutoff
+t_var_test <- function(data,formula,cutoff=.05){
+  formula <- as.formula(formula)
+  t_out <- ''
+  var.equal <- try(
+    stats:::var.test.formula(formula=formula,
+                             data=data)$p.value>cutoff,
+    silent = T)
+  if(is.logical(var.equal)) {
   t_out <- stats:::t.test.formula(formula=formula,data=data,
-                                  var.equal = var.equal, ...)
+                                  var.equal = var.equal)
+  }
   return(t_out)
 }
 
@@ -222,7 +229,7 @@ compare2numvars <- function(data,testvars,groupvar,
     dplyr::select(Group=groupvar, testvars) %>%
     mutate(Group=factor(Group)) %>%
     gather(key = Variable,value = Value,-Group) %>%
-    na.omit() %>%
+    # na.omit() %>%
     as.tibble()
   out <- data_l %>%
     group_by(Variable) %>%
@@ -240,42 +247,59 @@ compare2numvars <- function(data,testvars,groupvar,
              sep = ':')
   return(out)
   }
-
+#'Comparison for columns of factors for 2 groups
+#'
+#'@export
 compare2qualvars <- function(data,testvars,groupvar,
                              round_p=3,round_desc=2,
-                             levelcol=F,pretext=F,mark=F){
+                             pretext=F,mark=F,
+                             singleline=F){
+  # data[,groupvar] <- factor(data[,groupvar])
+  freq <-
+    map(data[testvars],
+        .f = function(x) cat_desc_stats(
+          x,return_level = F,singleline=singleline)) %>%
+    map(as.tibble)
 
-  freq <- map(data[testvars],.f = function(x) cat_desc_stats(x,return_level = F)) %>%
-    as.tibble() %>% t() %>% as.character()
 
-  levels <- map(data[testvars],.f = function(x) cat_desc_stats(x)$level) %>%
-    as.tibble() %>% t() %>% as.character()
+  levels <-
+    map(data[testvars],
+        .f = function(x) cat_desc_stats(x,
+                                        singleline=singleline)$level) %>%
+    map(as.tibble)
   # freqBYgroup <- apply(data[testvars],2,
   #               FUN = function(x) by(x,data[groupvar],cat_desc_stats,
   #                                    return_level = F)) %>% t()
-  freqBYgroup <- map(data[testvars],
-                     .f = function(x) cat_desc_stats(x,
-                                                     groupvar=data[[groupvar]],
-                                                     return_level = F))%>%
-    as.tibble() %>% t() %>% as.tibble()
+  freqBYgroup <-
+    map(data[testvars],
+        .f = function(x) cat_desc_stats(x,
+                                        groupvar=data[[groupvar]],
+                                        return_level = F,
+                                        singleline=singleline))
 
   # map(data[testvars],
   #                  .f = function(x) cat_desc_stats(x,return_level = F))# %>%
   # transpose() %>% as.tibble()
-  p <- map2(data[testvars],data[groupvar],
-            .f = function(x,y) formatP(try(
-              fisher.test(x = x,y = y)$p.value,silent=T),
-              mark = mark,pretext = pretext)) %>%
-    flatten_chr() %>% as.character()
+  p <-
+    map2(data[testvars],data[groupvar],
+         .f = function(x,y) formatP(try(
+           fisher.test(x = x,y = y)$p.value,silent=T),
+           mark = mark,pretext = pretext))
 
-  colnames(freqBYgroup) <- glue('{groupvar} {levels(data[[groupvar]])}')
-  out <- tibble(Variable=testvars,desc_all=freq) %>%
-    cbind(freqBYgroup) %>% cbind(p)
-  if(levelcol){
-    out <- mutate(out,levels=levels) %>%
-      select(Variable,levels,everything())
-  } else{
-    out <- mutate(out,Variable=glue('{Variable} {levels}'))
+  # colnames(freqBYgroup) <- glue::glue('{groupvar} {factor(levels(data[[groupvar]]))}')
+  out <- tibble(Variable=character(),desc_all=character(),
+                g1=character(),g2=character(),p=character())
+  for(var_i in seq_along(testvars)){
+    out <- add_row(out,Variable=paste(c(testvars[var_i],
+                                        rep('   ',nrow(freqBYgroup[[var_i]])-1)),
+                                      levels[[var_i]][[1]]),
+                   desc_all=freq[[var_i]][[1]],
+                   g1=freqBYgroup[[var_i]][[1]],
+                   g2=freqBYgroup[[var_i]][[2]],
+                   p=c(p[[var_i]][[1]],
+                       rep('  ',nrow(freqBYgroup[[var_i]])-1)))
+
   }
+  return(out)
 }
 
