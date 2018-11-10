@@ -82,15 +82,15 @@ formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F) {
       pIn<-matrix(pIn);
     }
     formatp<-apply(X=pIn,MARGIN=c(1,2),max,
-                   10**(-ndigits),na.rm=F);
-    formatp<-apply(X=formatp,MARGIN=c(1,2),round,ndigits);
-    formatp<-apply(formatp,MARGIN=c(1,2),
+                   10**(-ndigits),na.rm=F) %>%
+      apply(MARGIN=c(1,2),round,ndigits) %>%
+    apply(MARGIN=c(1,2),
                    formatC,format="f",
-                   digits=ndigits,drop0trailing =F);
+                   digits=ndigits,drop0trailing =F)
     if(pretext) {
       for (row_i in 1:nrow(pIn)) {
         for (col_i in 1:ncol(pIn)) {
-          formatp[row_i,col_i]<-paste0(
+          formatp[row_i,col_i]<-paste(
             ifelse(pIn[row_i,col_i]<10**(-ndigits),
                    '<','='),
             formatp[row_i,col_i])
@@ -153,24 +153,31 @@ DelEmptyRows<-function(df_in,minValid=0,zero=F) {
 #'@param varnames Vector of pattern to look for.
 #'@param allnames Vector of values to detect pattern in;
 #'by default, colnames(rawdata).
-#'@param exact Partial matching or exact only?
+#'@param exact Partial matching or exact only (adding ^ and $)?
 #'@param exclude Vector of pattern to exclude from found names.
 #'@export
 FindVars<-function(varnames,allnames=colnames(rawdata),
-                   exact=F,exclude=NA) {
+                   exact=F,exclude=NA,casesensitive=T) {
+  allnames_tmp <- allnames
+  if(!casesensitive){
+    varnames <- tolower(varnames)
+    allnames_tmp <- tolower(allnames)
+  }
   vars<-numeric()
   evars<-numeric()
   if (exact==T) {
-    for (i in 1:length(varnames))
-    {vars<-c(vars,grep(paste0('^',varnames[i],'$'),allnames))}
+    for (i in 1:length(varnames)) {
+      vars<-c(vars,grep(paste0('^',varnames[i],'$'),allnames_tmp))
+      }
     vars <- unique(vars)
   } else {
-    for (i in 1:length(varnames))
-    {vars<-c(vars,grep(varnames[i],allnames))}
+    for (i in 1:length(varnames)) {
+      vars<-c(vars,grep(varnames[i],allnames_tmp))
+      }
     vars<-sort(unique(vars))
     if(any(!is.na(exclude))) {
       for (i in 1:length(exclude))
-      {evars<-c(evars,grep(exclude[i],allnames))}
+      {evars<-c(evars,grep(exclude[i],allnames_tmp))}
       evars<-unique(na.omit(match(
         sort(unique(evars)),vars)))
       if(length(evars)>0)
@@ -180,6 +187,7 @@ FindVars<-function(varnames,allnames=colnames(rawdata),
   }
   return(list(index=vars,
               names=allnames[vars],
+              bticked=bt(allnames[vars]),
               count=length(vars)))
 }
 

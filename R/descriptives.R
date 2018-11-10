@@ -50,11 +50,13 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
 #'@param groupvar Optional grouping variable for subgroups.
 #'@param range Should min and max be included in output?
 #'@param rangesep How should min/max be separated from mean+-sd?
+#'@param rangearrow What is put between min -> max?
 #'Default ARRR is my shortcut for newline ^p later in Word.
 #'@export
 median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
                               qtype=8,roundDig=2,drop0=F,
-                       groupvar=NULL,range=F,rangesep='ARRR') {
+                       groupvar=NULL,range=F,rangesep='ARRR',
+                       rangearrow=' -> ') {
   out <- ' '
   if(length(na.omit(x))>0) {
     if(is.null(groupvar)) {
@@ -73,11 +75,11 @@ median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
     } else {
       quart<-round(quart,nround)
     }
-    out<-paste(quart[,2],' (',quart[,1],'/',quart[,3],')',sep='')
+    out<-glue::glue('{quart[,2]} ({quart[,1]}/{quart[,3]})')
     if(range) {
-      out<-paste0(out,rangesep,' [',
-                  apply(matrix(quart[,4:5],ncol=2),1,paste,
-                        collapse=' -> '),']')
+      out<-glue::glue('{out}{rangesep} [\\
+                  {apply(matrix(quart[,4:5],ncol=2),1,glue::glue_collapse,
+                        sep=rangearrow)}]')
     }
   }
   return(out)
@@ -142,28 +144,59 @@ median_cl_boot <- function(x, conf = 0.95, type='basic') {
 #'@param ndigit Digits for rounding of relative frequencies.
 #'@export
 cat_desc_stats<-function(quelle,trenner='ARRR',
-                         return_level=T,ndigit=0) {
+                         return_level=T,ndigit=0, groupvar=NULL,
+                         singleline=F) {
   if(!is.factor(quelle)) {
-    if(is.numeric(quelle)) {
-      quelle<-factor(quelle,
-                     levels=sort(unique(quelle)),
-                     labels=sort(unique(quelle)))
-    } else
-    {quelle<-factor(quelle)}
+    # if(is.numeric(quelle)) {
+    #   quelle<-factor(quelle,
+    #                  levels=sort(unique(quelle)),
+    #                  labels=sort(unique(quelle)))
+    # } else {
+    quelle<-factor(quelle)
   }
-  tableout<-table(quelle)
-  ptableout<- round(100*prop.table(tableout),ndigit)
-  level<-paste(levels(quelle),collapse = trenner)
+  level<- levels(quelle) %>% as.tibble()
+  if(singleline){
+    level <- paste(levels(quelle),sep = '',collapse = trenner)
+  }
+  if(is.null(groupvar)) {
+    tableout<-matrix(table(quelle),
+                     nrow=length(levels(quelle)),
+                     byrow = F)
+    colnames(tableout) <- 'abs'
+    ptableout<- matrix(paste0(' (',
+                              round(100*prop.table(tableout),
+                                    ndigit),')'),
+                       nrow=length(levels(quelle)),
+                       byrow = F)
+    colnames(ptableout) <- 'rel'
+  } else {
+    tableout <- matrix(unlist(by(quelle,groupvar,table)),
+                       nrow=length(levels(quelle)),
+                       byrow = F)
+    colnames(tableout) <- glue::glue('abs{levels(factor(groupvar))}')
 
-  #    level<-paste(names(tableout[1]))
-  zwert<-paste0(tableout[1],' (',ptableout[1],'%)')
-
-  if (length(tableout)>1) {
-    for (var_j in 2:length(tableout)) {
-      wert<-paste(paste0(tableout[var_j],' (',ptableout[var_j],'%)'),sep = trenner)
-      zwert<-paste(zwert,wert,sep = trenner)
+    ptableout <- matrix(
+      paste0(' (',round(100*prop.table(tableout,margin = 2),ndigit),')'),
+      nrow=length(levels(quelle)),
+      byrow = F)
+    colnames(ptableout) <- glue::glue('rel{levels(factor(groupvar))}')
+  }
+    zwert <- purrr::map2(tableout,ptableout,glue::glue) %>%
+      as.character() %>%
+      matrix(
+        nrow=length(levels(quelle)),
+        byrow = F) %>% as.tibble()
+    if(is.null(groupvar)){
+      colnames(zwert) <- 'desc'
+    } else {
+    colnames(zwert) <- glue::glue('desc{levels(factor(groupvar))}')
     }
-  }
+    if(singleline){
+      zwert <- map(zwert,
+                   .f =  function(x)
+                     glue::glue_collapse(x,sep = trenner)) %>%
+         as.tibble()
+    }
   levdesstats<-list(level=level, freq=zwert)
   if(return_level==T) {
     return(levdesstats)
