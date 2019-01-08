@@ -214,7 +214,7 @@ t_var_test <- function(data,formula,cutoff=.05){
 #'@export
 compare2numvars <- function(data,testvars,groupvar,
                             gaussian,round_p=3,round_desc=2,
-                            range=F,pretext=F,mark=F){
+                            range=F,pretext=F,mark=F,n=F){
   if(gaussian){
     DESC <- meansd
     COMP <- t_var_test
@@ -233,8 +233,10 @@ compare2numvars <- function(data,testvars,groupvar,
     as.tibble()
   out <- data_l %>%
     group_by(Variable) %>%
-    do(summarise(.data = ., desc_all=DESC(.$Value,
-                                          roundDig = round_desc,range=range),
+    do(summarise(.data = .,
+                 n_groups=paste(table(.$Group[which(!is.na(.$Value))]),collapse=':'),
+                 desc_all=DESC(.$Value,
+                               roundDig = round_desc,range=range),
                  desc_groups=paste(try(
                    DESC(x = .$Value,groupvar = .$Group,
                         roundDig = round_desc, range=range),
@@ -248,7 +250,13 @@ compare2numvars <- function(data,testvars,groupvar,
     out <- separate(out,col = desc_groups,
              into = glue::glue('{groupvar} {levels(data_l$Group)}'),
              sep = ':')
-  return(out)
+    out <- separate(out,col = n_groups,
+                    into = glue::glue('n {groupvar} {levels(data_l$Group)}'),
+                    sep = ':')
+    if(n==F){
+      out <- select(out,-starts_with('n'))
+    }
+    return(out)
 }
 #'Comparison for columns of factors for 2 groups
 #'
