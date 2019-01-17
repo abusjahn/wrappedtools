@@ -202,8 +202,8 @@ t_var_test <- function(data,formula,cutoff=.05){
                              data=data)$p.value>cutoff,
     silent = T)
   if(is.logical(var.equal)) {
-  t_out <- stats:::t.test.formula(formula=formula,data=data,
-                                  var.equal = var.equal)
+    t_out <- stats:::t.test.formula(formula=formula,data=data,
+                                    var.equal = var.equal)
   }
   return(t_out)
 }
@@ -213,8 +213,8 @@ t_var_test <- function(data,formula,cutoff=.05){
 #'@param gaussian logical specifying normal or ordinal values.
 #'@export
 compare2numvars <- function(data,testvars,groupvar,
-                           gaussian,round_p=3,round_desc=2,
-                           range=F,pretext=F,mark=F){
+                            gaussian,round_p=3,round_desc=2,
+                            range=F,pretext=F,mark=F,n=F){
   if(gaussian){
     DESC <- meansd
     COMP <- t_var_test
@@ -233,27 +233,39 @@ compare2numvars <- function(data,testvars,groupvar,
     as.tibble()
   out <- data_l %>%
     group_by(Variable) %>%
-    do(summarise(.data = ., desc_all=DESC(.$Value,
-                                          roundDig = round_desc,range=range),
+    do(summarise(.data = .,
+                 n_groups=paste(table(.$Group[which(!is.na(.$Value))]),collapse=':'),
+                 desc_all=DESC(.$Value,
+                               roundDig = round_desc,range=range),
                  desc_groups=paste(try(
                    DESC(x = .$Value,groupvar = .$Group,
-                        roundDig = round_desc, range=range)),
+                        roundDig = round_desc, range=range),
+                   silent = T),
                    collapse = ':'),
                  p = formatP(try(
-                   COMP(data=.,formula = Value~Group)$p.value),
-                             ndigits = round_p,pretext = pretext, mark=mark))) %>%
-    separate(col = desc_groups,
+                   COMP(data=.,formula = Value~Group)$p.value,
+                   silent = T),
+                   ndigits = round_p,pretext = pretext, mark=mark)))
+    out$desc_groups[!str_detect(out$desc_groups,':')] <- ' : '
+    out <- separate(out,col = desc_groups,
              into = glue::glue('{groupvar} {levels(data_l$Group)}'),
              sep = ':')
-  return(out)
-  }
+    out <- separate(out,col = n_groups,
+                    into = glue::glue('n {groupvar} {levels(data_l$Group)}'),
+                    sep = ':')
+    if(n==F){
+      out <- select(out,-starts_with('n'))
+    }
+    return(out)
+}
 #'Comparison for columns of factors for 2 groups
 #'
 #'@export
 compare2qualvars <- function(data,testvars,groupvar,
                              round_p=3,round_desc=2,
                              pretext=F,mark=F,
-                             singleline=F){
+                             singleline=F,
+                             newline=T){
   # data[,groupvar] <- factor(data[,groupvar])
   freq <-
     map(data[testvars],
@@ -290,15 +302,97 @@ compare2qualvars <- function(data,testvars,groupvar,
   out <- tibble(Variable=character(),desc_all=character(),
                 g1=character(),g2=character(),p=character())
   for(var_i in seq_along(testvars)){
-    out <- add_row(out,Variable=paste(c(testvars[var_i],
-                                        rep('   ',nrow(freqBYgroup[[var_i]])-1)),
-                                      levels[[var_i]][[1]]),
-                   desc_all=freq[[var_i]][[1]],
-                   g1=freqBYgroup[[var_i]][[1]],
-                   g2=freqBYgroup[[var_i]][[2]],
-                   p=c(p[[var_i]][[1]],
-                       rep('  ',nrow(freqBYgroup[[var_i]])-1)))
+    if(newline){
+      out <- add_row(out,Variable=c(testvars[var_i],
+                                    glue::glue(
+                                      '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{levels[[var_i]][[1]]}')),
+                     desc_all=c('',freq[[var_i]][[1]]),
+                     g1=c('',freqBYgroup[[var_i]][[1]]),
+                     g2=c('',freqBYgroup[[var_i]][[2]]),
+                     p=c(p[[var_i]][[1]],
+                         rep('  ',nrow(freqBYgroup[[var_i]]))))
 
+    } else{
+      out <- add_row(out,Variable=paste(c(testvars[var_i],
+                                          rep('&nbsp;&nbsp;&nbsp;&nbsp;',
+                                              nrow(freqBYgroup[[var_i]])-1)),
+                                        levels[[var_i]][[1]]),
+                     desc_all=freq[[var_i]][[1]],
+                     g1=freqBYgroup[[var_i]][[1]],
+                     g2=freqBYgroup[[var_i]][[2]],
+                     p=c(p[[var_i]][[1]],
+                         rep('  ',nrow(freqBYgroup[[var_i]])-1)))
+    }
+  }
+  return(out)
+}
+
+
+#'Comparison for columns of factors for 2 groups with furrr
+#'
+#'@export
+compare2qualvars_f <- function(data,testvars,groupvar,
+                             round_p=3,round_desc=2,
+                             pretext=F,mark=F,
+                             singleline=F,
+                             newline=T){
+  # data[,groupvar] <- factor(data[,groupvar])
+  freq <-
+    future_map(data[testvars],
+        .f = function(x) cat_desc_stats(
+          x,return_level = F,singleline=singleline)) %>%
+    future_map(as.tibble)
+
+
+  levels <-
+    future_map(data[testvars],
+        .f = function(x) cat_desc_stats(x,
+                                        singleline=singleline)$level) %>%
+    map(as.tibble)
+  # freqBYgroup <- apply(data[testvars],2,
+  #               FUN = function(x) by(x,data[groupvar],cat_desc_stats,
+  #                                    return_level = F)) %>% t()
+  freqBYgroup <-
+    future_map(data[testvars],
+        .f = function(x) cat_desc_stats(x,
+                                        groupvar=data[[groupvar]],
+                                        return_level = F,
+                                        singleline=singleline))
+
+  # map(data[testvars],
+  #                  .f = function(x) cat_desc_stats(x,return_level = F))# %>%
+  # transpose() %>% as.tibble()
+  p <-
+    future_map2(data[testvars],data[groupvar],
+         .f = function(x,y) formatP(try(
+           fisher.test(x = x,y = y)$p.value,silent=T),
+           mark = mark,pretext = pretext))
+
+  # colnames(freqBYgroup) <- glue::glue('{groupvar} {factor(levels(data[[groupvar]]))}')
+  out <- tibble(Variable=character(),desc_all=character(),
+                g1=character(),g2=character(),p=character())
+  for(var_i in seq_along(testvars)){
+    if(newline){
+      out <- add_row(out,Variable=c(testvars[var_i],
+                                    glue::glue(
+                                      '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{levels[[var_i]][[1]]}')),
+                     desc_all=c('',freq[[var_i]][[1]]),
+                     g1=c('',freqBYgroup[[var_i]][[1]]),
+                     g2=c('',freqBYgroup[[var_i]][[2]]),
+                     p=c(p[[var_i]][[1]],
+                         rep('  ',nrow(freqBYgroup[[var_i]]))))
+
+    } else{
+      out <- add_row(out,Variable=paste(c(testvars[var_i],
+                                          rep('&nbsp;&nbsp;&nbsp;&nbsp;',
+                                              nrow(freqBYgroup[[var_i]])-1)),
+                                        levels[[var_i]][[1]]),
+                     desc_all=freq[[var_i]][[1]],
+                     g1=freqBYgroup[[var_i]][[1]],
+                     g2=freqBYgroup[[var_i]][[2]],
+                     p=c(p[[var_i]][[1]],
+                         rep('  ',nrow(freqBYgroup[[var_i]])-1)))
+    }
   }
   return(out)
 }

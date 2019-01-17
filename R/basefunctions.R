@@ -162,6 +162,7 @@ FindVars<-function(varnames,allnames=colnames(rawdata),
   if(!casesensitive){
     varnames <- tolower(varnames)
     allnames_tmp <- tolower(allnames)
+    exclude <- tolower(exclude)
   }
   vars<-numeric()
   evars<-numeric()

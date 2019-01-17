@@ -1,3 +1,4 @@
+#'@export
 ggcormat<-function(cor_mat, method='Correlation', title='',
                    maxpoint=2.1,textsize=5,axistextsize=2,
                    titlesize=3,breaklabels=NULL,
@@ -97,4 +98,75 @@ ggcormat<-function(cor_mat, method='Correlation', title='',
 
   }
   return(ggheatmap)
+}
+
+#'@export
+gg_rtree<-function(rpartdata=rpart_out,miny=NULL,
+                   title='',german=F)
+{
+  yesno <- c('yes','no')
+  if(german){yesno <- c('ja','nein')}
+  t<-ggdendro::dendro_data(rpartdata,uniform=T,compress=T)
+  if(is.numeric(t$leaf_labels$label)) {
+    t$leaf_labels$label<-prettyNum(as.numeric(t$leaf_labels$label))
+  }
+  if(german){
+    t$leaf_labels$label <- str_replace(t$leaf_labels$label,'\\.',',')
+  }
+  t$leaf_labels<-plyr::arrange(t$leaf_labels,x)
+  if(is.null(miny)) {miny<-c(min(t$leaf_labels$y),min(t$leaf_labels$y)/2)}
+  t$labels$label<-enc2utf8(as.character(t$labels$label))
+  t$labels$label<-stringr::str_replace(pattern='>=',replacement=' \u2265 ',
+                                       string=gsub('<',' <',t$labels$label))
+  if(german){
+    t$labels$label<-stringr::str_replace(pattern='\\.',replacement=',',
+                                         string=gsub('<',' <',t$labels$label))
+  }
+  t$segments$leaf<-yesno[2]
+  for (i in 1:nrow(t$segments)) {
+    if(t$segments$y[i]>t$segments$yend[i])
+    {
+      temp<-t$segments$y[i]
+      t$segments$y[i]<-t$segments$yend[i]
+      t$segments$yend[i]<-temp
+    }
+
+  }
+  for(i in 1:nrow(t$leaf_labels)) {
+    t$segments$y[which(t$segments$x==t$leaf_labels$x[i] &
+                         t$segments$y==t$leaf_labels$y[i])]<-
+      ifelse(i%%2==0,miny[1],miny[2])
+    t$leaf_labels$y[i]<-
+      ifelse(i%%2==0,miny[1],miny[2])
+    t$segments$leaf[which(t$segments$x==t$leaf_labels$x[i] &
+                            t$segments$y==t$leaf_labels$y[i])]<-yesno[1]
+  }
+  #yes/no edges
+  t$yes<-t$segments[which(t$segments$y==t$segments$yend),1:3]
+  t$yes$label<-yesno[1]
+  t$no<-t$segments[which(t$segments$y==t$segments$yend),c(1,3:4)]
+  colnames(t$no)[3]<-'x'
+  t$no$label<-yesno[2]
+
+  # t$leaf_labels$y<-c(min(t$leaf_labels$y),0.05)
+  tree<-ggplot(t$segments)+
+    ggtitle(title)+
+    geom_segment(aes(x,y,xend=xend,yend=yend,
+                     linetype=leaf,size=leaf))+
+    scale_size_manual(values=c(.5,1.25),guide=F)+
+    scale_linetype_manual(values=c(1,2),guide=F)+
+    geom_label(data=t$labels,aes(x,y,label=gsub('>=',' \u2265 ',label)),
+               vjust=-.25,hjust=.5,fontface='bold')+
+    geom_label(data=t$yes,aes(x,y,label=label),vjust=1,size=3,
+               label.r=unit(.5,units='lines'),color='white',fill='black',
+               fontface='bold')+
+    geom_label(data=t$no,aes(x,y,label=label),vjust=1,size=3,
+               label.r=unit(.5,units='lines'),color='white',fill='black',
+               fontface='bold')+
+    geom_label(data=t$leaf_labels,aes(x,y,label=label),vjust=1,
+               label.r=unit(0,'lines'),fontface='bold',fill='lightgrey')+
+    scale_y_continuous(limits=c(0,max(t$labels$y)*1.1))+
+    ggdendro::theme_dendro()+
+    theme(plot.title = element_text(hjust = 0.5,size=rel(2)))
+  return(tree)
 }
