@@ -4,8 +4,8 @@
 \alias{cat_desc_stats}
 \title{Compute absolute and relative frequencies.}
 \usage{
-cat_desc_stats(quelle, trenner = "ARRR", return_level = T,
-  ndigit = 0, groupvar = NULL, singleline = F)
+cat_desc_stats(quelle, trenner = "ARRR", return_level = TRUE,
+  ndigit = 0, groupvar = NULL, singleline = FALSE, percent = TRUE)
 }
 \arguments{
 \item{quelle}{Data for computation.}
@@ -15,6 +15,8 @@ cat_desc_stats(quelle, trenner = "ARRR", return_level = T,
 \item{return_level}{Should levels be reported?}
 
 \item{ndigit}{Digits for rounding of relative frequencies.}
+
+\item{percent}{logical, add % after relative frequencies?}
 }
 \description{
 Compute absolute and relative frequencies.

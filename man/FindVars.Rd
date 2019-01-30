@@ -16,6 +16,8 @@ by default, colnames(rawdata).}
 \item{exact}{Partial matching or exact only (adding ^ and $)?}
 
 \item{exclude}{Vector of pattern to exclude from found names.}
+
+\item{casesensitive}{Logical if case is respected in matching (default: a<>A)}
 }
 \description{
 \code{FindVars} looks up columnames (by default for data-frame rawdata)
