@@ -54,7 +54,7 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
 #'Default ARRR is my shortcut for newline ^p later in Word.
 #'@export
 median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
-                              qtype=8,roundDig=2,drop0=F,
+                       qtype=8,roundDig=2,drop0=F,
                        groupvar=NULL,range=F,rangesep='ARRR',
                        rangearrow=' -> ') {
   out <- ' '
@@ -142,10 +142,15 @@ median_cl_boot <- function(x, conf = 0.95, type='basic') {
 #'@param trenner delimiter between results per level. ARRR is my placeholder for later replacement with ^p (newline) in Word
 #'@param return_level Should levels be reported?
 #'@param ndigit Digits for rounding of relative frequencies.
+#'@param percent logical, add % after relative frequencies?
 #'@export
 cat_desc_stats<-function(quelle,trenner='ARRR',
-                         return_level=T,ndigit=0, groupvar=NULL,
-                         singleline=F) {
+                         return_level=TRUE,
+                         ndigit=0,
+                         groupvar=NULL,
+                         singleline=FALSE,
+                         percent=TRUE) {
+  percent <- ifelse(percent,'%','')
   if(!is.factor(quelle)) {
     # if(is.numeric(quelle)) {
     #   quelle<-factor(quelle,
@@ -154,7 +159,7 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
     # } else {
     quelle<-factor(quelle)
   }
-  level<- levels(quelle) %>% as.tibble()
+  level<- levels(quelle) %>% enframe(name=NULL)
   if(singleline){
     level <- paste(levels(quelle),sep = '',collapse = trenner)
   }
@@ -165,7 +170,8 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
     colnames(tableout) <- 'abs'
     ptableout<- matrix(paste0(' (',
                               round(100*prop.table(tableout),
-                                    ndigit),')'),
+                                    ndigit),
+                              percent,')'),
                        nrow=length(levels(quelle)),
                        byrow = F)
     colnames(ptableout) <- 'rel'
@@ -176,27 +182,28 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
     colnames(tableout) <- glue::glue('abs{levels(factor(groupvar))}')
 
     ptableout <- matrix(
-      paste0(' (',round(100*prop.table(tableout,margin = 2),ndigit),')'),
+      paste0(' (',round(100*prop.table(tableout,margin = 2),ndigit),
+             percent,')'),
       nrow=length(levels(quelle)),
       byrow = F)
     colnames(ptableout) <- glue::glue('rel{levels(factor(groupvar))}')
   }
-    zwert <- purrr::map2(tableout,ptableout,glue::glue) %>%
-      as.character() %>%
-      matrix(
-        nrow=length(levels(quelle)),
-        byrow = F) %>% as.tibble()
-    if(is.null(groupvar)){
-      colnames(zwert) <- 'desc'
-    } else {
+  zwert <- purrr::map2(tableout,ptableout,glue::glue) %>%
+    as.character() %>%
+    matrix(
+      nrow=length(levels(quelle)),
+      byrow = F) %>% as_tibble(.name_repair = 'minimal')
+  if(is.null(groupvar)){
+    colnames(zwert) <- 'desc'
+  } else {
     colnames(zwert) <- glue::glue('desc{levels(factor(groupvar))}')
-    }
-    if(singleline){
-      zwert <- map(zwert,
-                   .f =  function(x)
-                     glue::glue_collapse(x,sep = trenner)) %>%
-         as.tibble()
-    }
+  }
+  if(singleline){
+    zwert <- map(zwert,
+                 .f =  function(x)
+                   glue::glue_collapse(x,sep = trenner)) %>%
+      as.tibble()
+  }
   levdesstats<-list(level=level, freq=zwert)
   if(return_level==T) {
     return(levdesstats)

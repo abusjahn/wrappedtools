@@ -254,7 +254,7 @@ compare2numvars <- function(data,testvars,groupvar,
                     into = glue::glue('n {groupvar} {levels(data_l$Group)}'),
                     sep = ':')
     if(n==F){
-      out <- select(out,-starts_with('n'))
+      out <- dplyr::select(out,-starts_with('n'))
     }
     return(out)
 }
