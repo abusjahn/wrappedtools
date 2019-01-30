@@ -155,6 +155,7 @@ DelEmptyRows<-function(df_in,minValid=0,zero=F) {
 #'by default, colnames(rawdata).
 #'@param exact Partial matching or exact only (adding ^ and $)?
 #'@param exclude Vector of pattern to exclude from found names.
+#'@param casesensitive Logical if case is respected in matching (default: a<>A)
 #'@export
 FindVars<-function(varnames,allnames=colnames(rawdata),
                    exact=F,exclude=NA,casesensitive=T) {
@@ -199,14 +200,15 @@ print_kable<-function(t,nrows=30,caption='',
   for (block_i in 1:ceiling(nrow(t)/nrows)) {
     for (col_i in 1:ceiling((ncol(t)-1)/ncols)) {
       print(
-        kable(
+        knitr::kable(
           t[(1+(block_i-1)*nrows):
               min(nrow(t),block_i*nrows),
             c(1,(2+(col_i-1)*ncols):min((1+col_i*ncols),ncol(t)))],
           row.names = F,
           caption = paste0(ifelse(block_i+col_i>2,'newpage continued: ',''),
                            caption,
-                           '\n\n   ')))
+                           '  \n  \n   ')))
+      cat('  \n   \n')
     }
   }
 }
