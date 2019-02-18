@@ -21,12 +21,12 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
                ncol=4,byrow = F),level=roundDig,
         drop0=drop0)
     } else {
-      meansd<-roundR(
-        matrix(c(by(x,groupvar,mean,na.rm=T),
-                 by(x,groupvar,sd,na.rm=T),
-                 by(x,groupvar,min,na.rm=T),
-                 by(x,groupvar,max,na.rm=T)),
-               ncol=4,byrow=F),level=roundDig,
+      meansd<- matrix(c(by(x,groupvar,mean,na.rm=T),
+                        by(x,groupvar,sd,na.rm=T),
+                        by(x,groupvar,min,na.rm=T),
+                        by(x,groupvar,max,na.rm=T)),
+                      ncol=4,byrow=F)%>% na_if(Inf) %>% na_if(-Inf) %>%
+      roundR(level=roundDig,
         drop0=drop0)
     }
     out<-paste(meansd[,1],meansd[,2],sep='\u00B1')
@@ -52,13 +52,19 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
 #'@param rangesep How should min/max be separated from mean+-sd?
 #'@param rangearrow What is put between min -> max?
 #'Default ARRR is my shortcut for newline ^p later in Word.
+#'#'@param prettynum logical, apply prettyNum to results?
+#'@param german logical, should "." and "," be used as bigmark and decimal?
+
 #'@export
 median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
-                       qtype=8,roundDig=2,drop0=F,
-                       groupvar=NULL,range=F,rangesep='ARRR',
-                       rangearrow=' -> ') {
+qtype=8,roundDig=2,drop0=F,
+groupvar=NULL,range=F,rangesep='ARRR',
+rangearrow=' -> ',
+prettynum=F,german=F) {
   out <- ' '
-  if(length(na.omit(x))>0) {
+  bigmark <- ifelse(german,".",",")
+  decimal <- ifelse(german,",",".")
+  if(length(na.omit(x))>=1) {
     if(is.null(groupvar)) {
       quart<-matrix(
         stats::quantile(x,probs=c(probs,0,1),na.rm=T,type=qtype),
@@ -67,23 +73,74 @@ median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
       quart<-matrix(
         unlist(
           by(x,groupvar,quantile,probs=c(probs,0,1),na.rm=T,
-             librtype=qtype)),
+             type=qtype)),
         ncol=length(probs)+2,byrow=T)
     }
     if(is.null(nround)) {
       quart<-roundR(quart,level=roundDig,drop0=drop0)
+      if(prettynum){
+        quart <- apply(quart,1:2,function(x){
+          formatC(as.numeric(x),
+                  digits = roundDig-1,
+                  format = 'f',
+                  big.mark = bigmark,
+                  decimal.mark = decimal,
+                  preserve.width = 'common',drop0trailing = F)})
+      }
     } else {
       quart<-round(quart,nround)
+      if(prettynum){
+        quart <- apply(quart,1:2,function(x){
+          formatC(as.numeric(x),
+                  digits = nround,
+                  format = 'f',
+                  big.mark = bigmark,
+                  decimal.mark = decimal,
+                  preserve.width = 'common',drop0trailing = F)})
+      }
     }
     out<-glue::glue('{quart[,2]} ({quart[,1]}/{quart[,3]})')
     if(range) {
       out<-glue::glue('{out}{rangesep} [\\
-                  {apply(matrix(quart[,4:5],ncol=2),1,glue::glue_collapse,
-                        sep=rangearrow)}]')
+                      {apply(matrix(quart[,4:5],ncol=2),1,glue::glue_collapse,
+                      sep=rangearrow)}]')
     }
   }
   return(out)
-}
+    }
+
+
+# median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
+#                        qtype=8,roundDig=2,drop0=F,
+#                        groupvar=NULL,range=F,rangesep='ARRR',
+#                        rangearrow=' -> ') {
+#   out <- ' '
+#   if(length(na.omit(x))>0) {
+#     if(is.null(groupvar)) {
+#       quart<-matrix(
+#         stats::quantile(x,probs=c(probs,0,1),na.rm=T,type=qtype),
+#         ncol=length(probs)+2)
+#     } else {
+#       quart<-matrix(
+#         unlist(
+#           by(x,groupvar,quantile,probs=c(probs,0,1),na.rm=T,
+#              librtype=qtype)),
+#         ncol=length(probs)+2,byrow=T)
+#     }
+#     if(is.null(nround)) {
+#       quart<-roundR(quart,level=roundDig,drop0=drop0)
+#     } else {
+#       quart<-round(quart,nround)
+#     }
+#     out<-glue::glue('{quart[,2]} ({quart[,1]}/{quart[,3]})')
+#     if(range) {
+#       out<-glue::glue('{out}{rangesep} [\\
+#                   {apply(matrix(quart[,4:5],ncol=2),1,glue::glue_collapse,
+#                         sep=rangearrow)}]')
+#     }
+#   }
+#   return(out)
+# }
 
 
 #'@export
@@ -143,14 +200,20 @@ median_cl_boot <- function(x, conf = 0.95, type='basic') {
 #'@param return_level Should levels be reported?
 #'@param ndigit Digits for rounding of relative frequencies.
 #'@param percent logical, add % after relative frequencies?
+#'@param prettynum logical, apply prettyNum to results?
+#'@param german logical, should "." and "," be used as bigmark and decimal?
 #'@export
 cat_desc_stats<-function(quelle,trenner='ARRR',
                          return_level=TRUE,
                          ndigit=0,
                          groupvar=NULL,
                          singleline=FALSE,
-                         percent=TRUE) {
+                         percent=TRUE,
+                         prettynum=FALSE,
+                         german=FALSE) {
   percent <- ifelse(percent,'%','')
+  bigmark <- ifelse(german,".",",")
+  decimal <- ifelse(german,",",".")
   if(!is.factor(quelle)) {
     # if(is.numeric(quelle)) {
     #   quelle<-factor(quelle,
@@ -168,9 +231,24 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
                      nrow=length(levels(quelle)),
                      byrow = F)
     colnames(tableout) <- 'abs'
+    pt_temp <- round(100*prop.table(tableout),
+                     ndigit)
+    if(prettynum){
+      pt_temp <- formatC(pt_temp,
+                         digits = ndigit,
+                         format = 'f',
+                         big.mark = bigmark,
+                         decimal.mark = decimal,
+                         preserve.width = 'common',drop0trailing = F)
+      tableout <- formatC(tableout,
+                         digits = 0,
+                         format = 'f',
+                         big.mark = bigmark,
+                         decimal.mark = decimal,
+                         preserve.width = 'common')
+    }
     ptableout<- matrix(paste0(' (',
-                              round(100*prop.table(tableout),
-                                    ndigit),
+                              pt_temp,
                               percent,')'),
                        nrow=length(levels(quelle)),
                        byrow = F)
@@ -181,8 +259,23 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
                        byrow = F)
     colnames(tableout) <- glue::glue('abs{levels(factor(groupvar))}')
 
+    pt_temp <- round(100*prop.table(tableout,margin = 2),ndigit)
+    if(prettynum){
+      pt_temp <- formatC(pt_temp,
+                         digits = ndigit,
+                         format = 'f',
+                         big.mark = bigmark,
+                         decimal.mark = decimal,
+                         preserve.width = 'common',drop0trailing = F)
+      tableout <- formatC(tableout,
+                          digits = 0,
+                          format = 'f',
+                          big.mark = bigmark,
+                          decimal.mark = decimal,
+                          preserve.width = 'common')
+    }
     ptableout <- matrix(
-      paste0(' (',round(100*prop.table(tableout,margin = 2),ndigit),
+      paste0(' (',pt_temp,
              percent,')'),
       nrow=length(levels(quelle)),
       byrow = F)
@@ -202,7 +295,7 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
     zwert <- map(zwert,
                  .f =  function(x)
                    glue::glue_collapse(x,sep = trenner)) %>%
-      as.tibble()
+      as_tibble()
   }
   levdesstats<-list(level=level, freq=zwert)
   if(return_level==T) {
