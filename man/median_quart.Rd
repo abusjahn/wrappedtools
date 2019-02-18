@@ -6,7 +6,8 @@
 \usage{
 median_quart(x, nround = NULL, probs = c(0.25, 0.5, 0.75), qtype = 8,
   roundDig = 2, drop0 = F, groupvar = NULL, range = F,
-  rangesep = "ARRR", rangearrow = " -> ")
+  rangesep = "ARRR", rangearrow = " -> ", prettynum = F,
+  german = F)
 }
 \arguments{
 \item{x}{Data for computation.}
@@ -28,7 +29,10 @@ median_quart(x, nround = NULL, probs = c(0.25, 0.5, 0.75), qtype = 8,
 \item{rangesep}{How should min/max be separated from mean+-sd?}
 
 \item{rangearrow}{What is put between min -> max?
-Default ARRR is my shortcut for newline ^p later in Word.}
+Default ARRR is my shortcut for newline ^p later in Word.
+#'@param prettynum logical, apply prettyNum to results?}
+
+\item{german}{logical, should "." and "," be used as bigmark and decimal?}
 }
 \description{
 Compute median and quartiles and put together.

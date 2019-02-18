@@ -230,7 +230,7 @@ compare2numvars <- function(data,testvars,groupvar,
     mutate(Group=factor(Group)) %>%
     gather(key = Variable,value = Value,-Group) %>%
     # na.omit() %>%
-    as.tibble()
+    as_tibble()
   out <- data_l %>%
     group_by(Variable) %>%
     do(summarise(.data = .,
@@ -271,14 +271,14 @@ compare2qualvars <- function(data,testvars,groupvar,
     map(data[testvars],
         .f = function(x) cat_desc_stats(
           x,return_level = F,singleline=singleline)) %>%
-    map(as.tibble)
+    map(as_tibble)
 
 
   levels <-
     map(data[testvars],
         .f = function(x) cat_desc_stats(x,
                                         singleline=singleline)$level) %>%
-    map(as.tibble)
+    map(as_tibble)
   # freqBYgroup <- apply(data[testvars],2,
   #               FUN = function(x) by(x,data[groupvar],cat_desc_stats,
   #                                    return_level = F)) %>% t()
@@ -291,7 +291,7 @@ compare2qualvars <- function(data,testvars,groupvar,
 
   # map(data[testvars],
   #                  .f = function(x) cat_desc_stats(x,return_level = F))# %>%
-  # transpose() %>% as.tibble()
+  # transpose() %>% as_tibble()
   p <-
     map2(data[testvars],data[groupvar],
          .f = function(x,y) formatP(try(
@@ -341,14 +341,14 @@ compare2qualvars_f <- function(data,testvars,groupvar,
     future_map(data[testvars],
         .f = function(x) cat_desc_stats(
           x,return_level = F,singleline=singleline)) %>%
-    future_map(as.tibble)
+    future_map(as_tibble)
 
 
   levels <-
     future_map(data[testvars],
         .f = function(x) cat_desc_stats(x,
                                         singleline=singleline)$level) %>%
-    map(as.tibble)
+    map(as_tibble)
   # freqBYgroup <- apply(data[testvars],2,
   #               FUN = function(x) by(x,data[groupvar],cat_desc_stats,
   #                                    return_level = F)) %>% t()
@@ -361,7 +361,7 @@ compare2qualvars_f <- function(data,testvars,groupvar,
 
   # map(data[testvars],
   #                  .f = function(x) cat_desc_stats(x,return_level = F))# %>%
-  # transpose() %>% as.tibble()
+  # transpose() %>% as_tibble()
   p <-
     future_map2(data[testvars],data[groupvar],
          .f = function(x,y) formatP(try(
