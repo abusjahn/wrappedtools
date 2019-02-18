@@ -21,12 +21,12 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
                ncol=4,byrow = F),level=roundDig,
         drop0=drop0)
     } else {
-      meansd<-roundR(
-        matrix(c(by(x,groupvar,mean,na.rm=T),
-                 by(x,groupvar,sd,na.rm=T),
-                 by(x,groupvar,min,na.rm=T),
-                 by(x,groupvar,max,na.rm=T)),
-               ncol=4,byrow=F),level=roundDig,
+      meansd<- matrix(c(by(x,groupvar,mean,na.rm=T),
+                        by(x,groupvar,sd,na.rm=T),
+                        by(x,groupvar,min,na.rm=T),
+                        by(x,groupvar,max,na.rm=T)),
+                      ncol=4,byrow=F)%>% na_if(Inf) %>% na_if(-Inf) %>%
+      roundR(level=roundDig,
         drop0=drop0)
     }
     out<-paste(meansd[,1],meansd[,2],sep='\u00B1')
