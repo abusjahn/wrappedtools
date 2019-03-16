@@ -210,6 +210,9 @@ t_var_test <- function(data,formula,cutoff=.05){
 
 #'Comparison for columns of numbers for 2 groups
 #'
+#'@param data name of dataset (tibble/data.frame)to analyze.
+#'@param testvars vector of column names.
+#'@param groupvar name of grouping variable, has to translate to 2 groups.
 #'@param gaussian logical specifying normal or ordinal values.
 #'@export
 compare2numvars <- function(data,testvars,groupvar,
@@ -265,7 +268,8 @@ compare2qualvars <- function(data,testvars,groupvar,
                              round_p=3,round_desc=2,
                              pretext=F,mark=F,
                              singleline=F,
-                             newline=T){
+                             newline=T,
+                             spacer='&nbsp;'){
   # data[,groupvar] <- factor(data[,groupvar])
   freq <-
     map(data[testvars],
@@ -295,7 +299,7 @@ compare2qualvars <- function(data,testvars,groupvar,
   p <-
     map2(data[testvars],data[groupvar],
          .f = function(x,y) formatP(try(
-           fisher.test(x = x,y = y)$p.value,silent=T),
+           fisher.test(x = x,y = y,simulate.p.value = T)$p.value,silent=T),
            mark = mark,pretext = pretext))
 
   # colnames(freqBYgroup) <- glue::glue('{groupvar} {factor(levels(data[[groupvar]]))}')
@@ -306,11 +310,11 @@ compare2qualvars <- function(data,testvars,groupvar,
       out <- add_row(out,Variable=c(testvars[var_i],
                                     glue::glue(
                                       '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{levels[[var_i]][[1]]}')),
-                     desc_all=c('',freq[[var_i]][[1]]),
-                     g1=c('',freqBYgroup[[var_i]][[1]]),
-                     g2=c('',freqBYgroup[[var_i]][[2]]),
+                     desc_all=c(spacer,freq[[var_i]][[1]]),
+                     g1=c(spacer,freqBYgroup[[var_i]][[1]]),
+                     g2=c(spacer,freqBYgroup[[var_i]][[2]]),
                      p=c(p[[var_i]][[1]],
-                         rep('  ',nrow(freqBYgroup[[var_i]]))))
+                         rep(spacer,nrow(freqBYgroup[[var_i]]))))
 
     } else{
       out <- add_row(out,Variable=paste(c(testvars[var_i],
@@ -321,7 +325,7 @@ compare2qualvars <- function(data,testvars,groupvar,
                      g1=freqBYgroup[[var_i]][[1]],
                      g2=freqBYgroup[[var_i]][[2]],
                      p=c(p[[var_i]][[1]],
-                         rep('  ',nrow(freqBYgroup[[var_i]])-1)))
+                         rep(spacer,nrow(freqBYgroup[[var_i]])-1)))
     }
   }
   return(out)

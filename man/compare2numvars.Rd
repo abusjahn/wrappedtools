@@ -8,6 +8,12 @@ compare2numvars(data, testvars, groupvar, gaussian, round_p = 3,
   round_desc = 2, range = F, pretext = F, mark = F, n = F)
 }
 \arguments{
+\item{data}{name of dataset (tibble/data.frame)to analyze.}
+
+\item{testvars}{vector of column names.}
+
+\item{groupvar}{name of grouping variable, has to translate to 2 groups.}
+
 \item{gaussian}{logical specifying normal or ordinal values.}
 }
 \description{

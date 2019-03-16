@@ -5,7 +5,8 @@
 \title{Comparison for columns of factors for 2 groups}
 \usage{
 compare2qualvars(data, testvars, groupvar, round_p = 3, round_desc = 2,
-  pretext = F, mark = F, singleline = F, newline = T)
+  pretext = F, mark = F, singleline = F, newline = T,
+  spacer = "&nbsp;")
 }
 \description{
 Comparison for columns of factors for 2 groups

@@ -1,7 +1,7 @@
 Package: wrappedtools
 Type: Package
 Title: Usefull wrappers around commonly used functions
-Version: 0.1.9
+Version: 0.2.01
 Author: Andreas Busjahn 
 Maintainer: The package maintainer <andreas@busjahn.net>
 Description: Functions were mainly written for my own daily work or teaching, but may be of use to others as well.

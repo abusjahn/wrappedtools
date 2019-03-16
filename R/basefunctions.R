@@ -114,7 +114,7 @@ formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F) {
 DelEmptyCols<-function(df_in,minValid=1) {
   empties<-NA
   for (col_i in 1:ncol(df_in)) {
-    if (length(na.omit(df_in[,col_i]))<minValid) {
+    if (t %>% pull(4) %>% na.omit() %>% length()<minValid) {
       empties<-c(na.omit(empties),col_i)
     }
   }
@@ -156,9 +156,12 @@ DelEmptyRows<-function(df_in,minValid=0,zero=F) {
 #'@param exact Partial matching or exact only (adding ^ and $)?
 #'@param exclude Vector of pattern to exclude from found names.
 #'@param casesensitive Logical if case is respected in matching (default: a<>A)
+#'@param regex Logical, treat pattern as regex?
 #'@export
 FindVars<-function(varnames,allnames=colnames(rawdata),
-                   exact=F,exclude=NA,casesensitive=T) {
+                   exact=F,exclude=NA,casesensitive=T,
+                   fixed=F) {
+  if(fixed) {exact <- F}
   allnames_tmp <- allnames
   if(!casesensitive){
     varnames <- tolower(varnames)
@@ -167,14 +170,15 @@ FindVars<-function(varnames,allnames=colnames(rawdata),
   }
   vars<-numeric()
   evars<-numeric()
-  if (exact==T) {
+  if (exact) {
     for (i in 1:length(varnames)) {
       vars<-c(vars,grep(paste0('^',varnames[i],'$'),allnames_tmp))
       }
     vars <- unique(vars)
   } else {
     for (i in 1:length(varnames)) {
-      vars<-c(vars,grep(varnames[i],allnames_tmp))
+      vars<-c(vars,grep(varnames[i],allnames_tmp,
+                        fixed = fixed))
       }
     vars<-sort(unique(vars))
     if(any(!is.na(exclude))) {
@@ -237,4 +241,28 @@ bt<-function(x,remove=F) {
   } else {
     return(paste0('`',x,'`'))
   }
+}
+
+
+#'Search within data.frame or tibble
+#'
+#' \code{tab.search} searches for pattern within a data-frame or tibble,
+#' returning column(s) and row(s)
+#'
+#'@param searchdata table to search in, predefined as rawdata
+#'@param pattern regex, for exact matches add ^findme$
+#'@param find.all return all row indices or only 1st per column,default=TRUE
+#'@param names.only return only vector of colnames rather than list with names and rows, default=FALSE
+#'@export
+tab.search <- function(searchdata=rawdata, pattern,
+                       find.all = T,names.only=F)
+{
+  positions <- map(searchdata,str_which,pattern=pattern) %>% compact()
+  if(!find.all) {
+    positions <- map(positions,nth,n=1)
+  }
+  if(names.only){
+    positions <- names(positions)
+  }
+  return(positions)
 }
