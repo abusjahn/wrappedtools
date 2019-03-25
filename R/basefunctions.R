@@ -114,7 +114,7 @@ formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F) {
 DelEmptyCols<-function(df_in,minValid=1) {
   empties<-NA
   for (col_i in 1:ncol(df_in)) {
-    if (t %>% pull(4) %>% na.omit() %>% length()<minValid) {
+    if (df_in %>% pull(col_i) %>% na.omit() %>% length()<minValid) {
       empties<-c(na.omit(empties),col_i)
     }
   }
