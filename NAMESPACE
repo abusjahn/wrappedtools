@@ -3,6 +3,7 @@
 export(DelEmptyCols)
 export(DelEmptyRows)
 export(FindVars)
+export(SEM)
 export(bt)
 export(cat_desc_stats)
 export(cn)

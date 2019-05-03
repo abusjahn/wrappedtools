@@ -146,7 +146,7 @@ prettynum=F,german=F) {
 #'@export
 meanse<-function(x,mult=1) {
   m<-mean(x,na.rm=T)
-  s<-plotrix::std.error(x,na.rm = T)
+  s<-sd(x,na.rm = T)/length(na.omit(x))
   out<-c(m,m-s*mult,m+s*mult)
   names(out)<-c('y','ymin','ymax')
   return(out)
@@ -199,7 +199,7 @@ median_cl_boot <- function(x, conf = 0.95, type='basic') {
 #'@param trenner delimiter between results per level. ARRR is my placeholder for later replacement with ^p (newline) in Word
 #'@param return_level Should levels be reported?
 #'@param ndigit Digits for rounding of relative frequencies.
-#'@param percent logical, add % after relative frequencies?
+#'@param percent logical, add percent-symbol after relative frequencies?
 #'@param prettynum logical, apply prettyNum to results?
 #'@param german logical, should "." and "," be used as bigmark and decimal?
 #'@export
@@ -307,5 +307,10 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
 
 #'@export
 var_coeff<-function(x) {
-  return(sd(x,na.rm=T)/mean(x,na.rm=T))
+  return(sd(x,na.rm=T)/mean(x,na.rm=T)*100)
+}
+
+#'@export
+SEM <- function(x){
+  return(sd(x,na.rm=T)/sqrt(length(na.omit(x))))
 }
