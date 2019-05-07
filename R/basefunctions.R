@@ -74,8 +74,10 @@ markSign<-function(SignIn,plabel=c('n.s.','+','*','**','***')) {
 #'@param text Should output be casted to character default=T)?
 #'@param pretext Should = or < be added before p (default=F)?
 #'@param mark Should significance level be added after p (default=F)?
+#'@param german_num change dot (default) to comma?
 #'@export
-formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F) {
+formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F,
+                  decimal.mark='.') {
   formatp<-''
   if(is.numeric(pIn)) {
     if (!is.matrix(pIn)) {
@@ -86,7 +88,8 @@ formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F) {
       apply(MARGIN=c(1,2),round,ndigits) %>%
     apply(MARGIN=c(1,2),
                    formatC,format="f",
-                   digits=ndigits,drop0trailing =F)
+                   digits=ndigits,drop0trailing =F,
+          decimal.mark=decimal.mark)
     if(pretext) {
       for (row_i in 1:nrow(pIn)) {
         for (col_i in 1:ncol(pIn)) {
