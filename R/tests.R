@@ -256,8 +256,11 @@ compare2numvars <- function(data,testvars,groupvar,
     out <- separate(out,col = n_groups,
                     into = glue::glue('n {groupvar} {levels(data_l$Group)}'),
                     sep = ':')
-    if(n==F){
-      out <- dplyr::select(out,-starts_with('n'))
+    out$n <- apply(out[,2:3],1,function(x){sum(as.numeric(x))})
+    out %<>% select(1,n,starts_with('n '),everything())
+
+        if(n==F){
+      out <- dplyr::select(out,-n,-starts_with('n '))
     }
     return(out)
 }

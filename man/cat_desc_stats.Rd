@@ -17,7 +17,7 @@ cat_desc_stats(quelle, trenner = "ARRR", return_level = TRUE,
 
 \item{ndigit}{Digits for rounding of relative frequencies.}
 
-\item{percent}{logical, add % after relative frequencies?}
+\item{percent}{logical, add percent-symbol after relative frequencies?}
 
 \item{prettynum}{logical, apply prettyNum to results?}
 

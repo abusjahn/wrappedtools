@@ -74,8 +74,10 @@ markSign<-function(SignIn,plabel=c('n.s.','+','*','**','***')) {
 #'@param text Should output be casted to character default=T)?
 #'@param pretext Should = or < be added before p (default=F)?
 #'@param mark Should significance level be added after p (default=F)?
+#'@param german_num change dot (default) to comma?
 #'@export
-formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F) {
+formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F,
+                  decimal.mark='.') {
   formatp<-''
   if(is.numeric(pIn)) {
     if (!is.matrix(pIn)) {
@@ -86,7 +88,8 @@ formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F) {
       apply(MARGIN=c(1,2),round,ndigits) %>%
     apply(MARGIN=c(1,2),
                    formatC,format="f",
-                   digits=ndigits,drop0trailing =F)
+                   digits=ndigits,drop0trailing =F,
+          decimal.mark=decimal.mark)
     if(pretext) {
       for (row_i in 1:nrow(pIn)) {
         for (col_i in 1:ncol(pIn)) {
@@ -114,7 +117,7 @@ formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F) {
 DelEmptyCols<-function(df_in,minValid=1) {
   empties<-NA
   for (col_i in 1:ncol(df_in)) {
-    if (t %>% pull(4) %>% na.omit() %>% length()<minValid) {
+    if (df_in %>% pull(col_i) %>% na.omit() %>% length()<minValid) {
       empties<-c(na.omit(empties),col_i)
     }
   }
@@ -265,4 +268,26 @@ tab.search <- function(searchdata=rawdata, pattern,
     positions <- names(positions)
   }
   return(positions)
+}
+
+#'Change figure size within chunk, taken from http://michaeljw.com/blog/post/subchunkify/
+#'
+#'@param g plot object
+#'@export
+subchunkify <- function(g, fig_height=7, fig_width=5) {
+  g_deparsed <- paste0(deparse(
+    function() {g}
+  ), collapse = '')
+
+  sub_chunk <- paste0("
+                      `","``{r sub_chunk_", floor(runif(1) * 10000),
+                      ", fig.height=", fig_height,
+                      ", fig.width=", fig_width, ", echo=FALSE}",
+                      "\n(",
+                      g_deparsed
+                      , ")()",
+                      "\n`","``
+                      ")
+
+  cat(knitr::knit(text = knitr::knit_expand(text = sub_chunk), quiet = TRUE))
 }

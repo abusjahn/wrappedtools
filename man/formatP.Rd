@@ -4,7 +4,8 @@
 \alias{formatP}
 \title{Re-format p-values}
 \usage{
-formatP(pIn, ndigits = 3, text = T, pretext = F, mark = F)
+formatP(pIn, ndigits = 3, text = T, pretext = F, mark = F,
+  decimal.mark = ".")
 }
 \arguments{
 \item{pIn}{A numeric vector or matrix with p-values.}
@@ -16,6 +17,8 @@ formatP(pIn, ndigits = 3, text = T, pretext = F, mark = F)
 \item{pretext}{Should = or < be added before p (default=F)?}
 
 \item{mark}{Should significance level be added after p (default=F)?}
+
+\item{german_num}{change dot (default) to comma?}
 }
 \description{
 \code{formatP} simplifies p-values by rounding to the maximum of p or a
