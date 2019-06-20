@@ -21,8 +21,15 @@ by default, colnames(rawdata).}
 
 \item{regex}{Logical, treat pattern as regex?}
 }
+\value{
+A list with index, names, backticked names, and symbols
+}
 \description{
 \code{FindVars} looks up columnames (by default for data-frame rawdata)
 based on parts of names, using regular expressions.
 exlusion rules may be specified as well.
+}
+\examples{
+FindVars(varnames = c('^c','g'),allnames = colnames(mtcars))
+FindVars(varnames = c('^c','g'),allnames = colnames(mtcars),exclude='r')
 }
