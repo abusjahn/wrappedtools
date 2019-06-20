@@ -161,6 +161,10 @@ DelEmptyRows<-function(df_in,minValid=0,zero=F) {
 #'@param casesensitive Logical if case is respected in matching (default: a<>A)
 #'@param regex Logical, treat pattern as regex?
 #'@export
+#'@return A list with index, names, backticked names, and symbols
+#'@examples
+#'FindVars(varnames = c('^c','g'),allnames = colnames(mtcars))
+#'FindVars(varnames = c('^c','g'),allnames = colnames(mtcars),exclude='r')
 FindVars<-function(varnames,allnames=colnames(rawdata),
                    exact=F,exclude=NA,casesensitive=T,
                    fixed=F) {
@@ -197,6 +201,7 @@ FindVars<-function(varnames,allnames=colnames(rawdata),
   return(list(index=vars,
               names=allnames[vars],
               bticked=bt(allnames[vars]),
+              symbols=syms(allnames[vars]),
               count=length(vars)))
 }
 
