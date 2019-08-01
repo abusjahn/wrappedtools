@@ -1,7 +1,7 @@
 #'Compute mean and sd and put together with the +- symbol.
 #'
 #'@param x Data for computation.
-#'@param roundDig Number of relevant digigts for roundR.
+#'@param roundDig Number of relevant digits for roundR.
 #'@param drop0 Should trailing zeros be dropped?
 #'@param groupvar Optional grouping variable for subgroups.
 #'@param range Should min and max be included in output?

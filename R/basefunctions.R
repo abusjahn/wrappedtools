@@ -158,7 +158,7 @@ DelEmptyRows<-function(df_in,minValid=0,zero=F) {
 #'by default, colnames(rawdata).
 #'@param exact Partial matching or exact only (adding ^ and $)?
 #'@param exclude Vector of pattern to exclude from found names.
-#'@param casesensitive Logical if case is respected in matching (default: a<>A)
+#'@param casesensitive Logical if case is respected in matching (default FALSE: a<>A)
 #'@param regex Logical, treat pattern as regex?
 #'@export
 #'@return A list with index, names, backticked names, and symbols
@@ -205,6 +205,15 @@ FindVars<-function(varnames,allnames=colnames(rawdata),
               count=length(vars)))
 }
 
+#'Enhanced kable with definable number of rows/columns for splitting into subtables
+#'
+#'\code{print_kable} formats tibbles/df's for markdown
+#'
+#'@param t table to print
+#'@param nrows number of rows (30) before splitting
+#'@param ncols number of columns (100) before splitting
+#'#'@param caption header
+
 #'@export
 print_kable<-function(t,nrows=30,caption='',
                              ncols=100,...) {
@@ -224,6 +233,52 @@ print_kable<-function(t,nrows=30,caption='',
     }
   }
 }
+
+#'Enhanced kable with latex
+#'
+#'\code{pdf_kable} formats tibbles/df's for markdown
+#'
+#'@param .input table to print
+#'@param twidth default 14
+#'@param innercaption subheader
+#'@param caption header
+#'@param foot footnote
+#'@param escape see kable
+
+#'@export
+pdf_kable <- function(.input,width1=6,
+                      twidth = 14,
+                      tposition='left',
+                      innercaption=NULL,
+                      caption = '',
+                      foot=NULL,
+                      escape=T){
+  ncols=ncol(.input)
+  out <- kable(.input, format = "latex", booktabs = T,
+               linesep = "",
+               escape=escape, caption=caption,
+               align = c('l',rep('c',ncols-1))) %>%
+    kable_styling(position = tposition,
+                  latex_options = c("striped",
+                                    "hold_position")) %>%
+    column_spec(-1, #border_left = T,
+                width = paste0((twidth-width1)/(ncols-1),'cm'),
+    ) %>%
+    column_spec(1,bold = T,width = paste0(width1,'cm')) %>%
+    row_spec(0, bold = T)
+  if(!is.null(innercaption)){
+    caption1 <- c(caption=ncols)
+    names(caption1) <- caption
+    out <- out %>%
+      add_header_above(caption1,bold=T)
+  }
+  if(!is.null(foot)){
+    out <- out %>%
+      footnote(general = foot)
+  }
+  return(out)
+}
+
 
 #'Shortcut for colnames()
 #'
