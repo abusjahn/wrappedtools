@@ -10,7 +10,7 @@ meansd(x, roundDig = 2, drop0 = F, groupvar = NULL, range = F,
 \arguments{
 \item{x}{Data for computation.}
 
-\item{roundDig}{Number of relevant digigts for roundR.}
+\item{roundDig}{Number of relevant digits for roundR.}
 
 \item{drop0}{Should trailing zeros be dropped?}
 

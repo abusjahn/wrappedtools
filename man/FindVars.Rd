@@ -17,7 +17,7 @@ by default, colnames(rawdata).}
 
 \item{exclude}{Vector of pattern to exclude from found names.}
 
-\item{casesensitive}{Logical if case is respected in matching (default: a<>A)}
+\item{casesensitive}{Logical if case is respected in matching (default FALSE: a<>A)}
 
 \item{regex}{Logical, treat pattern as regex?}
 }
