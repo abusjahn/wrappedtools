@@ -5,7 +5,7 @@
 \title{Compute mean and sd and put together with the +- symbol.}
 \usage{
 meansd(x, roundDig = 2, drop0 = F, groupvar = NULL, range = F,
-  rangesep = "ARRR")
+  rangesep = "ARRR", .n = F)
 }
 \arguments{
 \item{x}{Data for computation.}
@@ -18,7 +18,9 @@ meansd(x, roundDig = 2, drop0 = F, groupvar = NULL, range = F,
 
 \item{range}{Should min and max be included in output?}
 
-\item{rangesep}{How should min/max be separated from mean+-sd?
+\item{rangesep}{How should min/max be separated from mean+-sd?}
+
+\item{.n}{Should n be included in output?
 Default ARRR is my shortcut for newline ^p later in Word.}
 }
 \description{

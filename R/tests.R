@@ -103,10 +103,17 @@ pairwise_ordcat_test <- function(x,group,adjmethod='fdr',plevel=.05,
               method=method))
 }
 
+#'Convinience function around ks.test, testing against Normal distribution
+#'
+#'\code{ksnormal} returns list output from ks.test.
+#'
+#'@param ksdata Vector of data to test.
 #'@export
 ksnormal<-function(ksdata)
 {
+  options(warn=-1)
   ksout<-ks.test(ksdata,'pnorm',mean(ksdata,na.rm=T),sd(ksdata,na.rm=T),exact=F)
+  options(warn=0)
   return(ksout)
 }
 
@@ -214,10 +221,17 @@ t_var_test <- function(data,formula,cutoff=.05){
 #'@param testvars vector of column names.
 #'@param groupvar name of grouping variable, has to translate to 2 groups.
 #'@param gaussian logical specifying normal or ordinal values.
+#'@param round_p level for rounding p-value
+#'@param round_desc number of significant digits for rounding of descriptive stats
+#'@param range include min/max?
+#'@param pretext for function formatP
+#'@param mark for function formatP
+#'@param n create columns for n per group?
+#'@param .n add n to descriptive statistics?
 #'@export
 compare2numvars <- function(data,testvars,groupvar,
                             gaussian,round_p=3,round_desc=2,
-                            range=F,pretext=F,mark=F,n=F){
+                            range=F,pretext=F,mark=F,n=F,.n=F){
   if(gaussian){
     DESC <- meansd
     COMP <- t_var_test
@@ -239,10 +253,10 @@ compare2numvars <- function(data,testvars,groupvar,
     do(summarise(.data = .,
                  n_groups=paste(table(.$Group[which(!is.na(.$Value))]),collapse=':'),
                  desc_all=DESC(.$Value,
-                               roundDig = round_desc,range=range),
+                               roundDig = round_desc,range=range,.n=.n),
                  desc_groups=paste(try(
                    DESC(x = .$Value,groupvar = .$Group,
-                        roundDig = round_desc, range=range),
+                        roundDig = round_desc, range=range,.n=.n),
                    silent = T),
                    collapse = ':'),
                  p = formatP(try(
@@ -259,7 +273,7 @@ compare2numvars <- function(data,testvars,groupvar,
     out$n <- apply(out[,2:3],1,function(x){sum(as.numeric(x))})
     out %<>% dplyr::select(1,n,starts_with('n '),everything())
 
-        if(n==F){
+    if(n==F){
       out <- dplyr::select(out,-n,-starts_with('n '))
     }
     return(out)

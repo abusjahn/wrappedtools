@@ -5,7 +5,8 @@
 \title{Comparison for columns of numbers for 2 groups}
 \usage{
 compare2numvars(data, testvars, groupvar, gaussian, round_p = 3,
-  round_desc = 2, range = F, pretext = F, mark = F, n = F)
+  round_desc = 2, range = F, pretext = F, mark = F, n = F,
+  .n = F)
 }
 \arguments{
 \item{data}{name of dataset (tibble/data.frame)to analyze.}
@@ -15,6 +16,20 @@ compare2numvars(data, testvars, groupvar, gaussian, round_p = 3,
 \item{groupvar}{name of grouping variable, has to translate to 2 groups.}
 
 \item{gaussian}{logical specifying normal or ordinal values.}
+
+\item{round_p}{level for rounding p-value}
+
+\item{round_desc}{number of significant digits for rounding of descriptive stats}
+
+\item{range}{include min/max?}
+
+\item{pretext}{for function formatP}
+
+\item{mark}{for function formatP}
+
+\item{n}{create columns for n per group?}
+
+\item{.n}{add n to descriptive statistics?}
 }
 \description{
 Comparison for columns of numbers for 2 groups

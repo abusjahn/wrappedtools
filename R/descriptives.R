@@ -6,20 +6,22 @@
 #'@param groupvar Optional grouping variable for subgroups.
 #'@param range Should min and max be included in output?
 #'@param rangesep How should min/max be separated from mean+-sd?
+#'@param .n Should n be included in output?
 #'Default ARRR is my shortcut for newline ^p later in Word.
 #'@export
 meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
-                 range=F,rangesep='ARRR') {
+                 range=F,rangesep='ARRR',.n=F) {
   out<-''
   if(length(na.omit(x))>0) {
     if(is.null(groupvar)) {
-      meansd<-roundR(
+      meansd<-cbind(roundR(
         matrix(c(mean(x,na.rm = T),
                  sd(x,na.rm = T),
                  min(x,na.rm = T),
                  max(x,na.rm = T)),
                ncol=4,byrow = F),level=roundDig,
-        drop0=drop0)
+        drop0=drop0),
+        length(na.omit(x)))
     } else {
       meansd<- matrix(c(by(x,groupvar,mean,na.rm=T),
                         by(x,groupvar,sd,na.rm=T),
@@ -27,13 +29,18 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
                         by(x,groupvar,max,na.rm=T)),
                       ncol=4,byrow=F)%>% na_if(Inf) %>% na_if(-Inf) %>%
       roundR(level=roundDig,
-        drop0=drop0)
+        drop0=drop0) %>%
+        cbind(by(x,groupvar,function(x){length(na.omit(x))}))
     }
     out<-paste(meansd[,1],meansd[,2],sep='\u00B1')
     if(range) {
       out<-paste0(out,rangesep, ' [',
                   apply(matrix(meansd[,3:4],ncol=2),1,paste,
                         collapse=' -> '),']') #\u22ef
+    }
+    if(.n) {
+      out<-paste0(out,rangesep, ' [n=',
+                  meansd[,5],']') #\u22ef
     }
   }#   }
   return(out)
@@ -54,30 +61,37 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
 #'Default ARRR is my shortcut for newline ^p later in Word.
 #'#'@param prettynum logical, apply prettyNum to results?
 #'@param german logical, should "." and "," be used as bigmark and decimal?
+#'@param n Should n be included in output?
 
 #'@export
 median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
 qtype=8,roundDig=2,drop0=F,
 groupvar=NULL,range=F,rangesep='ARRR',
 rangearrow=' -> ',
-prettynum=F,german=F) {
+prettynum=F,german=F,.n=F) {
   out <- ' '
   bigmark <- ifelse(german,".",",")
   decimal <- ifelse(german,",",".")
   if(length(na.omit(x))>=1) {
     if(is.null(groupvar)) {
       quart<-matrix(
-        stats::quantile(x,probs=c(probs,0,1),na.rm=T,type=qtype),
-        ncol=length(probs)+2)
+        c(
+          stats::quantile(x,probs=c(probs,0,1),na.rm=T,type=qtype),
+          length(na.omit(x))),
+          ncol=length(probs)+3)
     } else {
       quart<-matrix(
         unlist(
           by(x,groupvar,quantile,probs=c(probs,0,1),na.rm=T,
              type=qtype)),
         ncol=length(probs)+2,byrow=T)
+      quart <- cbind(quart,
+                     unlist(by(
+                       x,groupvar,function(x){length(na.omit(x))})))
     }
     if(is.null(nround)) {
-      quart<-roundR(quart,level=roundDig,drop0=drop0)
+      quart[,-ncol(quart)]<-roundR(quart[,-ncol(quart)],
+                                   level=roundDig,drop0=drop0)
       if(prettynum){
         quart <- apply(quart,1:2,function(x){
           formatC(as.numeric(x),
@@ -88,7 +102,7 @@ prettynum=F,german=F) {
                   preserve.width = 'common',drop0trailing = F)})
       }
     } else {
-      quart<-round(quart,nround)
+      quart[,-ncol(quart)]<-round(quart[,-ncol(quart)],nround)
       if(prettynum){
         quart <- apply(quart,1:2,function(x){
           formatC(as.numeric(x),
@@ -99,11 +113,14 @@ prettynum=F,german=F) {
                   preserve.width = 'common',drop0trailing = F)})
       }
     }
-    out<-glue::glue('{quart[,2]} ({quart[,1]}/{quart[,3]})')
+    out<-str_glue('{quart[,2]} ({quart[,1]}/{quart[,3]})')
     if(range) {
-      out<-glue::glue('{out}{rangesep} [\\
-                      {apply(matrix(quart[,4:5],ncol=2),1,glue::glue_collapse,
+      out<-str_glue('{out}{rangesep} [\\
+                      {apply(matrix(quart[,(length(probs)+1):(length(probs)+2)],ncol=2),1,glue::glue_collapse,
                       sep=rangearrow)}]')
+    }
+    if(.n) {
+      out<-str_glue('{out}{rangesep} [n={quart[,length(probs)+3]}]')
     }
   }
   return(out)
