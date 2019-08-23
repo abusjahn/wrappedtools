@@ -418,3 +418,164 @@ compare2qualvars_f <- function(data,testvars,groupvar,
   return(out)
 }
 
+#'@export
+pairwise_wilcox_test <-
+  function(dep_var,indep_var,strat_var=NA,
+           adjmethod='fdr',distr='exact',plevel=.05,
+           symbols=letters[-1],
+           sep='')
+  {
+    # if (!is.factor(indep_var))
+    # {
+    indep_var<-factor(indep_var)
+    # }
+    ngroups<-length(levels(indep_var))
+    if (length(strat_var)==1) {
+      strat_var<-rep(1,length(dep_var))
+      }
+    if (!is.factor(strat_var)) {
+      strat_var<-factor(strat_var)
+      }
+    pwt_data<-data_frame(dep_var,
+                         indep_var=as.numeric(indep_var),
+                         strat_var)
+    p_unadj<-matrix(nrow=ngroups-1,ncol=ngroups-1,
+                    dimnames=list(c(2:ngroups),c(1:(ngroups-1))))
+    for (firstgroup in 1:(ngroups-1)) {
+      for (secondgroup in (firstgroup+1):ngroups) {
+        tempdata<-pwt_data[c(which(pwt_data$indep_var==firstgroup),
+                             which(pwt_data$indep_var==secondgroup)),]
+        tempdata$indep_var<-factor(tempdata$indep_var)
+        #print(tempdata)
+        if (length(levels(as.factor(tempdata$dep_var)))>1) {
+          p_unadj[secondgroup-1,firstgroup]<-
+            pvalue(wilcox_test(tempdata$dep_var~tempdata$indep_var |
+                                 tempdata$strat_var,
+                               distribution=distr))
+        }
+        else {
+          p_unadj[secondgroup-1,firstgroup]<-1
+        }
+      }
+    }
+    p_adj<-matrix(p.adjust(as.vector(p_unadj),method=adjmethod),byrow=F,
+                  nrow=ngroups-1,ncol=ngroups-1,
+                  dimnames=list(group2=levels(indep_var)[-1],
+                                group1=levels(indep_var)[-ngroups]))
+    sign_colwise<-character()
+    for (col_i in 1:ncol(p_adj)) {
+      temp<-' '
+      for (row_i in col_i:nrow(p_adj)) {
+        if (!is.na(p_adj[row_i,col_i]) &
+            p_adj[row_i,col_i]<plevel) {
+          temp<-paste(temp,symbols[row_i],sep=sep)
+        }
+      }
+      sign_colwise<-c(sign_colwise,temp)
+    }
+
+    return(list(p_adj=p_adj,
+                sign_colwise=sign_colwise))
+  }
+
+#'@export
+pairwise_t_test<-function(dep_var,indep_var,adjmethod='fdr',plevel=.05,
+                          symbols=letters[-1])
+{
+  t_out<-pairwise.t.test(x=dep_var,g=indep_var,p.adjust.method=adjmethod)
+  p_colwise<-t_out$p.value
+  sign_colwise<-character()
+  for (col_i in 1:ncol(p_colwise)) {
+    temp<-' '
+    for (row_i in col_i:nrow(p_colwise)) {
+      if (!is.na(p_colwise[row_i,col_i]) &
+          p_colwise[row_i,col_i]<plevel) {
+        temp<-paste0(temp,symbols[row_i])
+      }
+    }
+    sign_colwise<-c(sign_colwise,temp)
+  }
+  return(list(method=t_out$method,
+              p.value=t_out$p.value,
+              plevel=plevel,
+              sign_colwise=sign_colwise))
+
+}
+
+
+#'@export
+compare_n_numvars <- function(.data=rawdata,
+                              testvars,groupvar,
+                              round_desc=2,range=F,
+                              rangesep='ARRR',
+                              pretext=F,mark=F,round_p=3,
+                              .n=F) {
+  if(!is.factor(.data[[groupvar]]) |
+     is.ordered(.data[[groupvar]])){
+    .data[[groupvar]] <- factor(.data[[groupvar]],
+                                ordered = F)
+  }
+  glevel <- fct_inorder(levels(.data[[groupvar]]))
+  .data <- select(.data,testvars,groupvar)
+  t <- .data %>% gather(key = 'Variable',value = 'value',testvars) %>%
+    nest(-Variable) %>%
+    mutate(Variable=fct_inorder(Variable),
+           desc=map_chr(data,~meansd(.$value,
+                                     roundDig = round_desc,
+                                     range = range,
+                                     .n = .n)),
+           desc_grp=map(data,~meansd(.$value,
+                                   groupvar = .[groupvar],
+                                   roundDig = round_desc,
+                                   range = range,
+                                   .n = .n)) %>%
+             map(~set_names(.x,
+                            as.character(glevel))),
+           lmout=map(data,~lm(value~!!sym(groupvar),data=.x)),
+           aout=map(lmout,anova),
+           ptout=map(data,~pairwise.t.test(.x[['value']],
+                                           g=.x[[groupvar]],
+                                           pool.sd = T,
+                                           p.adjust.method = 'none')$p.value),
+           p_tout=map(data,~pairwise_t_test(.x[['value']],
+                                            .x[[groupvar]])$sign_colwise),
+           p_tout=map(p_tout,~c(.x,''))) %>%
+    map(~set_names(.x,testvars))
+
+  results <- tibble(Variable=fct_inorder(testvars),all=t$desc) %>%
+    full_join(reduce(t$desc_grp,rbind) %>%
+                as_tibble() %>%
+                mutate(Variable=testvars) %>%
+                select(Variable, everything()) %>%
+                set_names(c('Variable',
+                            paste(groupvar,glevel)))) %>%
+    full_join(map_df(t$aout, 'Pr(>F)') %>% slice(1) %>%
+                gather(key='Variable',value = 'pANOVA') %>%
+                mutate(Variable=fct_inorder(Variable),
+                       pANOVA=formatP(pANOVA,
+                                      ndigits=round_p,
+                                      pretext=pretext,
+                                      mark=mark) %>% as.vector())) %>%
+    full_join(map_df(t$ptout,~paste(formatP(p.adjust(.x[lower.tri(.x,T)])),
+                                    collapse = ';')) %>%
+                gather(key='Variable',value = 'p between groups' )) %>%
+    full_join(reduce(t$p_tout,rbind) %>%
+                as_tibble() %>%
+                mutate(Variable=testvars) %>%
+                set_names(c(paste('sign',glevel),'Variable'))) %>%
+    full_join(map_df(t$ptout,~paste(formatP(p.adjust(.x[,1])),
+                                    collapse = ';')) %>%
+                gather(key='Variable',value = 'p vs.ref' ))
+  results <- cbind(results,
+                   map2_df(.x = select(results,starts_with(groupvar)),
+                           .y = select(results, starts_with('sign')),
+                           .f = paste) %>%
+                     rename_all(paste,'fn')) %>%
+    as_tibble()
+  #todo: p vs. ref symbol
+
+    return(list(results=results,raw=t))
+}
+# cnn <- compare_n_numvars(.data = diamonds,
+#                          testvars = c('carat','x','y','z'),
+#                          groupvar = 'cut')
