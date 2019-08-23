@@ -7,7 +7,7 @@
 median_quart(x, nround = NULL, probs = c(0.25, 0.5, 0.75), qtype = 8,
   roundDig = 2, drop0 = F, groupvar = NULL, range = F,
   rangesep = "ARRR", rangearrow = " -> ", prettynum = F,
-  german = F)
+  german = F, .n = F)
 }
 \arguments{
 \item{x}{Data for computation.}
@@ -33,6 +33,8 @@ Default ARRR is my shortcut for newline ^p later in Word.
 #'@param prettynum logical, apply prettyNum to results?}
 
 \item{german}{logical, should "." and "," be used as bigmark and decimal?}
+
+\item{n}{Should n be included in output?}
 }
 \description{
 Compute median and quartiles and put together.
