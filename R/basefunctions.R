@@ -159,7 +159,7 @@ DelEmptyRows<-function(df_in,minValid=0,zero=F) {
 #'@param exact Partial matching or exact only (adding ^ and $)?
 #'@param exclude Vector of pattern to exclude from found names.
 #'@param casesensitive Logical if case is respected in matching (default FALSE: a<>A)
-#'@param regex Logical, treat pattern as regex?
+#'@param fixed Logical, treat pattern as regex?
 #'@export
 #'@return A list with index, names, backticked names, and symbols
 #'@examples
