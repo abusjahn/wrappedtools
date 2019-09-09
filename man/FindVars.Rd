@@ -19,7 +19,7 @@ by default, colnames(rawdata).}
 
 \item{casesensitive}{Logical if case is respected in matching (default FALSE: a<>A)}
 
-\item{regex}{Logical, treat pattern as regex?}
+\item{fixed}{Logical, treat pattern as regex?}
 }
 \value{
 A list with index, names, backticked names, and symbols
