@@ -515,8 +515,8 @@ compare_n_numvars <- function(.data=rawdata,
     .data[[groupvar]] <- factor(.data[[groupvar]],
                                 ordered = F)
   }
-  glevel <- fct_inorder(levels(.data[[groupvar]]))
-  .data <- select(.data,testvars,groupvar)
+  glevel <- forcats::fct_inorder(levels(.data[[groupvar]]))
+  .data <- dplyr::select(.data,testvars,groupvar)
   t <- .data %>% gather(key = 'Variable',value = 'value',testvars) %>%
     nest(-Variable) %>%
     mutate(Variable=fct_inorder(Variable),
@@ -530,7 +530,7 @@ compare_n_numvars <- function(.data=rawdata,
                                    range = range,
                                    .n = .n)) %>%
              map(~set_names(.x,
-                            as.character(glevel))),
+                            as.character(glevel))) ,
            lmout=map(data,~lm(value~!!sym(groupvar),data=.x)),
            aout=map(lmout,anova),
            ptout=map(data,~pairwise.t.test(.x[['value']],
@@ -544,9 +544,10 @@ compare_n_numvars <- function(.data=rawdata,
 
   results <- tibble(Variable=fct_inorder(testvars),all=t$desc) %>%
     full_join(reduce(t$desc_grp,rbind) %>%
+                matrix(nrow=length(testvars),byrow=T) %>%
                 as_tibble() %>%
                 mutate(Variable=testvars) %>%
-                select(Variable, everything()) %>%
+                dplyr::select(Variable, everything()) %>%
                 set_names(c('Variable',
                             paste(groupvar,glevel)))) %>%
     full_join(map_df(t$aout, 'Pr(>F)') %>% slice(1) %>%
@@ -560,15 +561,16 @@ compare_n_numvars <- function(.data=rawdata,
                                     collapse = ';')) %>%
                 gather(key='Variable',value = 'p between groups' )) %>%
     full_join(reduce(t$p_tout,rbind) %>%
+                matrix(nrow=length(testvars),byrow=T) %>%
                 as_tibble() %>%
-                mutate(Variable=testvars) %>%
+                         mutate(Variable=testvars) %>%
                 set_names(c(paste('sign',glevel),'Variable'))) %>%
     full_join(map_df(t$ptout,~paste(formatP(p.adjust(.x[,1])),
                                     collapse = ';')) %>%
                 gather(key='Variable',value = 'p vs.ref' ))
   results <- cbind(results,
-                   map2_df(.x = select(results,starts_with(groupvar)),
-                           .y = select(results, starts_with('sign')),
+                   map2_df(.x = dplyr::select(results,starts_with(groupvar)),
+                           .y = dplyr::select(results, starts_with('sign')),
                            .f = paste) %>%
                      rename_all(paste,'fn')) %>%
     as_tibble()
