@@ -345,6 +345,15 @@ compare2qualvars <- function(data,testvars,groupvar,
                          rep(spacer,nrow(freqBYgroup[[var_i]])-1)))
     }
   }
+  colnames(out) %<>% str_replace_all(
+    c('g1'=paste(groupvar,
+                 levels(data %>%
+                          pull(groupvar))[1]),
+      'g2'=paste(groupvar,
+                 levels(data %>%
+                          pull(groupvar))[2])
+    )
+  )
   return(out)
 }
 
@@ -544,7 +553,7 @@ compare_n_numvars <- function(.data=rawdata,
 
   results <- tibble(Variable=fct_inorder(testvars),all=t$desc) %>%
     full_join(reduce(t$desc_grp,rbind) %>%
-                matrix(nrow=length(testvars),byrow=T) %>%
+                matrix(nrow=length(testvars),byrow=F) %>%
                 as_tibble() %>%
                 mutate(Variable=testvars) %>%
                 dplyr::select(Variable, everything()) %>%
@@ -561,7 +570,7 @@ compare_n_numvars <- function(.data=rawdata,
                                     collapse = ';')) %>%
                 gather(key='Variable',value = 'p between groups' )) %>%
     full_join(reduce(t$p_tout,rbind) %>%
-                matrix(nrow=length(testvars),byrow=T) %>%
+                matrix(nrow=length(testvars),byrow=F) %>%
                 as_tibble() %>%
                          mutate(Variable=testvars) %>%
                 set_names(c(paste('sign',glevel),'Variable'))) %>%
