@@ -345,6 +345,15 @@ compare2qualvars <- function(data,testvars,groupvar,
                          rep(spacer,nrow(freqBYgroup[[var_i]])-1)))
     }
   }
+  colnames(out) %<>% str_replace_all(
+    c('g1'=paste(groupvar,
+                 levels(data %>%
+                          pull(groupvar))[1]),
+      'g2'=paste(groupvar,
+                 levels(data %>%
+                          pull(groupvar))[2])
+    )
+  )
   return(out)
 }
 
