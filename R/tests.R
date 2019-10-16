@@ -289,32 +289,34 @@ compare2qualvars <- function(data,testvars,groupvar,
                              spacer='&nbsp;'){
   # data[,groupvar] <- factor(data[,groupvar])
   freq <-
-    map(data[testvars],
+    purrr::map(data[testvars],
         .f = function(x) cat_desc_stats(
-          x,return_level = F,singleline=singleline)) %>%
-    map(as_tibble)
+          x,return_level = F,singleline=singleline,
+          ndigit=round_desc)) %>%
+    purrr::map(as_tibble)
 
 
   levels <-
-    map(data[testvars],
+    purrr::map(data[testvars],
         .f = function(x) cat_desc_stats(x,
                                         singleline=singleline)$level) %>%
-    map(as_tibble)
+    purrr::map(as_tibble)
   # freqBYgroup <- apply(data[testvars],2,
   #               FUN = function(x) by(x,data[groupvar],cat_desc_stats,
   #                                    return_level = F)) %>% t()
   freqBYgroup <-
-    map(data[testvars],
+    purrr::map(data[testvars],
         .f = function(x) cat_desc_stats(x,
                                         groupvar=data[[groupvar]],
                                         return_level = F,
+                                        ndigit=round_desc,
                                         singleline=singleline))
 
-  # map(data[testvars],
+  # purrr::map(data[testvars],
   #                  .f = function(x) cat_desc_stats(x,return_level = F))# %>%
   # transpose() %>% as_tibble()
   p <-
-    map2(data[testvars],data[groupvar],
+    purrr::map2(data[testvars],data[groupvar],
          .f = function(x,y) formatP(try(
            fisher.test(x = x,y = y,simulate.p.value = T)$p.value,silent=T),
            mark = mark,pretext = pretext))
@@ -378,7 +380,7 @@ compare2qualvars_f <- function(data,testvars,groupvar,
     future_map(data[testvars],
         .f = function(x) cat_desc_stats(x,
                                         singleline=singleline)$level) %>%
-    map(as_tibble)
+    purrr::map(as_tibble)
   # freqBYgroup <- apply(data[testvars],2,
   #               FUN = function(x) by(x,data[groupvar],cat_desc_stats,
   #                                    return_level = F)) %>% t()
@@ -529,27 +531,27 @@ compare_n_numvars <- function(.data=rawdata,
   t <- .data %>% gather(key = 'Variable',value = 'value',testvars) %>%
     nest(-Variable) %>%
     mutate(Variable=fct_inorder(Variable),
-           desc=map_chr(data,~meansd(.$value,
+           desc=purrr::map_chr(data,~meansd(.$value,
                                      roundDig = round_desc,
                                      range = range,
                                      .n = .n)),
-           desc_grp=map(data,~meansd(.$value,
+           desc_grp=purrr::map(data,~meansd(.$value,
                                    groupvar = .[groupvar],
                                    roundDig = round_desc,
                                    range = range,
                                    .n = .n)) %>%
-             map(~set_names(.x,
+             purrr::map(~set_names(.x,
                             as.character(glevel))) ,
-           lmout=map(data,~lm(value~!!sym(groupvar),data=.x)),
-           aout=map(lmout,anova),
-           ptout=map(data,~pairwise.t.test(.x[['value']],
+           lmout=purrr::map(data,~lm(value~!!sym(groupvar),data=.x)),
+           aout=purrr::map(lmout,anova),
+           ptout=purrr::map(data,~pairwise.t.test(.x[['value']],
                                            g=.x[[groupvar]],
                                            pool.sd = T,
                                            p.adjust.method = 'none')$p.value),
-           p_tout=map(data,~pairwise_t_test(.x[['value']],
+           p_tout=purrr::map(data,~pairwise_t_test(.x[['value']],
                                             .x[[groupvar]])$sign_colwise),
-           p_tout=map(p_tout,~c(.x,''))) %>%
-    map(~set_names(.x,testvars))
+           p_tout=purrr::map(p_tout,~c(.x,''))) %>%
+    purrr::map(~set_names(.x,testvars))
 
   results <- tibble(Variable=fct_inorder(testvars),all=t$desc) %>%
     full_join(reduce(t$desc_grp,rbind) %>%
@@ -559,14 +561,14 @@ compare_n_numvars <- function(.data=rawdata,
                 dplyr::select(Variable, everything()) %>%
                 set_names(c('Variable',
                             paste(groupvar,glevel)))) %>%
-    full_join(map_df(t$aout, 'Pr(>F)') %>% slice(1) %>%
+    full_join(purrr::map_df(t$aout, 'Pr(>F)') %>% slice(1) %>%
                 gather(key='Variable',value = 'pANOVA') %>%
                 mutate(Variable=fct_inorder(Variable),
                        pANOVA=formatP(pANOVA,
                                       ndigits=round_p,
                                       pretext=pretext,
                                       mark=mark) %>% as.vector())) %>%
-    full_join(map_df(t$ptout,~paste(formatP(p.adjust(.x[lower.tri(.x,T)])),
+    full_join(purrr::map_df(t$ptout,~paste(formatP(p.adjust(.x[lower.tri(.x,T)])),
                                     collapse = ';')) %>%
                 gather(key='Variable',value = 'p between groups' )) %>%
     full_join(reduce(t$p_tout,rbind) %>%
@@ -574,11 +576,11 @@ compare_n_numvars <- function(.data=rawdata,
                 as_tibble() %>%
                          mutate(Variable=testvars) %>%
                 set_names(c(paste('sign',glevel),'Variable'))) %>%
-    full_join(map_df(t$ptout,~paste(formatP(p.adjust(.x[,1])),
+    full_join(purrr::map_df(t$ptout,~paste(formatP(p.adjust(.x[,1])),
                                     collapse = ';')) %>%
                 gather(key='Variable',value = 'p vs.ref' ))
   results <- cbind(results,
-                   map2_df(.x = dplyr::select(results,starts_with(groupvar)),
+                   purrr::map2_df(.x = dplyr::select(results,starts_with(groupvar)),
                            .y = dplyr::select(results, starts_with('sign')),
                            .f = paste) %>%
                      rename_all(paste,'fn')) %>%
