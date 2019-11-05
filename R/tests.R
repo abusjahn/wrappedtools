@@ -246,6 +246,7 @@ compare2numvars <- function(data,testvars,groupvar,
     dplyr::select(Group=groupvar, testvars) %>%
     mutate(Group=factor(Group)) %>%
     gather(key = Variable,value = Value,-Group) %>%
+    mutate(Variable=forcats::fct_inorder(Variable)) %>%
     # na.omit() %>%
     as_tibble()
   out <- data_l %>%
