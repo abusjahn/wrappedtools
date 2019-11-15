@@ -4,8 +4,13 @@
 \alias{cortestR}
 \title{correlation matrix with p-values based on cor.test}
 \usage{
-cortestR(cordata, method = "pearson", digits = 3, digits_p = 3,
-  sign = "symbol")
+cortestR(
+  cordata,
+  method = "pearson",
+  digits = 3,
+  digits_p = 3,
+  sign = "symbol"
+)
 }
 \arguments{
 \item{cordata}{data frame or matrix with rawdata.}

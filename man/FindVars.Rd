@@ -4,8 +4,14 @@
 \alias{FindVars}
 \title{Find numeric index and names of column name patterns}
 \usage{
-FindVars(varnames, allnames = colnames(rawdata), exact = F,
-  exclude = NA, casesensitive = T, fixed = F)
+FindVars(
+  varnames,
+  allnames = colnames(rawdata),
+  exact = F,
+  exclude = NA,
+  casesensitive = T,
+  fixed = F
+)
 }
 \arguments{
 \item{varnames}{Vector of pattern to look for.}

@@ -4,8 +4,15 @@
 \alias{meansd}
 \title{Compute mean and sd and put together with the +- symbol.}
 \usage{
-meansd(x, roundDig = 2, drop0 = F, groupvar = NULL, range = F,
-  rangesep = "ARRR", .n = F)
+meansd(
+  x,
+  roundDig = 2,
+  drop0 = F,
+  groupvar = NULL,
+  range = F,
+  rangesep = "ARRR",
+  .n = F
+)
 }
 \arguments{
 \item{x}{Data for computation.}

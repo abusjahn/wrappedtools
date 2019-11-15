@@ -288,7 +288,9 @@ compare2qualvars <- function(data,testvars,groupvar,
                              singleline=F,
                              newline=T,
                              spacer='&nbsp;'){
-  # data[,groupvar] <- factor(data[,groupvar])
+  if(!(is.factor(data %>% pull(groupvar)))) {
+    data %<>% mutate(!!groupvar:=factor(!!sym(groupvar)))
+  }
   freq <-
     purrr::map(data[testvars],
         .f = function(x) cat_desc_stats(
@@ -350,11 +352,9 @@ compare2qualvars <- function(data,testvars,groupvar,
   }
   colnames(out) %<>% str_replace_all(
     c('g1'=paste(groupvar,
-                 levels(data %>%
-                          pull(groupvar))[1]),
+                 data %>% pull(groupvar) %>% levels() %>% first()),
       'g2'=paste(groupvar,
-                 levels(data %>%
-                          pull(groupvar))[2])
+                 data %>% pull(groupvar) %>% levels() %>% last())
     )
   )
   return(out)

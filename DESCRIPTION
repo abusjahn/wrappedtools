@@ -10,4 +10,4 @@ Encoding: UTF-8
 LazyData: true
 Imports: tidyverse,magrittr, boot, knitr, furrr
 Depends: tidyverse, magrittr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.0
