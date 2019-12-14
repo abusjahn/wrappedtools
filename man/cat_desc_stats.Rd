@@ -4,9 +4,17 @@
 \alias{cat_desc_stats}
 \title{Compute absolute and relative frequencies.}
 \usage{
-cat_desc_stats(quelle, trenner = "ARRR", return_level = TRUE,
-  ndigit = 0, groupvar = NULL, singleline = FALSE, percent = TRUE,
-  prettynum = FALSE, german = FALSE)
+cat_desc_stats(
+  quelle,
+  trenner = "ARRR",
+  return_level = TRUE,
+  ndigit = 0,
+  groupvar = NULL,
+  singleline = FALSE,
+  percent = TRUE,
+  prettynum = FALSE,
+  german = FALSE
+)
 }
 \arguments{
 \item{quelle}{Data for computation.}

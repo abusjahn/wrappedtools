@@ -220,13 +220,14 @@ print_kable<-function(t,nrows=30,caption='',
   # require(knitr)
   for (block_i in 1:ceiling(nrow(t)/nrows)) {
     for (col_i in 1:ceiling((ncol(t)-1)/ncols)) {
+      if(block_i+col_i>2){cat('\\newpage\n\n')}
       print(
         knitr::kable(
           t[(1+(block_i-1)*nrows):
               min(nrow(t),block_i*nrows),
             c(1,(2+(col_i-1)*ncols):min((1+col_i*ncols),ncol(t)))],
           row.names = F,
-          caption = paste0(ifelse(block_i+col_i>2,'newpage continued: ',''),
+          caption = paste0(ifelse(block_i+col_i>2,'continued: ',''),
                            caption,
                            '  \n  \n   ')))
       cat('  \n   \n')

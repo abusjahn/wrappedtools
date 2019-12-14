@@ -4,9 +4,17 @@
 \alias{compare2qualvars_f}
 \title{Comparison for columns of factors for 2 groups with furrr}
 \usage{
-compare2qualvars_f(data, testvars, groupvar, round_p = 3,
-  round_desc = 2, pretext = F, mark = F, singleline = F,
-  newline = T)
+compare2qualvars_f(
+  data,
+  testvars,
+  groupvar,
+  round_p = 3,
+  round_desc = 2,
+  pretext = F,
+  mark = F,
+  singleline = F,
+  newline = T
+)
 }
 \description{
 Comparison for columns of factors for 2 groups with furrr

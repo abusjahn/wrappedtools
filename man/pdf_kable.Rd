@@ -4,8 +4,16 @@
 \alias{pdf_kable}
 \title{Enhanced kable with latex}
 \usage{
-pdf_kable(.input, width1 = 6, twidth = 14, tposition = "left",
-  innercaption = NULL, caption = "", foot = NULL, escape = T)
+pdf_kable(
+  .input,
+  width1 = 6,
+  twidth = 14,
+  tposition = "left",
+  innercaption = NULL,
+  caption = "",
+  foot = NULL,
+  escape = T
+)
 }
 \arguments{
 \item{.input}{table to print}

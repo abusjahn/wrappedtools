@@ -160,12 +160,19 @@ prettynum=F,german=F,.n=F) {
 # }
 
 
+#'Compute mean and se and put together with the +- symbol.
+#'
+#'@param x Data for computation.
+#'@param roundDig Number of relevant digits for roundR.
+#'@param drop0 Should trailing zeros be dropped?
+#'@param mult multiplier for se, default 1, can be set to 2 or 1.96 to create confidence intervals
 #'@export
-meanse<-function(x,mult=1) {
+meanse<-function(x,mult=1,roundDig=2,drop0=F) {
   m<-mean(x,na.rm=T)
-  s<-sd(x,na.rm = T)/length(na.omit(x))
-  out<-c(m,m-s*mult,m+s*mult)
-  names(out)<-c('y','ymin','ymax')
+  s<-sd(x,na.rm = T)/sqrt(length(na.omit(x)))
+    ms <- roundR(c(m,s*mult),
+                 level = roundDig,drop0 = drop0)
+    out <- paste(ms[1],ms[2],sep='\u00B1')
   return(out)
 }
 

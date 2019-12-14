@@ -1,3 +1,14 @@
+#'Print graphical representation of a correlation matrix.
+#'
+#'@param cor_mat correlation matrix as produced by cor.
+#'@param method text specifying type of correlation.
+#'@param title plottitle.
+#'@param maxpoint maximum for scale_size_manual, may need adjustment depending on plotsize.
+#'@param textsize for theme text.
+#'@param axistextsize relativ text size for axes.
+#'@param titlesize as you already guessed, relative text size for title.
+#'@param breaklables currently not used, intended for str_wrap.
+#'@param lower_only should only lower triangle be plotted?
 #'@export
 ggcormat<-function(cor_mat, method='Correlation', title='',
                    maxpoint=2.1,textsize=5,axistextsize=2,
@@ -18,12 +29,6 @@ ggcormat<-function(cor_mat, method='Correlation', title='',
     na.omit() %>%
     mutate(Variable1=factor(Variable1,levels=var_order),
            Variable2=factor(Variable2,levels=var_order))
-  # melted_cor_mat<-na.omit(reshape2::melt(cor_mat,
-  #                                        varnames=c('Variable1','Variable2')))
-  # melted_cor_mat$Variable1<-factor(melted_cor_mat$Variable1,
-  #                                  levels=var_order,labels=var_order)
-  # melted_cor_mat$Variable2<-factor(melted_cor_mat$Variable2,
-  #                                  levels=var_order,labels=var_order)
   corvar_count<-nrow(cor_mat)
   if(lower_only){
     triangel<-data.frame(x=c(0,rep(corvar_count+2,2)),
