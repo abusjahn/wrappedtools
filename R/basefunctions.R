@@ -226,7 +226,7 @@ print_kable<-function(t,nrows=30,caption='',
               min(nrow(t),block_i*nrows),
             c(1,(2+(col_i-1)*ncols):min((1+col_i*ncols),ncol(t)))],
           row.names = F,
-          caption = paste0(ifelse(block_i+col_i>2,'newpage continued: ',''),
+          caption = paste0(ifelse(block_i+col_i>2,'\\newpage\n\ncontinued: ',''),
                            caption,
                            '  \n  \n   ')))
       cat('  \n   \n')
