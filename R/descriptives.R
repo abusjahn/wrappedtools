@@ -6,9 +6,15 @@
 #'@param groupvar Optional grouping variable for subgroups.
 #'@param range Should min and max be included in output?
 #'@param rangesep How should min/max be separated from mean+-sd?
-#'@param .n Should n be included in output?
 #'Default ARRR is my shortcut for newline ^p later in Word.
-#'@export
+#'@param .n Should n be included in output?
+#' @examples
+#' # basic usage of meansd
+#' meansd(x=mtcars$wt)
+#' # more elaborate usage of meansd
+#' meansd(x=mtcars$wt, roundDig=3, groupvar=mtcars$gear,
+#' .n=T, range=T,rangesep=" : ")
+#' @export
 meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
                  range=F,rangesep='ARRR',.n=F) {
   out<-''
@@ -225,7 +231,7 @@ median_cl_boot <- function(x, conf = 0.95, type='basic') {
 #'@param ndigit Digits for rounding of relative frequencies.
 #'@param percent logical, add percent-symbol after relative frequencies?
 #'@param prettynum logical, apply prettyNum to results?
-#'@param german logical, should "." and "," be used as bigmark and decimal?
+#'@param german logical, should "." and "," be used as bigmark and decimal? Sets prettynum to TRUE
 #'@export
 cat_desc_stats<-function(quelle,trenner='ARRR',
                          return_level=TRUE,
@@ -257,6 +263,7 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
     colnames(tableout) <- 'abs'
     pt_temp <- round(100*prop.table(tableout),
                      ndigit)
+    if(german) {prettynum <- T}
     if(prettynum){
       pt_temp <- formatC(pt_temp,
                          digits = ndigit,

@@ -212,7 +212,7 @@ FindVars<-function(varnames,allnames=colnames(rawdata),
 #'@param t table to print
 #'@param nrows number of rows (30) before splitting
 #'@param ncols number of columns (100) before splitting
-#'#'@param caption header
+#'@param caption header
 
 #'@export
 print_kable<-function(t,nrows=30,caption='',
