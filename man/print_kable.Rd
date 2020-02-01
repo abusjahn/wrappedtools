@@ -11,9 +11,14 @@ print_kable(t, nrows = 30, caption = "", ncols = 100, ...)
 
 \item{nrows}{number of rows (30) before splitting}
 
+<<<<<<< HEAD
 \item{caption}{header}
 
 \item{ncols}{number of columns (100) before splitting}
+=======
+\item{ncols}{number of columns (100) before splitting
+#'@param caption header}
+>>>>>>> 4dafd7a42e9093a1c3f1d078eaca5e29a7d66907
 }
 \description{
 \code{print_kable} formats tibbles/df's for markdown

@@ -11,4 +11,8 @@ ksnormal(ksdata)
 }
 \description{
 \code{ksnormal} returns list output from ks.test.
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4dafd7a42e9093a1c3f1d078eaca5e29a7d66907

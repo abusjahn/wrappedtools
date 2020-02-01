@@ -2,8 +2,14 @@ Package: wrappedtools
 Type: Package
 Title: Usefull wrappers around commonly used functions
 Version: 0.3.10
-Author: Andreas Busjahn 
-Maintainer: The package maintainer <andreas@busjahn.net>
+Date: 2020-02-01
+Authors@R:
+    person(given = "Andreas",
+           family = "Busjahn",
+           role = c("cre", "aut"),
+           email = "andreas@busjahn.net",
+           comment = c(ORCID = "0000-0001-9650-6919"))
+Maintainer: Andreas Busjahn <andreas@busjahn.net>
 Description: Functions were mainly written for my own daily work or teaching, but may be of use to others as well.
 License: GPL-3
 Encoding: UTF-8

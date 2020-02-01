@@ -6,6 +6,7 @@
 #'@param groupvar Optional grouping variable for subgroups.
 #'@param range Should min and max be included in output?
 #'@param rangesep How should min/max be separated from mean+-sd?
+#'@param .n Should n be included in output?
 #'Default ARRR is my shortcut for newline ^p later in Word.
 #'@param .n Should n be included in output?
 #' @examples
