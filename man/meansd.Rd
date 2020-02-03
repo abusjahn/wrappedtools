@@ -27,9 +27,6 @@ meansd(
 
 \item{rangesep}{How should min/max be separated from mean+-sd?}
 
-\item{.n}{Should n be included in output?
-Default ARRR is my shortcut for newline ^p later in Word.}
-
 \item{.n}{Should n be included in output?}
 }
 \description{

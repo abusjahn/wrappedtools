@@ -11,5 +11,4 @@ subchunkify(g, fig_height = 7, fig_width = 5)
 }
 \description{
 Change figure size within chunk, taken from http://michaeljw.com/blog/post/subchunkify/
-<<<<<<< HEAD
 }

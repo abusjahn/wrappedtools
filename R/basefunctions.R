@@ -8,7 +8,7 @@
 #'@param level A number specifying number of relevant digits to keep.
 #'@param textout A logical if output is converted to text.
 #'@param drop0 A logical if trailing zeros should be dropped
-#' @export
+#'@export
 roundR <- function(roundin,smooth=F,level=2, textout=T,drop0=F){
   if (!is.matrix(roundin))
   {
