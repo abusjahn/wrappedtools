@@ -110,6 +110,7 @@ gg_rtree<-function(rpartdata=rpart_out,miny=NULL,
                    title='',german=F)
 {
   yesno <- c('yes','no')
+  splitlevel=attr(rpartdata,'xlevels')
   if(german){yesno <- c('ja','nein')}
   t<-ggdendro::dendro_data(rpartdata,uniform=T,compress=T)
   if(is.numeric(t$leaf_labels$label)) {
@@ -120,6 +121,11 @@ gg_rtree<-function(rpartdata=rpart_out,miny=NULL,
   }
   t$leaf_labels<-plyr::arrange(t$leaf_labels,x)
   if(is.null(miny)) {miny<-c(min(t$leaf_labels$y),min(t$leaf_labels$y)/2)}
+  for(label_i in seq_along(splitlevel)){
+    t$labels$label[which(str_detect(t$labels$label,names(splitlevel)[label_i]))] %<>% 
+      str_replace_all(c('=a'=str_glue('={splitlevel[[label_i]][1]}'),
+                        '=b'=str_glue('={splitlevel[[label_i]][2]}')))
+  }
   t$labels$label<-enc2utf8(as.character(t$labels$label))
   t$labels$label<-stringr::str_replace(pattern='>=',replacement=' \u2265 ',
                                        string=gsub('<',' <',t$labels$label))
