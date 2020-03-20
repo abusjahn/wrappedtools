@@ -9,6 +9,7 @@
 #'@param .n Should n be included in output?
 #'Default ARRR is my shortcut for newline ^p later in Word.
 #'@param .n Should n be included in output?
+#'@param .german logical, should "." and "," be used as bigmark and decimal?
 #' @examples
 #' # basic usage of meansd
 #' meansd(x=mtcars$wt)
@@ -17,7 +18,7 @@
 #' .n=T, range=T,rangesep=" : ")
 #' @export
 meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
-                 range=F,rangesep='ARRR',.n=F) {
+                 range=F,rangesep='ARRR',.n=F, .german=F) {
   out<-''
   if(length(na.omit(x))>0) {
     if(is.null(groupvar)) {
@@ -27,7 +28,7 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
                  min(x,na.rm = T),
                  max(x,na.rm = T)),
                ncol=4,byrow = F),level=roundDig,
-        drop0=drop0),
+        drop0=drop0,.german=.german),
         length(na.omit(x)))
     } else {
       meansd<- matrix(c(by(x,groupvar,mean,na.rm=T),
@@ -35,8 +36,7 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
                         by(x,groupvar,min,na.rm=T),
                         by(x,groupvar,max,na.rm=T)),
                       ncol=4,byrow=F)%>% na_if(Inf) %>% na_if(-Inf) %>%
-      roundR(level=roundDig,
-        drop0=drop0) %>%
+      roundR(level=roundDig, drop0=drop0,.german=.german) %>%
         cbind(by(x,groupvar,function(x){length(na.omit(x))}))
     }
     out<-paste(meansd[,1],meansd[,2],sep='\u00B1')
@@ -67,18 +67,18 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
 #'@param rangearrow What is put between min -> max?
 #'Default ARRR is my shortcut for newline ^p later in Word.
 #'#'@param prettynum logical, apply prettyNum to results?
-#'@param german logical, should "." and "," be used as bigmark and decimal?
+#'@param .german logical, should "." and "," be used as bigmark and decimal?
 #'@param n Should n be included in output?
 
 #'@export
 median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
-qtype=8,roundDig=2,drop0=F,
+qtype=8,roundDig=2,drop0=FALSE,
 groupvar=NULL,range=F,rangesep='ARRR',
 rangearrow=' -> ',
-prettynum=F,german=F,.n=F) {
+prettynum=FALSE,.german=FALSE,.n=FALSE) {
   out <- ' '
-  bigmark <- ifelse(german,".",",")
-  decimal <- ifelse(german,",",".")
+  bigmark <- ifelse(.german,".",",")
+  decimal <- ifelse(.german,",",".")
   if(length(na.omit(x))>=1) {
     if(is.null(groupvar)) {
       quart<-matrix(
@@ -97,16 +97,16 @@ prettynum=F,german=F,.n=F) {
                        x,groupvar,function(x){length(na.omit(x))})))
     }
     if(is.null(nround)) {
-      quart[,-ncol(quart)]<-roundR(quart[,-ncol(quart)],
-                                   level=roundDig,drop0=drop0)
+      quart[,]<-roundR(quart[,],
+                                   level=roundDig,drop0=drop0,.german = .german)
       if(prettynum){
-        quart <- apply(quart,1:2,function(x){
-          formatC(as.numeric(x),
-                  digits = roundDig-1,
-                  format = 'f',
-                  big.mark = bigmark,
-                  decimal.mark = decimal,
-                  preserve.width = 'common',drop0trailing = F)})
+      #   quart <- apply(quart,1:2,function(x){
+      #     formatC(as.numeric(x),
+      #             digits = roundDig-1,
+      #             format = 'f',
+      #             big.mark = bigmark,
+      #             decimal.mark = decimal,
+      #             preserve.width = 'common',drop0trailing = F)})
       }
     } else {
       quart[,-ncol(quart)]<-round(quart[,-ncol(quart)],nround)
@@ -232,7 +232,7 @@ median_cl_boot <- function(x, conf = 0.95, type='basic') {
 #'@param ndigit Digits for rounding of relative frequencies.
 #'@param percent logical, add percent-symbol after relative frequencies?
 #'@param prettynum logical, apply prettyNum to results?
-#'@param german logical, should "." and "," be used as bigmark and decimal? Sets prettynum to TRUE
+#'@param .german logical, should "." and "," be used as bigmark and decimal? Sets prettynum to TRUE
 #'@export
 cat_desc_stats<-function(quelle,trenner='ARRR',
                          return_level=TRUE,
@@ -241,10 +241,10 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
                          singleline=FALSE,
                          percent=TRUE,
                          prettynum=FALSE,
-                         german=FALSE) {
+                         .german=FALSE) {
   percent <- ifelse(percent,'%','')
-  bigmark <- ifelse(german,".",",")
-  decimal <- ifelse(german,",",".")
+  bigmark <- ifelse(.german,".",",")
+  decimal <- ifelse(.german,",",".")
   if(!is.factor(quelle)) {
     # if(is.numeric(quelle)) {
     #   quelle<-factor(quelle,
@@ -264,7 +264,7 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
     colnames(tableout) <- 'abs'
     pt_temp <- round(100*prop.table(tableout),
                      ndigit)
-    if(german) {prettynum <- T}
+    if(.german) {prettynum <- T}
     if(prettynum){
       pt_temp <- formatC(pt_temp,
                          digits = ndigit,

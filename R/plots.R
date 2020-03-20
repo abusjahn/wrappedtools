@@ -47,7 +47,7 @@ ggcormat<-function(cor_mat, method='Correlation', title='',
   if(is.null(breaklabels)) {
     breaklabels <- levels(melted_cor_mat$Variable1)
   }
-
+  
   ggheatmap<-ggplot(melted_cor_mat,
                     aes(Variable2, Variable1))+
     #geom_tile(color = "white")+
@@ -83,9 +83,9 @@ ggcormat<-function(cor_mat, method='Correlation', title='',
     scale_x_discrete(limits = levels(melted_cor_mat$Variable1),
                      labels=breaklabels)+
     ggtitle(title)
-
-
-
+  
+  
+  
   if(lower_only){
     ggheatmap <- ggheatmap+
       guides(color = guide_colorbar(barwidth = 7, barheight = 1,
@@ -100,7 +100,7 @@ ggcormat<-function(cor_mat, method='Correlation', title='',
       theme(legend.justification = c(1, 1),
             legend.direction = "horizontal",
             legend.position = c(1, .99))
-
+    
   }
   return(ggheatmap)
 }
@@ -141,7 +141,7 @@ gg_rtree<-function(rpartdata=rpart_out,miny=NULL,
       t$segments$y[i]<-t$segments$yend[i]
       t$segments$yend[i]<-temp
     }
-
+    
   }
   for(i in 1:nrow(t$leaf_labels)) {
     t$segments$y[which(t$segments$x==t$leaf_labels$x[i] &
@@ -158,7 +158,7 @@ gg_rtree<-function(rpartdata=rpart_out,miny=NULL,
   t$no<-t$segments[which(t$segments$y==t$segments$yend),c(1,3:4)]
   colnames(t$no)[3]<-'x'
   t$no$label<-yesno[2]
-
+  
   # t$leaf_labels$y<-c(min(t$leaf_labels$y),0.05)
   tree<-ggplot(t$segments)+
     ggtitle(title)+
@@ -181,3 +181,48 @@ gg_rtree<-function(rpartdata=rpart_out,miny=NULL,
     theme(plot.title = element_text(hjust = 0.5,size=rel(2)))
   return(tree)
 }
+
+#' #'Create alluvialplot.
+#' #'\code{alluvialplot} returns a ggplot object.
+#' #'@param  .fill Variable in .data defining fill color.
+#' #'@export
+#' alluvialplot<-function(.data,.x,.label=NULL,.fill=NULL,
+#'                        .title=NULL,.gridrow=NULL,.gridcol=NULL)
+#' {
+#'   if(is.null(.label)){
+#'     .label <- .x
+#'   }
+#'   plottmp <- eval(parse(text=paste0(
+#'     'ggplot(data = .data,',
+#'     'aes(y=n,',
+#'     paste0('axis',1:length(.x),'=',.x,collapse = ','),
+#'     '))')))+
+#'     ggalluvial::geom_alluvium(aes_string(fill=.fill))+
+#'     ggalluvial::geom_stratum(width = 1/3, fill = "darkgrey", color = "lightgrey") +
+#'     geom_label(stat = "stratum", infer.label = TRUE) +
+#'     scale_x_discrete(limits = .label,
+#'                      expand = c(.1, .05)) +
+#'     # scale_fill_viridis_d(option = 'D',guide=F)+
+#'     scale_fill_manual(values = rev(ampel),guide=F)+
+#'     scale_y_continuous()+
+#'     theme(panel.grid.major.x = element_blank())
+#'   if(!is.null(.title)) {
+#'     plottmp  <- plottmp +
+#'       ggtitle(.title)
+#'   }
+#'   if(!is.null(.gridrow)){
+#'     plottmp <- plottmp  +
+#'       facet_grid(rows=.gridrow, cols = NULL,scales = 'free', 
+#'                  labeller = label_both, switch = 'y')
+#'   }
+#'   return(plottmp)
+#' }
+#' 
+#' 
+#' #'Print bla.
+#' #'@param x nüscht.
+#' #'@export
+#' bla <- function(x)
+#' {
+#'   print('bla')
+#' }

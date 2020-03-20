@@ -8,10 +8,13 @@
 #'@param level A number specifying number of relevant digits to keep.
 #'@param textout A logical if output is converted to text.
 #'@param drop0 A logical if trailing zeros should be dropped
+#'@param .german A logical if german numbers should be reported
 #'@export
-roundR <- function(roundin,smooth=F,level=2, textout=T,drop0=F){
-  if (!is.matrix(roundin))
-  {
+roundR <- function(roundin,smooth=F,level=2, textout=T,drop0=F, .german=F){
+  if(.german){textout <- T}
+  decimalmark <- ifelse(.german,',','.')
+  bigmark <- ifelse(.german,'.',',')
+  if (!is.matrix(roundin))  {
     roundin<-matrix(as.numeric(roundin))
   }
   roundout<-roundin
@@ -38,7 +41,9 @@ roundR <- function(roundin,smooth=F,level=2, textout=T,drop0=F){
   if(textout==T) {
     roundout[which(!is.na(roundout))]<-
       formatC(roundout[which(!is.na(roundout))],format='f',
-              digits=roundlevel,drop0trailing=drop0)
+              digits=roundlevel,drop0trailing=drop0,
+              big.mark = bigmark,
+              decimal.mark = decimalmark)
   }
   return(roundout)
 }
@@ -351,4 +356,59 @@ subchunkify <- function(g, fig_height=7, fig_width=5) {
                       ")
 
   cat(knitr::knit(text = knitr::knit_expand(text = sub_chunk), quiet = TRUE))
+}
+
+
+#'Create alluvialplot.
+#'
+#'\code{alluvialplot} returns a ggplot object.
+#'@param  .fill Variable in .data defining fill color.
+#'@export
+alluvialplot<-function(.data,.x,.label=NULL,.fill=NULL,
+                       .title=NULL,.gridrow=NULL,.gridcol=NULL,
+                       .fillcollors=NULL)
+{
+  if(is.null(.label)){
+    .label <- .x
+  }
+  plottmp <- eval(parse(text=paste0(
+    'ggplot(data = .data,',
+    'aes(y=n,',
+    paste0('axis',1:length(.x),'=',.x,collapse = ','),
+    '))')))+
+    ggalluvial::geom_alluvium(aes_string(fill=.fill))+
+    ggalluvial::geom_stratum(width = 1/3, fill = "darkgrey", color = "lightgrey") +
+    geom_label(stat = "stratum", infer.label = TRUE) +
+    scale_x_discrete(limits = .label,
+                     expand = c(.1, .05)) +
+    # scale_fill_viridis_d(option = 'D',guide=F)+
+    scale_y_continuous()+
+    theme(panel.grid.major.x = element_blank())
+  if(!is.null(.title)) {
+    plottmp  <- plottmp +
+      ggtitle(.title)
+  }
+
+  if(!is.null(.fillcolors)){
+    plottmp <- plottmp+
+      scale_fill_manual(values = .fillcolors,guide=F)
+  }
+    if(!is.null(.gridrow)){
+    plottmp <- plottmp  +
+      facet_grid(rows=.gridrow, cols = NULL,scales = 'free', 
+                 labeller = label_both, switch = 'y')
+  }
+  return(plottmp)
+}
+
+
+#'Print bla.
+#'
+#'\code(bla} retuns text.
+#'
+#'@param x nüscht.
+#'@export
+bla <- function(x)
+{
+  print('bla')
 }

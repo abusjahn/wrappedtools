@@ -517,11 +517,18 @@ pairwise_t_test<-function(dep_var,indep_var,adjmethod='fdr',plevel=.05,
 
 #'@export
 compare_n_numvars <- function(.data=rawdata,
-                              testvars,groupvar,
+                              testvars,groupvar,# gaussian,
                               round_desc=2,range=F,
                               rangesep='ARRR',
                               pretext=F,mark=F,round_p=3,
                               .n=F) {
+  # if(gaussian){
+  #   desc <- wrappedtools::meansd
+  #   # grptest <- lm
+  # } else {
+  #   desc <- wrappedtools::median_quart
+  #   # grptest <- kruskal.test
+  # }
   if(!is.factor(.data[[groupvar]]) |
      is.ordered(.data[[groupvar]])){
     .data[[groupvar]] <- factor(.data[[groupvar]],
@@ -530,7 +537,7 @@ compare_n_numvars <- function(.data=rawdata,
   glevel <- forcats::fct_inorder(levels(.data[[groupvar]]))
   .data <- dplyr::select(.data,testvars,groupvar)
   t <- .data %>% gather(key = 'Variable',value = 'value',testvars) %>%
-    nest(-Variable) %>%
+    nest(data=c(gear,value)) %>%
     mutate(Variable=fct_inorder(Variable),
            desc=purrr::map_chr(data,~meansd(.$value,
                                      roundDig = round_desc,
