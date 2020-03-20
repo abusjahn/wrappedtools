@@ -1,8 +1,8 @@
 Package: wrappedtools
 Type: Package
 Title: Usefull wrappers around commonly used functions
-Version: 0.3.12
-Date: 2020-03-12
+Version: 0.3.13
+Date: 2020-03-20
 Authors@R:
     person(given = "Andreas",
            family = "Busjahn",
@@ -14,7 +14,7 @@ Description: Functions were mainly written for my own daily work or teaching, bu
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: boot, knitr, furrr, tidyverse,ggalluvial
-Depends: magrittr, tidyverse
-Exports: magrittr
-RoxygenNote: 7.0.2
+Imports: boot, knitr, furrr, tidyverse,ggalluvial, magrittr
+Depends: 
+Exports: magrittr,tidyverse
+RoxygenNote: 7.1.0

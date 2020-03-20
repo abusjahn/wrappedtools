@@ -4,7 +4,7 @@
 \alias{roundR}
 \title{Automatic rounding to a reasonable length, based on largest number}
 \usage{
-roundR(roundin, smooth = F, level = 2, textout = T, drop0 = F)
+roundR(roundin, smooth = F, level = 2, textout = T, drop0 = F, .german = F)
 }
 \arguments{
 \item{roundin}{A vector or matrix of numbers.}
@@ -17,6 +17,8 @@ roundR(roundin, smooth = F, level = 2, textout = T, drop0 = F)
 \item{textout}{A logical if output is converted to text.}
 
 \item{drop0}{A logical if trailing zeros should be dropped}
+
+\item{.german}{A logical if german numbers should be reported}
 }
 \description{
 \code{roundR} returns a matrix of rounded numbers.

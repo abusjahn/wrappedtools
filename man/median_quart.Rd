@@ -10,14 +10,14 @@ median_quart(
   probs = c(0.25, 0.5, 0.75),
   qtype = 8,
   roundDig = 2,
-  drop0 = F,
+  drop0 = FALSE,
   groupvar = NULL,
   range = F,
   rangesep = "ARRR",
   rangearrow = " -> ",
-  prettynum = F,
-  german = F,
-  .n = F
+  prettynum = FALSE,
+  .german = FALSE,
+  .n = FALSE
 )
 }
 \arguments{
@@ -43,7 +43,7 @@ median_quart(
 Default ARRR is my shortcut for newline ^p later in Word.
 #'@param prettynum logical, apply prettyNum to results?}
 
-\item{german}{logical, should "." and "," be used as bigmark and decimal?}
+\item{.german}{logical, should "." and "," be used as bigmark and decimal?}
 
 \item{n}{Should n be included in output?}
 }

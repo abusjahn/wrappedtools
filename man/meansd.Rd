@@ -11,7 +11,8 @@ meansd(
   groupvar = NULL,
   range = F,
   rangesep = "ARRR",
-  .n = F
+  .n = F,
+  .german = F
 )
 }
 \arguments{
@@ -28,14 +29,15 @@ meansd(
 \item{rangesep}{How should min/max be separated from mean+-sd?}
 
 \item{.n}{Should n be included in output?}
+
+\item{.german}{logical, should "." and "," be used as bigmark and decimal?}
 }
 \description{
 Compute mean and sd and put together with the +- symbol.
 }
 \examples{
 # basic usage of meansd
+\dontrun{
 meansd(x=mtcars$wt)
-# more elaborate usage of meansd
-meansd(x=mtcars$wt, roundDig=3, groupvar=mtcars$gear,
-.n=T, range=T,rangesep=" : ")
+}
 }

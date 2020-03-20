@@ -182,47 +182,46 @@ gg_rtree<-function(rpartdata=rpart_out,miny=NULL,
   return(tree)
 }
 
-#' #'Create alluvialplot.
-#' #'\code{alluvialplot} returns a ggplot object.
-#' #'@param  .fill Variable in .data defining fill color.
-#' #'@export
-#' alluvialplot<-function(.data,.x,.label=NULL,.fill=NULL,
-#'                        .title=NULL,.gridrow=NULL,.gridcol=NULL)
-#' {
-#'   if(is.null(.label)){
-#'     .label <- .x
-#'   }
-#'   plottmp <- eval(parse(text=paste0(
-#'     'ggplot(data = .data,',
-#'     'aes(y=n,',
-#'     paste0('axis',1:length(.x),'=',.x,collapse = ','),
-#'     '))')))+
-#'     ggalluvial::geom_alluvium(aes_string(fill=.fill))+
-#'     ggalluvial::geom_stratum(width = 1/3, fill = "darkgrey", color = "lightgrey") +
-#'     geom_label(stat = "stratum", infer.label = TRUE) +
-#'     scale_x_discrete(limits = .label,
-#'                      expand = c(.1, .05)) +
-#'     # scale_fill_viridis_d(option = 'D',guide=F)+
-#'     scale_fill_manual(values = rev(ampel),guide=F)+
-#'     scale_y_continuous()+
-#'     theme(panel.grid.major.x = element_blank())
-#'   if(!is.null(.title)) {
-#'     plottmp  <- plottmp +
-#'       ggtitle(.title)
-#'   }
-#'   if(!is.null(.gridrow)){
-#'     plottmp <- plottmp  +
-#'       facet_grid(rows=.gridrow, cols = NULL,scales = 'free', 
-#'                  labeller = label_both, switch = 'y')
-#'   }
-#'   return(plottmp)
-#' }
-#' 
-#' 
-#' #'Print bla.
-#' #'@param x nüscht.
-#' #'@export
-#' bla <- function(x)
-#' {
-#'   print('bla')
-#' }
+
+#'Create alluvialplot.
+#'
+#'\code{alluvialplot} returns a ggplot object.
+#'@param  .fill Variable in .data defining fill color.
+#'@export
+alluvialplot<-function(.data,.x,.label=NULL,.fill=NULL,
+                       .title=NULL,.gridrow=NULL,.gridcol=NULL,
+                       .fillcolors=NULL)
+{
+  if(is.null(.label)){
+    .label <- .x
+  }
+  plottmp <- eval(parse(text=paste0(
+    'ggplot(data = .data,',
+    'aes(y=n,',
+    paste0('axis',1:length(.x),'=',.x,collapse = ','),
+    '))')))+
+    ggalluvial::geom_alluvium(aes_string(fill=.fill))+
+    ggalluvial::geom_stratum(width = 1/3, fill = "darkgrey", color = "lightgrey") +
+    geom_label(stat = "stratum", infer.label = TRUE) +
+    scale_x_discrete(limits = .label,
+                     expand = c(.1, .05)) +
+    # scale_fill_viridis_d(option = 'D',guide=F)+
+    scale_y_continuous()+
+    theme(panel.grid.major.x = element_blank())
+  if(!is.null(.title)) {
+    plottmp  <- plottmp +
+      ggtitle(.title)
+  }
+  
+  if(!is.null(.fillcolors)){
+    plottmp <- plottmp+
+      scale_fill_manual(values = .fillcolors,guide=F)
+  }
+  if(!is.null(.gridrow)){
+    plottmp <- plottmp  +
+      facet_grid(rows=.gridrow, cols = NULL,scales = 'free', 
+                 labeller = label_both, switch = 'y')
+  }
+  return(plottmp)
+}
+

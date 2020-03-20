@@ -10,12 +10,11 @@
 #'Default ARRR is my shortcut for newline ^p later in Word.
 #'@param .n Should n be included in output?
 #'@param .german logical, should "." and "," be used as bigmark and decimal?
-#' @examples
+#'@examples
 #' # basic usage of meansd
+#' \dontrun{
 #' meansd(x=mtcars$wt)
-#' # more elaborate usage of meansd
-#' meansd(x=mtcars$wt, roundDig=3, groupvar=mtcars$gear,
-#' .n=T, range=T,rangesep=" : ")
+#' }
 #' @export
 meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
                  range=F,rangesep='ARRR',.n=F, .german=F) {

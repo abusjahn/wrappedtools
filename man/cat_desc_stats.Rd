@@ -13,7 +13,7 @@ cat_desc_stats(
   singleline = FALSE,
   percent = TRUE,
   prettynum = FALSE,
-  german = FALSE
+  .german = FALSE
 )
 }
 \arguments{
@@ -29,7 +29,7 @@ cat_desc_stats(
 
 \item{prettynum}{logical, apply prettyNum to results?}
 
-\item{german}{logical, should "." and "," be used as bigmark and decimal? Sets prettynum to TRUE}
+\item{.german}{logical, should "." and "," be used as bigmark and decimal? Sets prettynum to TRUE}
 }
 \description{
 Compute absolute and relative frequencies.
