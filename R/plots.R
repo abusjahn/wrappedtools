@@ -216,6 +216,9 @@ alluvialplot<-function(.data,.x,.label=NULL,.fill=NULL,
   if(!is.null(.fillcolors)){
     plottmp <- plottmp+
       scale_fill_manual(values = .fillcolors,guide=F)
+  } else {
+    plottmp <- plottmp+
+      scale_fill_viridis_d(option = 'D',guide=F)
   }
   if(!is.null(.gridrow)){
     plottmp <- plottmp  +

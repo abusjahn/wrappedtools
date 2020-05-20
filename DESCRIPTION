@@ -15,6 +15,6 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: boot, knitr, furrr, tidyverse,ggalluvial, magrittr
-Depends: 
+Depends: tidyverse, magrittr
 Exports: magrittr,tidyverse
 RoxygenNote: 7.1.0
