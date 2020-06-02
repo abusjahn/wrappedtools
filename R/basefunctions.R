@@ -66,6 +66,7 @@ markSign<-function(SignIn,plabel=c('n.s.','+','*','**','***')) {
     if (SignIn<=0.001) {SignOut<-plabel[5]}
   }
   return(SignOut)
+  # cut(.1,c(0,.001,.01,.05,.1,1),c('***','**','*','+','n.s.'))
 }
 
 #'Re-format p-values
