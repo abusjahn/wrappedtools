@@ -4,7 +4,7 @@
 \alias{formatP}
 \title{Re-format p-values}
 \usage{
-formatP(pIn, ndigits = 3, text = T, pretext = F, mark = F, decimal.mark = ".")
+formatP(pIn, ndigits = 3, text = T, pretext = F, mark = F, german_num = F)
 }
 \arguments{
 \item{pIn}{A numeric vector or matrix with p-values.}

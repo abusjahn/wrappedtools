@@ -12,6 +12,7 @@ compare2numvars(
   round_p = 3,
   round_desc = 2,
   range = F,
+  rangesep = " ",
   pretext = F,
   mark = F,
   n = F,
@@ -31,7 +32,8 @@ compare2numvars(
 
 \item{round_desc}{number of significant digits for rounding of descriptive stats}
 
-\item{range}{include min/max?}
+\item{range}{include min/max?
+qparam rangesep test between statistics and range or other elements}
 
 \item{pretext}{for function formatP}
 

@@ -224,6 +224,7 @@ t_var_test <- function(data,formula,cutoff=.05){
 #'@param round_p level for rounding p-value
 #'@param round_desc number of significant digits for rounding of descriptive stats
 #'@param range include min/max?
+#'qparam rangesep test between statistics and range or other elements  
 #'@param pretext for function formatP
 #'@param mark for function formatP
 #'@param n create columns for n per group?
@@ -231,7 +232,10 @@ t_var_test <- function(data,formula,cutoff=.05){
 #'@export
 compare2numvars <- function(data,testvars,groupvar,
                             gaussian,round_p=3,round_desc=2,
-                            range=F,pretext=F,mark=F,n=F,.n=F){
+                            range=F,
+                            rangesep=' ',
+                            pretext=F,mark=F,n=F,.n=F){
+  options(warn=-1)
   if(gaussian){
     DESC <- meansd
     COMP <- t_var_test
@@ -254,10 +258,13 @@ compare2numvars <- function(data,testvars,groupvar,
     do(summarise(.data = .,
                  n_groups=paste(table(.$Group[which(!is.na(.$Value))]),collapse=':'),
                  desc_all=DESC(.$Value,
-                               roundDig = round_desc,range=range,.n=.n),
+                               roundDig = round_desc,
+                               range=range,rangesep=rangesep,
+                               .n=.n),
                  desc_groups=paste(try(
                    DESC(x = .$Value,groupvar = .$Group,
-                        roundDig = round_desc, range=range,.n=.n),
+                        roundDig = round_desc, range=range,
+                        rangesep=rangesep, .n=.n),
                    silent = T),
                    collapse = ':'),
                  p = formatP(try(
@@ -277,6 +284,7 @@ compare2numvars <- function(data,testvars,groupvar,
     if(n==F){
       out <- dplyr::select(out,-n,-starts_with('n '))
     }
+    options(warn=0)
     return(out)
 }
 #'Comparison for columns of factors for 2 groups

@@ -83,7 +83,8 @@ markSign<-function(SignIn,plabel=c('n.s.','+','*','**','***')) {
 #'@param german_num change dot (default) to comma?
 #'@export
 formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F,
-                  decimal.mark='.') {
+                  german_num=F) {
+  decimal.mark <- ifelse(german_num,',','.')
   formatp<-''
   if(is.numeric(pIn)) {
     if (!is.matrix(pIn)) {
