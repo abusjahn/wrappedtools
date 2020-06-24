@@ -1,9 +1,9 @@
 #'@export
 pairwise_fisher_test <- function(x,group,adjmethod='fdr',plevel=.05,
-                                 symbols=c('b','c','d','e','f','g'),
+                                 symbols=letters[-1],#c('b','c','d','e','f','g'),
                                  ref=F) {
-  if (!is.factor(group))
-  {group<-factor(group)}
+  if (!is.factor(group)) {
+    group<-factor(group)}
   ngroups<-length(levels(group))
   pft_data<-data.frame(x,group)
   pft_data<-na.omit(pft_data)
@@ -40,7 +40,7 @@ pairwise_fisher_test <- function(x,group,adjmethod='fdr',plevel=.05,
     }
   } else {
     p_adj<-p.adjust(as.vector(p_unadj[,1]),method=adjmethod)
-    sign_colwise<-sapply(p_adj,markSign)
+    sign_colwise<-markSign(p_adj)#sapply(p_adj,markSign)
   }
   return(list(method=adjmethod,
               p.value=p_adj,
