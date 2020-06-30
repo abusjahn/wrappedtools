@@ -10,7 +10,8 @@
 #'@param drop0 A logical if trailing zeros should be dropped
 #'@param .german A logical if german numbers should be reported
 #'@export
-roundR <- function(roundin,smooth=F,level=2, textout=T,drop0=F, .german=F){
+roundR <- function(roundin,smooth=F,level=2, 
+                   textout=T,drop0=F, .german=F){
   if(.german){textout <- T}
   decimalmark <- ifelse(.german,',','.')
   bigmark <- ifelse(.german,'.',',')
@@ -19,13 +20,17 @@ roundR <- function(roundin,smooth=F,level=2, textout=T,drop0=F, .german=F){
   }
   roundout<-roundin
   roundlevel<-0
-  if(min(roundin,na.rm=T)!=0 | max(roundin,na.rm=T)!=0) {
-    roundlevel<-round(max(0,level-log10(max(abs(roundin),
-                                            na.rm=T))))
-  }
-  roundout[which(!is.na(roundout))]<-
-    round(roundin[which(!is.na(roundin))],roundlevel)
-  # if(all((roundin[which(!is.na(roundin))]-roundout[which(!is.na(roundout))])==0))
+  # if(.strict){
+  #   roundlevel<-level
+  #   roundout <- signif(roundin,digits = level)
+  #   } else {
+      if(min(roundin,na.rm=T)!=0 | max(roundin,na.rm=T)!=0) {
+        roundlevel<-round(max(0,level-log10(max(abs(roundin),
+                                                na.rm=T))))
+      }
+      roundout[which(!is.na(roundout))]<-
+        round(roundin[which(!is.na(roundin))],roundlevel)
+    # }     # if(all((roundin[which(!is.na(roundin))]-roundout[which(!is.na(roundout))])==0))
   # {
   #   roundlevel<-0
   #   roundout[which(!is.na(roundout))]<-
@@ -38,7 +43,7 @@ roundR <- function(roundin,smooth=F,level=2, textout=T,drop0=F, .german=F){
           10^round(log10(max(abs(roundout),na.rm=T))-level))*
       10^round(log10(max(abs(roundout),na.rm=T))-level)
   }
-  if(textout==T) {
+  if(textout) {
     roundout[which(!is.na(roundout))]<-
       formatC(roundout[which(!is.na(roundout))],format='f',
               digits=roundlevel,drop0trailing=drop0,
@@ -57,14 +62,16 @@ roundR <- function(roundin,smooth=F,level=2, textout=T,drop0=F, .german=F){
 #'@export
 markSign<-function(SignIn,plabel=c('n.s.','+','*','**','***')) {
   SignIn <- as.numeric(SignIn)
-  SignOut<-' '
-  if (!is.na(SignIn)) {
-    SignOut<-plabel[1]
-    if (SignIn<=0.1) {SignOut<-plabel[2]}
-    if (SignIn<=0.0501) {SignOut<-plabel[3]}
-    if (SignIn<=0.01) {SignOut<-plabel[4]}
-    if (SignIn<=0.001) {SignOut<-plabel[5]}
-  }
+  SignOut <- cut(SignIn,breaks = c(0,.001,.01,.05,.1,1),
+      labels = rev(plabel))
+  # SignOut<-' '
+  # if (!is.na(SignIn)) {
+  #   SignOut<-plabel[1]
+  #   if (SignIn<=0.1) {SignOut<-plabel[2]}
+  #   if (SignIn<=0.0501) {SignOut<-plabel[3]}
+  #   if (SignIn<=0.01) {SignOut<-plabel[4]}
+  #   if (SignIn<=0.001) {SignOut<-plabel[5]}
+  # }
   return(SignOut)
   # cut(.1,c(0,.001,.01,.05,.1,1),c('***','**','*','+','n.s.'))
 }

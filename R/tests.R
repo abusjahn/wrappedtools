@@ -247,7 +247,8 @@ compare2numvars <- function(data,testvars,groupvar,
   # pnames <- names(formals(COMP))
 
   data_l <- data %>%
-    dplyr::select(Group=groupvar, testvars) %>%
+    dplyr::select(Group=all_of(groupvar), 
+                  all_of(testvars)) %>%
     mutate(Group=factor(Group)) %>%
     gather(key = Variable,value = Value,-Group) %>%
     mutate(Variable=forcats::fct_inorder(Variable)) %>%
@@ -270,7 +271,8 @@ compare2numvars <- function(data,testvars,groupvar,
                  p = formatP(try(
                    COMP(data=.,formula = Value~Group)$p.value,
                    silent = T),
-                   ndigits = round_p,pretext = pretext, mark=mark)))
+                   ndigits = round_p,pretext = pretext, 
+                   mark=mark) %>% as.character()))
     out$desc_groups[!str_detect(out$desc_groups,':')] <- ' : '
     out <- separate(out,col = desc_groups,
              into = glue::glue('{groupvar} {levels(data_l$Group)}'),
@@ -543,9 +545,10 @@ compare_n_numvars <- function(.data=rawdata,
                                 ordered = F)
   }
   glevel <- forcats::fct_inorder(levels(.data[[groupvar]]))
-  .data <- dplyr::select(.data,testvars,groupvar)
+  .data <- dplyr::select(.data,all_of(testvars),
+                         all_of(groupvar))
   t <- .data %>% gather(key = 'Variable',value = 'value',testvars) %>%
-    nest(data=c(gear,value)) %>%
+    nest(data=c(groupvar,value)) %>%
     mutate(Variable=fct_inorder(Variable),
            desc=purrr::map_chr(data,~meansd(.$value,
                                      roundDig = round_desc,

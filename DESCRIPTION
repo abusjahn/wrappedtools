@@ -17,4 +17,4 @@ LazyData: true
 Imports: boot, knitr, furrr, tidyverse,ggalluvial, magrittr
 Depends: tidyverse, magrittr
 Exports: magrittr,tidyverse
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

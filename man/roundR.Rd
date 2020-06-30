@@ -18,7 +18,7 @@ roundR(roundin, smooth = F, level = 2, textout = T, drop0 = F, .german = F)
 
 \item{drop0}{A logical if trailing zeros should be dropped}
 
-\item{.german}{A logical if german numbers should be reported}
+\item{.german}{A logical if german numbers should be reported,}
 }
 \description{
 \code{roundR} returns a matrix of rounded numbers.
