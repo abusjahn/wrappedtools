@@ -458,7 +458,7 @@ pairwise_wilcox_test <-
     if (!is.factor(strat_var)) {
       strat_var<-factor(strat_var)
       }
-    pwt_data<-data_frame(dep_var,
+    pwt_data<-tibble(dep_var,
                          indep_var=as.numeric(indep_var),
                          strat_var)
     p_unadj<-matrix(nrow=ngroups-1,ncol=ngroups-1,
@@ -471,7 +471,7 @@ pairwise_wilcox_test <-
         #print(tempdata)
         if (length(levels(as.factor(tempdata$dep_var)))>1) {
           p_unadj[secondgroup-1,firstgroup]<-
-            pvalue(wilcox_test(tempdata$dep_var~tempdata$indep_var |
+            coin::pvalue(coin::wilcox_test(tempdata$dep_var~tempdata$indep_var |
                                  tempdata$strat_var,
                                distribution=distr))
         }

@@ -62,7 +62,7 @@ roundR <- function(roundin,smooth=F,level=2,
 #'@export
 markSign<-function(SignIn,plabel=c('n.s.','+','*','**','***')) {
   SignIn <- as.numeric(SignIn)
-  SignOut <- cut(SignIn,breaks = c(0,.001,.01,.05,.1,1),
+  SignOut <- cut(SignIn,breaks = c(-Inf,.001,.01,.05,.1,1),
       labels = rev(plabel))
   # SignOut<-' '
   # if (!is.na(SignIn)) {
