@@ -96,7 +96,7 @@ prettynum=FALSE,.german=FALSE,.n=FALSE) {
                        x,groupvar,function(x){length(na.omit(x))})))
     }
     if(is.null(nround)) {
-      quart[,]<-roundR(quart[,],
+      quart[,-ncol(quart)]<-roundR(quart[,-ncol(quart)],
                                    level=roundDig,drop0=drop0,.german = .german)
       if(prettynum){
       #   quart <- apply(quart,1:2,function(x){

@@ -25,7 +25,7 @@ roundR <- function(roundin,smooth=F,level=2,
   #   roundout <- signif(roundin,digits = level)
   #   } else {
       if(min(roundin,na.rm=T)!=0 | max(roundin,na.rm=T)!=0) {
-        roundlevel<-round(max(0,level-log10(max(abs(roundin),
+        roundlevel<-floor(max(0,level-log10(max(abs(roundin),
                                                 na.rm=T))))
       }
       roundout[which(!is.na(roundout))]<-
