@@ -2,7 +2,7 @@ Package: wrappedtools
 Type: Package
 Title: Usefull wrappers around commonly used functions
 Version: 0.5.01
-Date: 2020-08-25
+Date: 2020-09-18
 Authors@R:
     person(given = "Andreas",
            family = "Busjahn",
