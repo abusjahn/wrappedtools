@@ -21,21 +21,28 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
   out<-''
   if(length(na.omit(x))>0) {
     if(is.null(groupvar)) {
-      meansd<-cbind(roundR(
+      meansd<-cbind(
         matrix(c(mean(x,na.rm = T),
                  sd(x,na.rm = T),
                  min(x,na.rm = T),
                  max(x,na.rm = T)),
-               ncol=4,byrow = F),level=roundDig,
-        drop0=drop0,.german=.german),
+               ncol=4,byrow = F),
         length(na.omit(x)))
+      meansd[1:2] %<>%
+        roundR(level=roundDig, drop0=drop0,.german=.german)
+      meansd[3:4] %<>%
+        roundR(level=roundDig, drop0=drop0,.german=.german)
     } else {
       meansd<- matrix(c(by(x,groupvar,mean,na.rm=T),
                         by(x,groupvar,sd,na.rm=T),
                         by(x,groupvar,min,na.rm=T),
                         by(x,groupvar,max,na.rm=T)),
-                      ncol=4,byrow=F)%>% na_if(Inf) %>% na_if(-Inf) %>%
-      roundR(level=roundDig, drop0=drop0,.german=.german) %>%
+                      ncol=4,byrow=F)%>% na_if(Inf) %>% na_if(-Inf) 
+      meansd[1:2] %<>%
+      roundR(level=roundDig, drop0=drop0,.german=.german)
+      meansd[3:4] %<>%
+        roundR(level=roundDig, drop0=drop0,.german=.german)
+      meansd %<>%
         cbind(by(x,groupvar,function(x){length(na.omit(x))}))
     }
     out<-paste(meansd[,1],meansd[,2],sep='\u00B1')
@@ -96,8 +103,12 @@ prettynum=FALSE,.german=FALSE,.n=FALSE) {
                        x,groupvar,function(x){length(na.omit(x))})))
     }
     if(is.null(nround)) {
-      quart[,-ncol(quart)]<-roundR(quart[,-ncol(quart)],
+      colcount <- ncol(quart)
+      quart[,1:(colcount-3)]<-roundR(quart[,1:(colcount-3)],
                                    level=roundDig,drop0=drop0,.german = .german)
+      quart[,(colcount-2):(colcount-1)]<-
+        roundR(as.numeric(quart[,(colcount-2):(colcount-1)]),
+               level=roundDig,drop0=drop0,.german = .german)
       if(prettynum){
       #   quart <- apply(quart,1:2,function(x){
       #     formatC(as.numeric(x),
@@ -133,39 +144,6 @@ prettynum=FALSE,.german=FALSE,.n=FALSE) {
     }
 
 
-# median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
-#                        qtype=8,roundDig=2,drop0=F,
-#                        groupvar=NULL,range=F,rangesep='ARRR',
-#                        rangearrow=' -> ') {
-#   out <- ' '
-#   if(length(na.omit(x))>0) {
-#     if(is.null(groupvar)) {
-#       quart<-matrix(
-#         stats::quantile(x,probs=c(probs,0,1),na.rm=T,type=qtype),
-#         ncol=length(probs)+2)
-#     } else {
-#       quart<-matrix(
-#         unlist(
-#           by(x,groupvar,quantile,probs=c(probs,0,1),na.rm=T,
-#              librtype=qtype)),
-#         ncol=length(probs)+2,byrow=T)
-#     }
-#     if(is.null(nround)) {
-#       quart<-roundR(quart,level=roundDig,drop0=drop0)
-#     } else {
-#       quart<-round(quart,nround)
-#     }
-#     out<-glue::glue('{quart[,2]} ({quart[,1]}/{quart[,3]})')
-#     if(range) {
-#       out<-glue::glue('{out}{rangesep} [\\
-#                   {apply(matrix(quart[,4:5],ncol=2),1,glue::glue_collapse,
-#                         sep=rangearrow)}]')
-#     }
-#   }
-#   return(out)
-# }
-
-
 #'Compute mean and se and put together with the +- symbol.
 #'
 #'@param x Data for computation.
@@ -182,27 +160,6 @@ meanse<-function(x,mult=1,roundDig=2,drop0=F) {
   return(out)
 }
 
-#'@export
-torso<-function(inputDF,rows2return=3) {
-  if (is.data.frame(inputDF)|is.matrix(inputDF)) {
-    rows<-nrow(inputDF)
-    outputDF<-inputDF[c(1:rows2return,
-                        sort(
-                          sample((rows2return+1):(rows-rows2return),
-                                 size=rows2return)),
-                        (rows-rows2return+1):rows),]
-  }
-  if (is.vector(inputDF)) {
-    rows<-length(inputDF)
-    outputDF<-
-      inputDF[c(1:rows2return,
-                sort(
-                  sample((rows2return+1):(rows-rows2return),
-                         size=rows2return)),
-                (rows-rows2return+1):rows)]
-  }
-  return(outputDF)
-}
 
 #'@export
 se_median<-function(x) {

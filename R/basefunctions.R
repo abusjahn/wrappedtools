@@ -127,39 +127,6 @@ formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F,
   return(formatp);
 }
 
-#'@export
-DelEmptyCols<-function(df_in,minValid=1) {
-  empties<-NA
-  for (col_i in 1:ncol(df_in)) {
-    if (df_in %>% pull(col_i) %>% na.omit() %>% length()<minValid) {
-      empties<-c(na.omit(empties),col_i)
-    }
-  }
-  if (!is.na(empties[1]))
-  {df_in<-df_in[,-empties]}
-  return(df_in)
-}
-
-#'@export
-DelEmptyRows<-function(df_in,minValid=0,zero=F) {
-  empties<-numeric(0)
-  for (row_i in 1:nrow(df_in)) {
-    if (!sum(!is.na(df_in[row_i,]))>minValid) {
-      empties<-c(empties,row_i)
-    }
-  }
-  if (zero) {
-    empties<-numeric(0)
-    for (row_i in 1:nrow(df_in)) {
-      if (!sum(df_in[row_i,])>0) {
-        empties<-c(empties,row_i)
-      }
-    }
-  }
-  if (!is.na(empties[1]))
-  {df_in<-df_in[-empties,]}
-  return(df_in)
-}
 
 #'Find numeric index and names of column name patterns
 #'
