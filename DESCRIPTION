@@ -1,7 +1,7 @@
 Package: wrappedtools
 Type: Package
 Title: Usefull wrappers around commonly used functions
-Version: 0.5.01
+Version: 0.5.04
 Date: 2020-09-18
 Authors@R:
     person(given = "Andreas",
@@ -14,7 +14,8 @@ Description: Functions were mainly written for my own daily work or teaching, bu
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: boot, knitr, tidyverse,ggalluvial, magrittr
-Depends: tidyverse, magrittr
-Exports: magrittr,tidyverse
+Imports: boot, knitr,  ggalluvial
+Depends: base, stats, coin, stringr, purrr, rlang, forcats, rlist,tidyverse, magrittr
+Exports: magrittr, tidyverse
+SUGGESTS: pacman
 RoxygenNote: 7.1.1

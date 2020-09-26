@@ -16,8 +16,9 @@ roundR <- function(roundin,smooth=F,level=2,
   decimalmark <- ifelse(.german,',','.')
   bigmark <- ifelse(.german,'.',',')
   if (!is.matrix(roundin))  {
-    roundin<-matrix(as.numeric(roundin))
+    roundin<-matrix(roundin)
   }
+  roundin <- as.numeric(roundin)
   roundout<-roundin
   roundlevel<-0
   # if(.strict){

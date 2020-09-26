@@ -38,9 +38,10 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
                         by(x,groupvar,min,na.rm=T),
                         by(x,groupvar,max,na.rm=T)),
                       ncol=4,byrow=F)%>% na_if(Inf) %>% na_if(-Inf) 
-      meansd[1:2] %<>%
+      meansd[,1:2] %<>%
       roundR(level=roundDig, drop0=drop0,.german=.german)
-      meansd[3:4] %<>%
+      meansd[,3:4] %<>%
+        # as.numeric() %>% 
         roundR(level=roundDig, drop0=drop0,.german=.german)
       meansd %<>%
         cbind(by(x,groupvar,function(x){length(na.omit(x))}))
