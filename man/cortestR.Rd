@@ -9,7 +9,8 @@ cortestR(
   method = "pearson",
   digits = 3,
   digits_p = 3,
-  sign = "symbol"
+  sign = "symbol",
+  split = F
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ cortestR(
 \item{digits_p}{rounding level for p value.}
 
 \item{sign}{if 'symbol', add significance indicator.}
+
+\item{split}{logical, report correlation and p combined (default) or split in list}
 }
 \description{
 \code{cortestR} returns a data frame with coefficient,p-values,

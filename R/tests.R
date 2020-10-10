@@ -167,34 +167,48 @@ glmCI<-function(model,min=.01,max=100, cisep='\u22ef',ndigit=2)
 #'@param digits rounding level for estimate.
 #'@param digits_p rounding level for p value.
 #'@param sign if 'symbol', add significance indicator.
+#'@param split logical, report correlation and p combined (default) or split in list
 #'@export
 cortestR <- function(cordata,method='pearson',
                      digits=3,digits_p=3,
-                     sign='symbol'){
+                     sign='symbol',
+                     split=F){
   n <- ncol(cordata)
   corout <- as.data.frame(
     matrix('&nbsp;',nrow = n,ncol = n))
   colnames(corout) <- colnames(cordata)
   rownames(corout) <- colnames(corout)
+  if(split){
+    pout <- corout
+  }
   for(row_i in 1:n){
     for(col_i in 1:row_i){
       ct <- cor.test(cordata[,row_i],cordata[,col_i],
                      method=method)
       corout[row_i,col_i] <-
         round(ct$estimate,digits)
-      if(row_i!=col_i){
-        if(sign=='symbol'){
-          corout[row_i,col_i] <- paste0( corout[row_i,col_i],
-                                         markSign(ct$p.value))
-        } else {
-          corout[row_i,col_i] <- paste0( corout[row_i,col_i], ' (',
-                                         formatP(ct$p.value,ndigits = digits_p),
-                                         ')')
-        }
+        if(!split){
+          if(row_i!=col_i){
+            if(sign=='symbol'){
+            corout[row_i,col_i] <- paste0( corout[row_i,col_i],
+                                           markSign(ct$p.value))
+          } else {
+            corout[row_i,col_i] <- paste0( corout[row_i,col_i], ' (',
+                                           formatP(ct$p.value,ndigits = digits_p),
+                                           ')')
+          }
+        } 
+        } else{
+        pout[row_i,col_i] <- ct$p.value
       }
     }
   }
-  return(corout)
+  if(split){
+    return(list(corout=corout,
+                pout=pout))
+    } else {
+      return(corout)
+    }
 }
 
 #'Two independent sample t-test with decision for var.equal based on var.test

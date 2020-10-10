@@ -6,6 +6,7 @@
 \usage{
 ggcormat(
   cor_mat,
+  p_mat = NULL,
   method = "Correlation",
   title = "",
   maxpoint = 2.1,
@@ -18,6 +19,8 @@ ggcormat(
 }
 \arguments{
 \item{cor_mat}{correlation matrix as produced by cor.}
+
+\item{p_mat}{matrix of p-values, if provided, this is used to define size of dots rather than absolute correlation}
 
 \item{method}{text specifying type of correlation.}
 

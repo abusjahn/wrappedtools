@@ -9,8 +9,10 @@
 #'@param titlesize as you already guessed, relative text size for title.
 #'@param breaklables currently not used, intended for str_wrap.
 #'@param lower_only should only lower triangle be plotted?
+#'@param p_mat matrix of p-values, if provided, this is used to define size of dots rather than absolute correlation
 #'@export
-ggcormat<-function(cor_mat, method='Correlation', title='',
+ggcormat<-function(cor_mat, p_mat=NULL,
+                   method='Correlation', title='',
                    maxpoint=2.1,textsize=5,axistextsize=2,
                    titlesize=3,breaklabels=NULL,
                    lower_only=T)
@@ -28,8 +30,21 @@ ggcormat<-function(cor_mat, method='Correlation', title='',
     gather(key = Variable2,value = value, -Variable1) %>%
     na.omit() %>%
     mutate(Variable1=factor(Variable1,levels=var_order),
-           Variable2=factor(Variable2,levels=var_order))
+           Variable2=factor(Variable2,levels=var_order),
+           value=as.numeric(value),
+           size=abs(value))
   corvar_count<-nrow(cor_mat)
+  if(!is.null(p_mat)){
+    melted_p_mat <-  p_mat %>% as_tibble() %>%
+      mutate(Variable1=colnames(.)) %>%
+      gather(key = Variable2,value = size, -Variable1) %>%
+      mutate(Variable1=factor(Variable1,levels=var_order),
+             Variable2=factor(Variable2,levels=var_order),
+             size=-log10(formatP(as.numeric(size),
+                                 text = F))) %>% 
+      na.omit() 
+  melted_cor_mat <- full_join(melted_cor_mat[1:3],melted_p_mat)
+    }
   if(lower_only){
     triangel<-data.frame(x=c(0,rep(corvar_count+2,2)),
                          y=c(rep(corvar_count+2,2),0))
@@ -51,14 +66,14 @@ ggcormat<-function(cor_mat, method='Correlation', title='',
   ggheatmap<-ggplot(melted_cor_mat,
                     aes(Variable2, Variable1))+
     #geom_tile(color = "white")+
-    geom_point(aes(Variable2, Variable1, size=abs(value),color=value))+
+    geom_point(aes(Variable2, Variable1, 
+                   size=size,color=value))+
     geom_vline(xintercept = seq(0.5,corvar_count+1, by=1),color='grey',size=.25)+
     geom_hline(yintercept = seq(0.5,corvar_count+1, by=1),color='grey',size=.25)+
     # geom_point(aes(Variable2, Variable1, size=abs(value),color=value))+
     scale_color_gradient2(low = "blue3", high = "red2", mid = "grey",
                           midpoint = 0, limit = c(-1,1), space = "Lab",
                           name=method) +
-    scale_size_continuous(range=rel(c(.2,maxpoint)),guide=F)+
     theme_minimal()+ # minimal theme
     theme(axis.text.x = element_text(angle = 90, vjust = 0,
                                      hjust = 1),
@@ -83,7 +98,23 @@ ggcormat<-function(cor_mat, method='Correlation', title='',
     scale_x_discrete(limits = levels(melted_cor_mat$Variable1),
                      labels=breaklabels)+
     ggtitle(title)
-  
+  if(is.null(p_mat)){
+    ggheatmap <- ggheatmap+
+      scale_size_continuous(name = 'abs. correlation',
+    limits = c(0,1),
+    breaks=c(.1,.5,.9),
+    labels=c(.1,.5,.9),
+    range=rel(c(.2,maxpoint)))
+  } else{
+    ggheatmap <- ggheatmap+
+      scale_size_continuous(name = 'p.value',
+                          limits = c(0,3),
+                          breaks=c(1,2,3),
+                          labels=c(.1,.01,.001),
+                          range=rel(c(.2,maxpoint)))
+      
+  }
+    
   
   
   if(lower_only){
