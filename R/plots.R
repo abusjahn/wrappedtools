@@ -43,6 +43,7 @@ ggcormat<-function(cor_mat, p_mat=NULL,
              size=-log10(formatP(as.numeric(size),
                                  text = F))) %>% 
       na.omit() 
+    melted_p_mat$size[which(melted_p_mat$size>3)] <- 3
   melted_cor_mat <- full_join(melted_cor_mat[1:3],melted_p_mat)
     }
   if(lower_only){
@@ -119,15 +120,15 @@ ggcormat<-function(cor_mat, p_mat=NULL,
   
   if(lower_only){
     ggheatmap <- ggheatmap+
-      guides(color = guide_colorbar(barwidth = 7, barheight = 1,
-                                    title.position = "top", title.hjust = 0.5))+
       geom_polygon(data=triangel,aes(x=x,y=y),fill='white')+
       geom_polygon(data=viereck1,aes(x=x,y=y),fill='white')+
       geom_polygon(data=viereck2,aes(x=x,y=y),fill='white')+
       geom_polygon(data=viereck3,aes(x=x,y=y),fill='white')+
       geom_polygon(data=viereck4,aes(x=x,y=y),fill='white')+
       guides(color = guide_colorbar(barwidth = 7, barheight = 1,
-                                    title.position = "top", title.hjust = 0.5))+
+                                    title.position = "top", 
+                                    title.hjust = 0.5, order=2),
+             size=guide_legend(order=1))+
       theme(legend.justification = c(1, 1),
             legend.direction = "horizontal",
             legend.position = c(1, .99))
