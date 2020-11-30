@@ -15,7 +15,9 @@ ggcormat<-function(cor_mat, p_mat=NULL,
                    method='Correlation', title='',
                    maxpoint=2.1,textsize=5,axistextsize=2,
                    titlesize=3,breaklabels=NULL,
-                   lower_only=T)
+                   lower_only=T,
+                   .low="blue3",.high="red2",
+                   .legendtitle=NULL)
 {
   rownames(cor_mat)<-colnames(cor_mat)
   # dd <- as.dist((1-cor_mat)/2)
@@ -72,7 +74,7 @@ ggcormat<-function(cor_mat, p_mat=NULL,
     geom_vline(xintercept = seq(0.5,corvar_count+1, by=1),color='grey',size=.25)+
     geom_hline(yintercept = seq(0.5,corvar_count+1, by=1),color='grey',size=.25)+
     # geom_point(aes(Variable2, Variable1, size=abs(value),color=value))+
-    scale_color_gradient2(low = "blue3", high = "red2", mid = "grey",
+    scale_color_gradient2(low = .low, high = .high, mid = "grey",
                           midpoint = 0, limit = c(-1,1), space = "Lab",
                           name=method) +
     theme_minimal()+ # minimal theme
@@ -101,21 +103,25 @@ ggcormat<-function(cor_mat, p_mat=NULL,
     ggtitle(title)
   if(is.null(p_mat)){
     ggheatmap <- ggheatmap+
-      scale_size_continuous(name = 'abs. correlation',
+      scale_size_continuous(name = ifelse(
+        is.null(.legendtitle),'abs. correlation scaling',
+        .legendtitle),
     limits = c(0,1),
     breaks=c(.1,.5,.9),
     labels=c(.1,.5,.9),
     range=rel(c(.2,maxpoint)))
   } else{
     ggheatmap <- ggheatmap+
-      scale_size_continuous(name = 'p.value',
-                          limits = c(0,3),
-                          breaks=c(1,2,3),
-                          labels=c(.1,.01,.001),
-                          range=rel(c(.2,maxpoint)))
-      
-  }
+      scale_size_continuous(name = ifelse(
+        is.null(.legendtitle),'p-value scaling',
+        .legendtitle),
+        limits = c(0,3),
+        breaks=c(1,2,3),
+        labels=c(.1,.01,.001),
+        range=rel(c(.2,maxpoint)))
     
+  }
+  
   
   
   if(lower_only){
@@ -234,7 +240,7 @@ alluvialplot<-function(.data,.x,.label=NULL,.fill=NULL,
     '))')))+
     ggalluvial::geom_alluvium(aes_string(fill=.fill))+
     ggalluvial::geom_stratum(width = 1/3, fill = "darkgrey", color = "lightgrey") +
-    geom_label(stat = "stratum", infer.label = TRUE) +
+    geom_label(stat = "stratum", aes(label=after_stat(stratum)))+#infer.label = TRUE) +
     scale_x_discrete(limits = .label,
                      expand = c(.1, .05)) +
     # scale_fill_viridis_d(option = 'D',guide=F)+

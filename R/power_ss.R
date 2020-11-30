@@ -352,8 +352,7 @@ FZcalc_Prop <- function(pControl,pMax,pMin,pStep,pEstim,
        xlim=c(pMax, pMin), xaxp=c(pMin,pMax,round((pMax-pMin)/pStep)))
   
   d.range <- d.abs.range
-  for (d.count in 1:length(d.range))
-  {
+  for (d.count in 1:length(d.range))  {
     n.range[d.count] <- ceiling(power.prop.test(
       n=NULL, p1=1-(1-pControl)^patyears,p2=1-(1-d.range[d.count])^patyears,
       sig.level=p,power=power, alternative=tail)$n)
@@ -365,19 +364,23 @@ FZcalc_Prop <- function(pControl,pMax,pMin,pStep,pEstim,
   #    lines(c(0,max(d.abs.range)),c(Estimates[3,2],Estimates[3,2]),col='green', lwd=3,lty=3)
   lines(c(pEstim,pEstim),c(0,Estimates[3,2]),col='green', lwd=3,lty=3)
   lines(c(pEstim,max(d.abs.range)),c(Estimates[3,2],Estimates[3,2]),col='green', lwd=3,lty=3)
-  legend(min(d.abs.range),ymax,paste0('Power=',power,', p=',p,', ',tail),
-         xjust=1, yjust=1, cex=1, bg='white',box.col='white')
-  legend(min(d.abs.range),ymax*.94,
-         paste0('p Control=',pControl,', p Cases=',pEstim,', patyears=',patyears),
-         xjust=1, yjust=1, cex=1, bg='white',box.col='white')
-  legend(min(d.abs.range),ymax*.88,
-         paste0('n=',Estimates[3,2]),xjust=1, yjust=1,
+  legend(max(d.abs.range),ymax,paste0('Power=',power,', p=',p,', ',tail,
+                                      ' p Control=',pControl,', p Cases=',
+                                      pEstim),
+         xjust=0, yjust=1, cex=1, bg='white',box.col='white')
+  # legend(max(d.abs.range),ymax*.9,
+  #        paste0('p Control=',pControl,', p Cases=',pEstim),
+  #               # ', patyears=',patyears),
+  #        xjust=0, yjust=1, cex=1, bg='white',box.col='white')
+  legend(max(d.abs.range),ymax*.88,
+         paste0('n=',Estimates[3,2],', n incl. 10% drop-out=',Estimates[4,2]),
+         xjust=0, yjust=1,
          cex=1, bg='white',box.col='white')
-  legend(min(d.abs.range),ymax*.82,
-         paste('n incl. 10% drop-out=',Estimates[4,2],sep=''),
-         xjust=1, yjust=1, cex=1, bg='white',box.col='white')
-  legend(min(d.abs.range),ymax*.76,
-         paste('n incl. 20% drop-out=',Estimates[5,2],sep=''),xjust=1, yjust=1,
+  # legend(max(d.abs.range),ymax*.82,
+  #        paste('n incl. 10% drop-out=',Estimates[4,2],sep=''),
+  #        xjust=0, yjust=1, cex=1, bg='white',box.col='white')
+  legend(max(d.abs.range),ymax*.76,
+         paste('n incl. 20% drop-out=',Estimates[5,2],sep=''),xjust=0, yjust=1,
          cex=1, bg='white',box.col='white')
   legend(max(d.abs.range),1,paste('HealthTwiSt',Sys.Date(),sep=' '),
          xjust=0, yjust=0.5, cex=0.7, bg='white',box.col='white') #adj=c(0,0), )
