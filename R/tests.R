@@ -105,14 +105,15 @@ pairwise_ordcat_test <- function(x,group,adjmethod='fdr',plevel=.05,
 
 #'Convinience function around ks.test, testing against Normal distribution
 #'
-#'\code{ksnormal} returns list output from ks.test.
+#'\code{ksnormal} returns p.value from ks.test.
 #'
 #'@param ksdata Vector of data to test.
 #'@export
 ksnormal<-function(ksdata)
 {
   options(warn=-1)
-  ksout<-ks.test(ksdata,'pnorm',mean(ksdata,na.rm=T),sd(ksdata,na.rm=T),exact=F)
+  ksout<-ks.test(ksdata,'pnorm',mean(ksdata,na.rm=T),sd(ksdata,na.rm=T),
+                 exact=F)$p.value
   options(warn=0)
   return(ksout)
 }
@@ -470,6 +471,18 @@ pairwise_t_test<-function(dep_var,indep_var,adjmethod='fdr',plevel=.05,
 }
 
 
+#'Comparison for columns of Gaussian measures for n groups
+#'
+#'@param .data name of dataset (tibble/data.frame)to analyze, defaults to rawdata.
+#'@param testvars vector of column names.
+#'@param groupvar name of grouping variable.
+#'@param round_p level for rounding p-value
+#'@param round_desc number of significant digits for rounding of descriptive stats
+#'@param range include min/max?
+#'@param rangesep text between statistics and range or other elements  
+#'@param pretext for function formatP
+#'@param mark for function formatP
+#'@param .n add n to descriptive statistics?
 #'@export
 compare_n_numvars <- function(.data=rawdata,
                               testvars,groupvar,# gaussian,
@@ -492,7 +505,8 @@ compare_n_numvars <- function(.data=rawdata,
   glevel <- forcats::fct_inorder(levels(.data[[groupvar]]))
   .data <- dplyr::select(.data,all_of(testvars),
                          all_of(groupvar))
-  t <- .data %>% gather(key = 'Variable',value = 'value',testvars) %>%
+  t <- .data %>% gather(key = 'Variable',value = 'value',
+                        all_of(testvars)) %>%
     nest(data=c(groupvar,value)) %>%
     mutate(Variable=fct_inorder(Variable),
            desc=purrr::map_chr(data,~meansd(.$value,
@@ -520,7 +534,7 @@ compare_n_numvars <- function(.data=rawdata,
   results <- tibble(Variable=fct_inorder(testvars),all=t$desc) %>%
     full_join(reduce(t$desc_grp,rbind) %>%
                 matrix(nrow=length(testvars),byrow=F) %>%
-                as_tibble() %>%
+                as_tibble(.name_repair='unique') %>%
                 mutate(Variable=testvars) %>%
                 dplyr::select(Variable, everything()) %>%
                 set_names(c('Variable',
@@ -532,7 +546,8 @@ compare_n_numvars <- function(.data=rawdata,
                                       ndigits=round_p,
                                       pretext=pretext,
                                       mark=mark) %>% as.vector())) %>%
-    full_join(purrr::map_df(t$ptout,~paste(formatP(p.adjust(.x[lower.tri(.x,T)])),
+    full_join(purrr::map_df(t$ptout,~paste(formatP(
+      p.adjust(.x[lower.tri(.x,T)], method='lm')),
                                     collapse = ';')) %>%
                 gather(key='Variable',value = 'p between groups' )) %>%
     full_join(reduce(t$p_tout,rbind) %>%
@@ -540,7 +555,8 @@ compare_n_numvars <- function(.data=rawdata,
                 as_tibble() %>%
                          mutate(Variable=testvars) %>%
                 set_names(c(paste('sign',glevel),'Variable'))) %>%
-    full_join(purrr::map_df(t$ptout,~paste(formatP(p.adjust(.x[,1])),
+    full_join(purrr::map_df(t$ptout,~paste(formatP(p.adjust(.x[,1],
+                                                            method='fdr')),
                                     collapse = ';')) %>%
                 gather(key='Variable',value = 'p vs.ref' ))
   results <- cbind(results,

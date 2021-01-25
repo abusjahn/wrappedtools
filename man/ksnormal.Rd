@@ -10,5 +10,5 @@ ksnormal(ksdata)
 \item{ksdata}{Vector of data to test.}
 }
 \description{
-\code{ksnormal} returns list output from ks.test.
+\code{ksnormal} returns p.value from ks.test.
 }

@@ -244,7 +244,8 @@ FZcalc_t <- function(SD.estim, SD.worst, SD.best,SD.step,
     d.range <- d.abs.range/SD.range[SD.count]			#Differenz in SD-Einheiten
     
     for (d.count in 1:length(d.range)) {
-      temp <- power.t.test(n=NULL, d=d.range[d.count],sig.level=p,power=power,
+      temp <- power.t.test(n=NULL, delta = d.range[d.count],
+                           sig.level=p,power=power,
                            alternative=tail, type=testtype)
       n.range[d.count] <- ceiling(temp$n)
       power_df$n[(SD.count-1)*length(d.abs.range)+d.count]<-ceiling(temp$n)
