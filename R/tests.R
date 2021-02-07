@@ -547,7 +547,7 @@ compare_n_numvars <- function(.data=rawdata,
                                       pretext=pretext,
                                       mark=mark) %>% as.vector())) %>%
     full_join(purrr::map_df(t$ptout,~paste(formatP(
-      p.adjust(.x[lower.tri(.x,T)], method='lm')),
+      p.adjust(.x[lower.tri(.x,T)], method='fdr')),
                                     collapse = ';')) %>%
                 gather(key='Variable',value = 'p between groups' )) %>%
     full_join(reduce(t$p_tout,rbind) %>%
