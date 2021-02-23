@@ -311,8 +311,9 @@ compare2qualvars <- function(data,testvars,groupvar,
                              round_p=3,round_desc=2,
                              pretext=F,mark=F,
                              singleline=F,
-                             newline=T,
-                             spacer='&nbsp;'){
+                             # newline=T,
+                             spacer='&nbsp;',
+                             linebreak='ARRR'){
   if(!(is.factor(data %>% pull(groupvar)))) {
     data %<>% mutate(!!groupvar:=factor(!!sym(groupvar)))
   }
@@ -346,14 +347,14 @@ compare2qualvars <- function(data,testvars,groupvar,
   p <-
     purrr::map2(data[testvars],data[groupvar],
          .f = function(x,y) formatP(try(
-           fisher.test(x = x,y = y,simulate.p.value = T)$p.value,silent=T),
+           fisher.test(x = x,y = y,simulate.p.value = T,B = 10^4)$p.value,silent=T),
            mark = mark,pretext = pretext))
 
   # colnames(freqBYgroup) <- glue::glue('{groupvar} {factor(levels(data[[groupvar]]))}')
   out <- tibble(Variable=character(),desc_all=character(),
                 g1=character(),g2=character(),p=character())
   for(var_i in seq_along(testvars)){
-    if(newline){
+    if(!singleline){
       out <- add_row(out,Variable=c(testvars[var_i],
                                     glue::glue(
                                       '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{levels[[var_i]][[1]]}')),
@@ -371,8 +372,7 @@ compare2qualvars <- function(data,testvars,groupvar,
                      desc_all=freq[[var_i]][[1]],
                      g1=freqBYgroup[[var_i]][[1]],
                      g2=freqBYgroup[[var_i]][[2]],
-                     p=c(p[[var_i]][[1]],
-                         rep(spacer,nrow(freqBYgroup[[var_i]])-1)))
+                     p=p[[var_i]][[1]])
     }
   }
   colnames(out) %<>% str_replace_all(
@@ -382,6 +382,87 @@ compare2qualvars <- function(data,testvars,groupvar,
                  data %>% pull(groupvar) %>% levels() %>% last())
     )
   )
+  return(out)
+}
+
+#'Comparison for columns of factors for more than 2 groups with post-hoc
+#'
+#'@export
+compare_n_qualvars <- function(data,testvars,groupvar,
+                             round_p=3,round_desc=2,
+                             pretext=F,mark=F,
+                             singleline=F,
+                             # newline=T,
+                             spacer='&nbsp;',
+                             linebreak='ARRR'){
+  if(!(is.factor(data %>% pull(groupvar)))) {
+    data %<>% mutate(!!groupvar:=factor(!!sym(groupvar)))
+  }
+  # groups <- levels(data[[groupvar]])
+   freq <-
+    purrr::map(data[testvars],
+               .f = function(x) cat_desc_stats(
+                 x,return_level = F,singleline=singleline,
+                 ndigit=round_desc,trenner = linebreak)) %>%
+    purrr::map(as_tibble)
+  
+  
+  levels <-
+    purrr::map(data[testvars],
+               .f = function(x) cat_desc_stats(x,
+                                               singleline=singleline,
+                                               trenner = linebreak)$level) %>%
+    purrr::map(as_tibble)
+  freqBYgroup <-
+    purrr::map(data[testvars],
+               .f = function(x) cat_desc_stats(x,
+                                               groupvar=data[[groupvar]],
+                                               return_level = F,
+                                               ndigit=round_desc,
+                                               singleline=singleline,
+                                               trenner = linebreak))
+  
+  p <-
+    purrr::map2(data[testvars],data[groupvar],
+                .f = function(x,y) formatP(try(
+                  fisher.test(x = x,y = y,simulate.p.value = T,
+                              B = 10^4)$p.value,silent=T),
+                  mark = mark,pretext = pretext))
+  
+  out <- tibble(Variable=character(),desc_all=character()) %>% 
+    left_join(freqBYgroup[[1]] %>% slice(0),by = character()) %>% 
+    mutate(p=character())
+  out_template <- out
+  groupcols <- 3:(ncol(out)-1)
+  for(var_i in seq_along(testvars)){
+    testdata <- data %>% dplyr::select(all_of(c(groupvar,testvars[var_i]))) %>% 
+      na.omit()
+    pairwise_p <- pairwise_fisher_test(testdata[[2]],testdata[[1]])$sign_colwise %>% 
+      str_replace('^ $',spacer)
+    if(!singleline){
+      out_tmp <- add_row(out_template,
+                         Variable=c(
+                           testvars[var_i],
+                           str_glue(
+                             '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{levels[[var_i]][[1]]}')),
+                         desc_all=c(spacer,freq[[var_i]][[1]]))
+      out_tmp[1,groupcols] <- c(pairwise_p, spacer) %>% as.list()
+      out_tmp[-1,groupcols] <-freqBYgroup[[var_i]]
+      out_tmp['p'] <- c(p[[var_i]][[1]],
+                         rep(spacer,nrow(freqBYgroup[[var_i]])))
+      
+    } else{
+      out_tmp <- add_row(out_template,Variable=paste(c(testvars[var_i],
+                                          rep('&nbsp;&nbsp;&nbsp;&nbsp;',
+                                              nrow(freqBYgroup[[var_i]])-1)),
+                                        levels[[var_i]][[1]]),
+                     desc_all=freq[[var_i]][[1]])
+      out_tmp[1,groupcols] <- paste(freqBYgroup[[var_i]],c(pairwise_p,spacer)) %>% 
+        as.list()
+      out_tmp['p'] <- p[[var_i]]
+    }
+  out %<>% rbind(out_tmp)  
+  }
   return(out)
 }
 
