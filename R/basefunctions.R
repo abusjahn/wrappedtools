@@ -9,12 +9,17 @@
 #'@param textout A logical if output is converted to text.
 #'@param drop0 A logical if trailing zeros should be dropped
 #'@param .german A logical if german numbers should be reported
+#'@param .bigmark A logical if big.mark is to be shown, mark itself 
+#'depends on parameter .german 
 #'@export
 roundR <- function(roundin,smooth=F,level=2, 
-                   textout=T,drop0=F, .german=F){
+                   textout=T,drop0=F, .german=F, .bigmark=F){
   if(.german){textout <- T}
   decimalmark <- ifelse(.german,',','.')
   bigmark <- ifelse(.german,'.',',')
+  if(!.bigmark) {
+    bigmark <- ''
+  }
   if (!is.matrix(roundin))  {
     roundin<-matrix(roundin)
   }
