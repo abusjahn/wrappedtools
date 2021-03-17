@@ -32,7 +32,7 @@ roundR <- function(roundin,smooth=F,level=2,
   #   } else {
       if(min(roundin,na.rm=T)!=0 | max(roundin,na.rm=T)!=0) {
         roundlevel<-floor(max(0,level-log10(max(abs(roundin),
-                                                na.rm=T))))
+                                                na.rm=T)+10^-10)))
       }
       roundout[which(!is.na(roundout))]<-
         round(roundin[which(!is.na(roundin))],roundlevel)
