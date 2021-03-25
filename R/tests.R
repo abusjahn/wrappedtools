@@ -394,7 +394,8 @@ compare_n_qualvars <- function(data,testvars,groupvar,
                              singleline=F,
                              # newline=T,
                              spacer='&nbsp;',
-                             linebreak='ARRR'){
+                             linebreak='ARRR',
+                             prettynum=F){
   if(!(is.factor(data %>% pull(groupvar)))) {
     data %<>% mutate(!!groupvar:=factor(!!sym(groupvar)))
   }
@@ -403,7 +404,8 @@ compare_n_qualvars <- function(data,testvars,groupvar,
     purrr::map(data[testvars],
                .f = function(x) cat_desc_stats(
                  x,return_level = F,singleline=singleline,
-                 ndigit=round_desc,trenner = linebreak)) %>%
+                 ndigit=round_desc,trenner = linebreak,
+                 prettynum = prettynum)) %>%
     purrr::map(as_tibble)
   
   
@@ -420,7 +422,8 @@ compare_n_qualvars <- function(data,testvars,groupvar,
                                                return_level = F,
                                                ndigit=round_desc,
                                                singleline=singleline,
-                                               trenner = linebreak))
+                                               trenner = linebreak,
+                                               prettynum = prettynum))
   
   p <-
     purrr::map2(data[testvars],data[groupvar],

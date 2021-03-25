@@ -14,7 +14,8 @@ compare_n_qualvars(
   mark = F,
   singleline = F,
   spacer = "&nbsp;",
-  linebreak = "ARRR"
+  linebreak = "ARRR",
+  prettynum = F
 )
 }
 \description{
