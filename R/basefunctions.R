@@ -30,10 +30,12 @@ roundR <- function(roundin,smooth=F,level=2,
   #   roundlevel<-level
   #   roundout <- signif(roundin,digits = level)
   #   } else {
-      if(min(roundin,na.rm=T)!=0 | max(roundin,na.rm=T)!=0) {
-        roundlevel<-floor(max(0,level-log10(max(abs(roundin),
-                                                na.rm=T)+10^-10)))
-      }
+      # if(min(roundin,na.rm=T)!=0 | max(roundin,na.rm=T)!=0) {
+        roundlevel<-max(0,
+                        level-floor(
+                          log10(
+                            max(abs(roundin), na.rm=T))-1))
+      # }
       roundout[which(!is.na(roundout))]<-
         round(roundin[which(!is.na(roundin))],roundlevel)
     # }     # if(all((roundin[which(!is.na(roundin))]-roundout[which(!is.na(roundout))])==0))
