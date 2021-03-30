@@ -46,7 +46,8 @@ ggcormat<-function(cor_mat, p_mat=NULL,
                                  text = F))) %>% 
       na.omit() 
     melted_p_mat$size[which(melted_p_mat$size>3)] <- 3
-  melted_cor_mat <- full_join(melted_cor_mat[1:3],melted_p_mat)
+  melted_cor_mat <- full_join(melted_cor_mat[1:3],melted_p_mat,
+                              by=c('Variable1','Variable2'))
     }
   if(lower_only){
     triangel<-data.frame(x=c(0,rep(corvar_count+2,2)),
