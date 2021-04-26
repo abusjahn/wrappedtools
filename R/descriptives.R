@@ -162,11 +162,19 @@ meanse<-function(x,mult=1,roundDig=2,drop0=F) {
 }
 
 
+#'Compute standard error median.
+#'
+#'@param quelle Data for computation.
 #'@export
 se_median<-function(x) {
   mad(x,na.rm=T)/sqrt(length(na.omit(x)))
 }
 
+#'Compute confidence interval of median by bootstrapping.
+#'
+#'@param x Data for computation.
+#'@param conf confidence interval with default 95%.
+#'@param type type for function boot.ci.
 #'@export
 median_cl_boot <- function(x, conf = 0.95, type='basic') {
   x <- na.omit(x)
@@ -294,11 +302,17 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
   }
 }
 
+#'Compute coefficient of variance.
+#'
+#'@param x Data for computation.
 #'@export
 var_coeff<-function(x) {
   return(sd(x,na.rm=T)/mean(x,na.rm=T)*100)
 }
 
+#'Compute standard error of mean.
+#'
+#'@param quelle Data for computation.
 #'@export
 SEM <- function(x){
   return(sd(x,na.rm=T)/sqrt(length(na.omit(x))))

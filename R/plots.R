@@ -145,6 +145,12 @@ ggcormat<-function(cor_mat, p_mat=NULL,
   return(ggheatmap)
 }
 
+#'Plot  a regression tree with ggplot.
+#'
+#'@param rpartdata output from rpart.
+#'@param miny ??.
+#'@param title Headline for plot.
+#'@param german Use German numbers.
 #'@export
 gg_rtree<-function(rpartdata=rpart_out,miny=NULL,
                    title='',german=F)
