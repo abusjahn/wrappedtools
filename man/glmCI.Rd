@@ -4,7 +4,7 @@
 \alias{glmCI}
 \title{Computation and formatting of CIs for glm}
 \usage{
-glmCI(model, min = 0.01, max = 100, cisep = "<U+22EF>", ndigit = 2)
+glmCI(model, min = .01, max = 100, cisep = '\U000022ef', ndigit=2)
 }
 \arguments{
 \item{model}{Output from glm .}
@@ -18,6 +18,5 @@ glmCI(model, min = 0.01, max = 100, cisep = "<U+22EF>", ndigit = 2)
 \item{ndigit}{rounding level.}
 }
 \description{
-\code{glmCI} returns a list with coefficient,CIs,
-and coef \link{CIs}.
+\code{glmCI} returns a list with coefficient, CIs, and coef [CIs].
 }

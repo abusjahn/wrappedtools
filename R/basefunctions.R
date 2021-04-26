@@ -11,6 +11,7 @@
 #'@param .german A logical if german numbers should be reported
 #'@param .bigmark A logical if big.mark is to be shown, mark itself 
 #'depends on parameter .german 
+#'@return vector of type character or numeric, depending on parameter textout
 #'@export
 roundR <- function(roundin,smooth=F,level=2, 
                    textout=T,drop0=F, .german=F, .bigmark=F){

@@ -31,6 +31,9 @@ roundR(
 \item{.bigmark}{A logical if big.mark is to be shown, mark itself
 depends on parameter .german}
 }
+\value{
+vector of type character or numeric, depending on parameter textout
+}
 \description{
 \code{roundR} returns a matrix of rounded numbers.
 }

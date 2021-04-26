@@ -120,16 +120,18 @@ ksnormal<-function(ksdata)
 
 #'Computation and formatting of CIs for glm
 #'
-#'\code{glmCI} returns a list with coefficient,CIs,
-#'and coef [CIs].
+#'\code{glmCI} returns a list with coefficient, CIs, and coef \[CIs\].
 #'
 #'@param model Output from glm .
 #'@param min Smallest OR to report.
 #'@param max Largest OR to report.
 #'@param cisep Separator between CI values.
 #'@param ndigit rounding level.
+#'
+#'@usage glmCI(model, min = .01, max = 100, cisep = '\U000022ef', ndigit=2)
+#'
 #'@export
-glmCI<-function(model,min=.01,max=100, cisep='\u22ef',ndigit=2)
+glmCI<-function(model, min = .01, max = 100, cisep = '\U000022ef', ndigit=2)
 {
   glmReturn<-list(coeff=character(0),ci=character(0),
                   c_ci=NA)

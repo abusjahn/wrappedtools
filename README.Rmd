@@ -1,0 +1,45 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# wrappedtools
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of wrappedtools is to ...
+
+## Installation
+
+You can install the released version of wrappedtools from github with:
+
+``` r
+devtools::install_github("abusjahn/wrappedtools")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem,
+that is, describe and test differences in some measures between 2 samples,
+rounding descriptive statistics to a reasonable precision in the process:
+
+```{r example}
+library(wrappedtools)
+compare2numvars(data = mtcars, testvars = c('wt','mpg', "disp"), 
+                groupvar = 'am',
+                gaussian = F,
+                round_desc = 3)
+```
+
+
