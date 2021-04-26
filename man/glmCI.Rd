@@ -19,5 +19,5 @@ glmCI(model, min = 0.01, max = 100, cisep = "<U+22EF>", ndigit = 2)
 }
 \description{
 \code{glmCI} returns a list with coefficient,CIs,
-and coef [CIs].
+and coef \link{CIs}.
 }

@@ -28,7 +28,7 @@ roundR(
 
 \item{.german}{A logical if german numbers should be reported}
 
-\item{.bigmark}{A logical if big.mark is to be shown, mark itself 
+\item{.bigmark}{A logical if big.mark is to be shown, mark itself
 depends on parameter .german}
 }
 \description{
