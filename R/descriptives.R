@@ -73,14 +73,14 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
 #'@param rangesep How should min/max be separated from mean+-sd?
 #'@param rangearrow What is put between min -> max?
 #'Default ARRR is my shortcut for newline ^p later in Word.
-#'#'@param prettynum logical, apply prettyNum to results?
+#'@param prettynum logical, apply prettyNum to results?
 #'@param .german logical, should "." and "," be used as bigmark and decimal?
-#'@param n Should n be included in output?
+#'@param .n Should n be included in output?
 
 #'@export
 median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
 qtype=8,roundDig=2,drop0=FALSE,
-groupvar=NULL,range=F,rangesep='ARRR',
+groupvar=NULL,range=F,rangesep=' ',
 rangearrow=' -> ',
 prettynum=FALSE,.german=FALSE,.n=FALSE) {
   out <- ' '
@@ -162,9 +162,9 @@ meanse<-function(x,mult=1,roundDig=2,drop0=F) {
 }
 
 
-#'Compute standard error median.
+#'Compute standard error of median.
 #'
-#'@param quelle Data for computation.
+#'@param x Data for computation.
 #'@export
 se_median<-function(x) {
   mad(x,na.rm=T)/sqrt(length(na.omit(x)))
@@ -192,14 +192,16 @@ median_cl_boot <- function(x, conf = 0.95, type='basic') {
 #'Compute absolute and relative frequencies.
 #'
 #'@param quelle Data for computation.
-#'@param trenner delimiter between results per level. ARRR is my placeholder for later replacement with ^p (newline) in Word
+#'@param separator delimiter between results per level, preset as ' '.
 #'@param return_level Should levels be reported?
 #'@param ndigit Digits for rounding of relative frequencies.
-#'@param percent logical, add percent-symbol after relative frequencies?
+#'@param groupvar Optional grouping factor.
+#'@param singleline Put all group levels in  a single line?
+#'@param percent Logical, add percent-symbol after relative frequencies?
 #'@param prettynum logical, apply prettyNum to results?
 #'@param .german logical, should "." and "," be used as bigmark and decimal? Sets prettynum to TRUE
 #'@export
-cat_desc_stats<-function(quelle,trenner='ARRR',
+cat_desc_stats<-function(quelle,separator=' ',
                          return_level=TRUE,
                          ndigit=0,
                          groupvar=NULL,
@@ -220,7 +222,7 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
   }
   level<- levels(quelle) %>% enframe(name=NULL)
   if(singleline){
-    level <- paste(levels(quelle),sep = '',collapse = trenner)
+    level <- paste(levels(quelle),sep = '',collapse = separator)
   }
   if(is.null(groupvar)) {
     tableout<-matrix(table(quelle),
@@ -291,7 +293,7 @@ cat_desc_stats<-function(quelle,trenner='ARRR',
   if(singleline){
     zwert <- map(zwert,
                  .f =  function(x)
-                   glue::glue_collapse(x,sep = trenner)) %>%
+                   glue::glue_collapse(x,sep = separator)) %>%
       as_tibble()
   }
   levdesstats<-list(level=level, freq=zwert)
@@ -312,7 +314,7 @@ var_coeff<-function(x) {
 
 #'Compute standard error of mean.
 #'
-#'@param quelle Data for computation.
+#'@param x Data for computation.
 #'@export
 SEM <- function(x){
   return(sd(x,na.rm=T)/sqrt(length(na.omit(x))))

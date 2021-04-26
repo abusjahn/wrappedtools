@@ -7,6 +7,10 @@
 t_var_test(data, formula, cutoff = 0.05)
 }
 \arguments{
+\item{data}{Tibble or data_frame.}
+
+\item{formula}{Formula object with dependent and independent variable.}
+
 \item{cutoff}{is significance threshold for equal variances}
 }
 \description{

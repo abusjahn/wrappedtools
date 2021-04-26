@@ -7,9 +7,12 @@
 #'@param textsize for theme text.
 #'@param axistextsize relativ text size for axes.
 #'@param titlesize as you already guessed, relative text size for title.
-#'@param breaklables currently not used, intended for str_wrap.
+#'@param breaklabels currently not used, intended for str_wrap.
+#'@param .low Color for heatmap.
+#'@param .high Color for heatmap.
 #'@param lower_only should only lower triangle be plotted?
-#'@param p_mat matrix of p-values, if provided, this is used to define size of dots rather than absolute correlation
+#'@param .legendtitle Optional name for color legend.
+#'@param p_mat Optional matrix of p-values; if provided, this is used to define size of dots rather than absolute correlation
 #'@export
 ggcormat<-function(cor_mat, p_mat=NULL,
                    method='Correlation', title='',
@@ -234,7 +237,14 @@ gg_rtree<-function(rpartdata=rpart_out,miny=NULL,
 #'Create alluvialplot.
 #'
 #'\code{alluvialplot} returns a ggplot object.
-#'@param  .fill Variable in .data defining fill color.
+#'@param .data tibble or data_frame with data
+#'@param .x column defining x-axis
+#'@param .label optional x-axis label
+#'@param .fill optional column for subgroups
+#'@param .title optional plot title
+#'@param .gridrow optional facetting variable
+#'@param .gridcol optional facetting variable
+#'@param  .fillcolors values manually defining fill colors.
 #'@export
 alluvialplot<-function(.data,.x,.label=NULL,.fill=NULL,
                        .title=NULL,.gridrow=NULL,.gridcol=NULL,

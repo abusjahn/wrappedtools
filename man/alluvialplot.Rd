@@ -16,7 +16,21 @@ alluvialplot(
 )
 }
 \arguments{
-\item{.fill}{Variable in .data defining fill color.}
+\item{.data}{tibble or data_frame with data}
+
+\item{.x}{column defining x-axis}
+
+\item{.label}{optional x-axis label}
+
+\item{.fill}{optional column for subgroups}
+
+\item{.title}{optional plot title}
+
+\item{.gridrow}{optional facetting variable}
+
+\item{.gridcol}{optional facetting variable}
+
+\item{.fillcolors}{values manually defining fill colors.}
 }
 \description{
 \code{alluvialplot} returns a ggplot object.

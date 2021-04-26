@@ -2,13 +2,13 @@
 % Please edit documentation in R/descriptives.R
 \name{se_median}
 \alias{se_median}
-\title{Compute standard error median.}
+\title{Compute standard error of median.}
 \usage{
 se_median(x)
 }
 \arguments{
-\item{quelle}{Data for computation.}
+\item{x}{Data for computation.}
 }
 \description{
-Compute standard error median.
+Compute standard error of median.
 }

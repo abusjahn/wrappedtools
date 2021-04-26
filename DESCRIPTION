@@ -14,7 +14,7 @@ Description: Functions were mainly written for my own daily work or teaching, bu
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: boot, knitr, ggalluvial, coin, rlist
+Imports: boot, knitr, ggalluvial, coin, rlist, utils
 Depends: base, stats, rlang, tidyverse, magrittr
 Exports: magrittr, tidyverse
 SUGGESTS: pacman

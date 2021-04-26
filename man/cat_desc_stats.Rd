@@ -6,7 +6,7 @@
 \usage{
 cat_desc_stats(
   quelle,
-  trenner = "ARRR",
+  separator = " ",
   return_level = TRUE,
   ndigit = 0,
   groupvar = NULL,
@@ -19,13 +19,17 @@ cat_desc_stats(
 \arguments{
 \item{quelle}{Data for computation.}
 
-\item{trenner}{delimiter between results per level. ARRR is my placeholder for later replacement with ^p (newline) in Word}
+\item{separator}{delimiter between results per level, preset as ' '.}
 
 \item{return_level}{Should levels be reported?}
 
 \item{ndigit}{Digits for rounding of relative frequencies.}
 
-\item{percent}{logical, add percent-symbol after relative frequencies?}
+\item{groupvar}{Optional grouping factor.}
+
+\item{singleline}{Put all group levels in  a single line?}
+
+\item{percent}{Logical, add percent-symbol after relative frequencies?}
 
 \item{prettynum}{logical, apply prettyNum to results?}
 

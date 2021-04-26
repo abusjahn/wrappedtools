@@ -20,7 +20,7 @@ compare2numvars(
 )
 }
 \arguments{
-\item{data}{name of dataset (tibble/data.frame)to analyze.}
+\item{data}{name of dataset (tibble/data.frame) to analyze.}
 
 \item{testvars}{vector of column names.}
 
@@ -32,12 +32,13 @@ compare2numvars(
 
 \item{round_desc}{number of significant digits for rounding of descriptive stats}
 
-\item{range}{include min/max?
-qparam rangesep test between statistics and range or other elements}
+\item{range}{include min/max?}
 
-\item{pretext}{for function formatP}
+\item{rangesep}{text between statistics and range or other elements}
 
-\item{mark}{for function formatP}
+\item{pretext}{for function \link{formatP}}
+
+\item{mark}{for function \link{formatP}}
 
 \item{n}{create columns for n per group?}
 

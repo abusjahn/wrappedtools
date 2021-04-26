@@ -7,7 +7,7 @@
 SEM(x)
 }
 \arguments{
-\item{quelle}{Data for computation.}
+\item{x}{Data for computation.}
 }
 \description{
 Compute standard error of mean.

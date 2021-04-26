@@ -202,7 +202,8 @@ FindVars<-function(varnames,allnames=colnames(rawdata),
 #'@param t table to print
 #'@param nrows number of rows (30) before splitting
 #'@param ncols number of columns (100) before splitting
-#'@param caption header
+#'@param caption header.
+#'@param ... Further arguments passed to [kable]
 
 #'@export
 print_kable<-function(t,nrows=30,caption='',
@@ -230,7 +231,9 @@ print_kable<-function(t,nrows=30,caption='',
 #'\code{pdf_kable} formats tibbles/df's for markdown
 #'
 #'@param .input table to print
-#'@param twidth default 14
+#'@param twidth Default 14
+#'@param width1 Width of 1st column, default 6.
+#'@param tposition Default left 
 #'@param innercaption subheader
 #'@param caption header
 #'@param foot footnote

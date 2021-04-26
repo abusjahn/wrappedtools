@@ -1,4 +1,14 @@
-#'@export
+#'Calculate pairwise comparisons between group levels with corrections for 
+#'multiple testing
+#'
+#'@param x dependent variable, containing the data
+#'@param group independent variable, should be factor
+#'@param adjmethod method for adjusting p values (see [p.adjust])
+#'@param plevel threshold for significance
+#'@param symbols predefined as b,c, d...;  provides footnotes to mark group 
+#'differences, e.g. b means different from group 2
+#'@param ref is the 1st subgroup the reference (like in Dunnett test)
+#'export
 pairwise_fisher_test <- function(x,group,adjmethod='fdr',plevel=.05,
                                  symbols=letters[-1],#c('b','c','d','e','f','g'),
                                  ref=F) {
@@ -48,6 +58,19 @@ pairwise_fisher_test <- function(x,group,adjmethod='fdr',plevel=.05,
               sign_colwise=sign_colwise))
 }
 
+#'Calculate pairwise comparisons for ordinal categories between group levels 
+#'with corrections for multiple testing
+#'
+#'@param x dependent variable, containing the data
+#'@param group independent variable, should be factor
+#'@param adjmethod method for adjusting p values (see [p.adjust])
+#'@param plevel threshold for significance
+#'@param symbols predefined as b,c, d...;  provides footnotes to mark group 
+#'differences, e.g. b means different from group 2
+#'@param ref is the 1st subgroup the reference (like in Dunnett test)
+#'@param method which function should be used for individual testing?
+#'Predefined to cmh from package coin
+#'export
 #'@export
 pairwise_ordcat_test <- function(x,group,adjmethod='fdr',plevel=.05,
                                  symbols=letters[-1],
@@ -216,6 +239,8 @@ cortestR <- function(cordata,method='pearson',
 
 #'Two independent sample t-test with decision for var.equal based on var.test
 #'
+#'@param data Tibble or data_frame.
+#'@param formula Formula object with dependent and independent variable.
 #'@param cutoff is significance threshold for equal variances
 #'@export
 t_var_test <- function(data,formula,cutoff=.05){
@@ -234,16 +259,16 @@ t_var_test <- function(data,formula,cutoff=.05){
 
 #'Comparison for columns of numbers for 2 groups
 #'
-#'@param data name of dataset (tibble/data.frame)to analyze.
+#'@param data name of dataset (tibble/data.frame) to analyze.
 #'@param testvars vector of column names.
 #'@param groupvar name of grouping variable, has to translate to 2 groups.
 #'@param gaussian logical specifying normal or ordinal values.
 #'@param round_p level for rounding p-value
 #'@param round_desc number of significant digits for rounding of descriptive stats
 #'@param range include min/max?
-#'qparam rangesep test between statistics and range or other elements  
-#'@param pretext for function formatP
-#'@param mark for function formatP
+#'@param rangesep text between statistics and range or other elements  
+#'@param pretext for function [formatP]
+#'@param mark for function [formatP]
 #'@param n create columns for n per group?
 #'@param .n add n to descriptive statistics?
 #'@export
@@ -307,6 +332,16 @@ compare2numvars <- function(data,testvars,groupvar,
     return(out)
 }
 #'Comparison for columns of factors for 2 groups
+#'@param data name of data set (tibble/data.frame) to analyze.
+#'@param testvars vector of column names.
+#'@param groupvar name of grouping variable, has to translate to 2 groups.
+#'@param round_p level for rounding p-value.
+#'@param round_desc number of significant digits for rounding of descriptive stats
+#'@param pretext for function [formatP]
+#'@param mark for function [formatP]
+#'@param singleline Put all group levels in  a single line?
+#'@param spacer Text element to indent levels.  
+#'@param linebreak place holder for newline.
 #'
 #'@export
 compare2qualvars <- function(data,testvars,groupvar,
@@ -315,7 +350,7 @@ compare2qualvars <- function(data,testvars,groupvar,
                              singleline=F,
                              # newline=T,
                              spacer='&nbsp;',
-                             linebreak='ARRR'){
+                             linebreak='\n'){
   if(!(is.factor(data %>% pull(groupvar)))) {
     data %<>% mutate(!!groupvar:=factor(!!sym(groupvar)))
   }
@@ -388,6 +423,17 @@ compare2qualvars <- function(data,testvars,groupvar,
 }
 
 #'Comparison for columns of factors for more than 2 groups with post-hoc
+#'@param data name of data set (tibble/data.frame) to analyze.
+#'@param testvars vector of column names.
+#'@param groupvar name of grouping variable, has to translate to 2 groups.
+#'@param round_p level for rounding p-value.
+#'@param round_desc number of significant digits for rounding of descriptive stats
+#'@param pretext for function [formatP]
+#'@param mark for function [formatP]
+#'@param singleline Put all group levels in  a single line?
+#'@param spacer Text element to indent levels.  
+#'@param linebreak place holder for newline.
+#'@param prettynum Apply prettyNum to results?
 #'
 #'@export
 compare_n_qualvars <- function(data,testvars,groupvar,
@@ -396,7 +442,7 @@ compare_n_qualvars <- function(data,testvars,groupvar,
                              singleline=F,
                              # newline=T,
                              spacer='&nbsp;',
-                             linebreak='ARRR',
+                             linebreak='\n',
                              prettynum=F){
   if(!(is.factor(data %>% pull(groupvar)))) {
     data %<>% mutate(!!groupvar:=factor(!!sym(groupvar)))
@@ -406,7 +452,7 @@ compare_n_qualvars <- function(data,testvars,groupvar,
     purrr::map(data[testvars],
                .f = function(x) cat_desc_stats(
                  x,return_level = F,singleline=singleline,
-                 ndigit=round_desc,trenner = linebreak,
+                 ndigit=round_desc,separator = linebreak,
                  prettynum = prettynum)) %>%
     purrr::map(as_tibble)
   
@@ -415,7 +461,7 @@ compare_n_qualvars <- function(data,testvars,groupvar,
     purrr::map(data[testvars],
                .f = function(x) cat_desc_stats(x,
                                                singleline=singleline,
-                                               trenner = linebreak)$level) %>%
+                                               separator = linebreak)$level) %>%
     purrr::map(as_tibble)
   freqBYgroup <-
     purrr::map(data[testvars],
@@ -424,7 +470,7 @@ compare_n_qualvars <- function(data,testvars,groupvar,
                                                return_level = F,
                                                ndigit=round_desc,
                                                singleline=singleline,
-                                               trenner = linebreak,
+                                               separator = linebreak,
                                                prettynum = prettynum))
   
   p <-
@@ -472,6 +518,18 @@ compare_n_qualvars <- function(data,testvars,groupvar,
 }
 
 
+#'Calculate pairwise comparisons between group levels with corrections for 
+#'multiple testing
+#'
+#'@param dep_var dependent variable, containing the data
+#'@param indep_var independent variable, should be factor
+#'@param strat_var optiona factor for stratification
+#'@param adjmethod method for adjusting p values (see [p.adjust])
+#'@param distr The conditional null distribution of the test statistic is used to obtain p-values and an asymptotic approximation of the exact distribution is used by default (distribution = "asymptotic"). Alternatively, the distribution can be approximated via Monte Carlo resampling or computed exactly for univariate two-sample problems by setting distribution to "approximate" or "exact" respectively.
+#'@param plevel threshold for significance
+#'@param symbols predefined as b,c, d...;  provides footnotes to mark group 
+#'differences, e.g. b means different from group 2
+#'@param sep text between statistics and range or other elements  
 #'@export
 pairwise_wilcox_test <-
   function(dep_var,indep_var,strat_var=NA,
@@ -532,6 +590,15 @@ pairwise_wilcox_test <-
                 sign_colwise=sign_colwise))
   }
 
+#'Calculate pairwise comparisons between group levels with corrections for 
+#'multiple testing, extension of pairwise.t.test
+#'
+#'@param dep_var dependent variable, containing the data
+#'@param indep_var independent variable, should be factor
+#'@param adjmethod method for adjusting p values (see [p.adjust])
+#'@param plevel threshold for significance
+#'@param symbols predefined as b,c, d...;  provides footnotes to mark group 
+#'differences, e.g. b means different from group 2
 #'@export
 pairwise_t_test<-function(dep_var,indep_var,adjmethod='fdr',plevel=.05,
                           symbols=letters[-1])

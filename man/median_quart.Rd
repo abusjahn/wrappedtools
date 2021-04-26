@@ -13,7 +13,7 @@ median_quart(
   drop0 = FALSE,
   groupvar = NULL,
   range = F,
-  rangesep = "ARRR",
+  rangesep = " ",
   rangearrow = " -> ",
   prettynum = FALSE,
   .german = FALSE,
@@ -40,12 +40,13 @@ median_quart(
 \item{rangesep}{How should min/max be separated from mean+-sd?}
 
 \item{rangearrow}{What is put between min -> max?
-Default ARRR is my shortcut for newline ^p later in Word.
-#'@param prettynum logical, apply prettyNum to results?}
+Default ARRR is my shortcut for newline ^p later in Word.}
+
+\item{prettynum}{logical, apply prettyNum to results?}
 
 \item{.german}{logical, should "." and "," be used as bigmark and decimal?}
 
-\item{n}{Should n be included in output?}
+\item{.n}{Should n be included in output?}
 }
 \description{
 Compute median and quartiles and put together.

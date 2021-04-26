@@ -14,8 +14,29 @@ compare2qualvars(
   mark = F,
   singleline = F,
   spacer = "&nbsp;",
-  linebreak = "ARRR"
+  linebreak = "\\n"
 )
+}
+\arguments{
+\item{data}{name of data set (tibble/data.frame) to analyze.}
+
+\item{testvars}{vector of column names.}
+
+\item{groupvar}{name of grouping variable, has to translate to 2 groups.}
+
+\item{round_p}{level for rounding p-value.}
+
+\item{round_desc}{number of significant digits for rounding of descriptive stats}
+
+\item{pretext}{for function \link{formatP}}
+
+\item{mark}{for function \link{formatP}}
+
+\item{singleline}{Put all group levels in  a single line?}
+
+\item{spacer}{Text element to indent levels.}
+
+\item{linebreak}{place holder for newline.}
 }
 \description{
 Comparison for columns of factors for 2 groups

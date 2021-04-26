@@ -23,7 +23,7 @@ ggcormat(
 \arguments{
 \item{cor_mat}{correlation matrix as produced by cor.}
 
-\item{p_mat}{matrix of p-values, if provided, this is used to define size of dots rather than absolute correlation}
+\item{p_mat}{Optional matrix of p-values; if provided, this is used to define size of dots rather than absolute correlation}
 
 \item{method}{text specifying type of correlation.}
 
@@ -37,9 +37,15 @@ ggcormat(
 
 \item{titlesize}{as you already guessed, relative text size for title.}
 
+\item{breaklabels}{currently not used, intended for str_wrap.}
+
 \item{lower_only}{should only lower triangle be plotted?}
 
-\item{breaklables}{currently not used, intended for str_wrap.}
+\item{.low}{Color for heatmap.}
+
+\item{.high}{Color for heatmap.}
+
+\item{.legendtitle}{Optional name for color legend.}
 }
 \description{
 Print graphical representation of a correlation matrix.

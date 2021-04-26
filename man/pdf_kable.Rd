@@ -18,7 +18,11 @@ pdf_kable(
 \arguments{
 \item{.input}{table to print}
 
-\item{twidth}{default 14}
+\item{width1}{Width of 1st column, default 6.}
+
+\item{twidth}{Default 14}
+
+\item{tposition}{Default left}
 
 \item{innercaption}{subheader}
 
