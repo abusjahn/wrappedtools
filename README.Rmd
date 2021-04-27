@@ -18,7 +18,12 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of wrappedtools is to ...
+The goal of wrappedtools is to make my (and possibly your) life a bit easier 
+by a set of convenience functions for many common tasks like e.g. computation
+of mean and SD and pasting them with ±. Instead of   
+paste(round(mean(x),some_level), round(sd(x),some_level), sep='±')  
+a simple meansd(x, roundDig = some_level) is enough.   
+
 
 ## Installation
 
@@ -27,19 +32,30 @@ You can install the released version of wrappedtools from github with:
 ``` r
 devtools::install_github("abusjahn/wrappedtools")
 ```
+```{r include=FALSE}
+library(wrappedtools)
+```
 
-## Example
+## Examples
 
 This is a basic example which shows you how to solve a common problem,
 that is, describe and test differences in some measures between 2 samples,
-rounding descriptive statistics to a reasonable precision in the process:
+rounding descriptive statistics to a reasonable precision in the process:   
 
-```{r example}
-library(wrappedtools)
+```{r example1}
 compare2numvars(data = mtcars, testvars = c('wt','mpg', "disp"), 
                 groupvar = 'am',
                 gaussian = F,
                 round_desc = 3)
 ```
 
+To explain the *wrapper' part of the package name, here is another example, 
+using the ks.test as test for a Normal distribution, where ksnormal simply
+wrapps around the ks.test function:   
+```{r example2}
+somedata <- rnorm(100)
+ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
 
+ksnormal(somedata)
+```
+This should give you the general idea, I'll try to expand this intro over time...

@@ -6,7 +6,11 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of wrappedtools is to …
+The goal of wrappedtools is to make my (and possibly your) life a bit
+easier by a set of convenience functions for many common tasks like
+e.g. computation of mean and SD and pasting them with ±. Instead of  
+paste(round(mean(x),some\_level), round(sd(x),some\_level), sep=‘±’)  
+a simple meansd(x, roundDig = some\_level) is enough.
 
 ## Installation
 
@@ -16,7 +20,7 @@ You can install the released version of wrappedtools from github with:
 devtools::install_github("abusjahn/wrappedtools")
 ```
 
-## Example
+## Examples
 
 This is a basic example which shows you how to solve a common problem,
 that is, describe and test differences in some measures between 2
@@ -24,50 +28,6 @@ samples, rounding descriptive statistics to a reasonable precision in
 the process:
 
 ``` r
-library(wrappedtools)
-#> Lade nötiges Paket: rlang
-#> 
-#> Attache Paket: 'rlang'
-#> The following object is masked from 'package:crayon':
-#> 
-#>     chr
-#> Lade nötiges Paket: tidyverse
-#> -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
-#> v ggplot2 3.3.3     v purrr   0.3.4
-#> v tibble  3.1.1     v dplyr   1.0.5
-#> v tidyr   1.1.3     v stringr 1.4.0
-#> v readr   1.4.0     v forcats 0.5.1
-#> -- Conflicts ------------------------------------------ tidyverse_conflicts() --
-#> x purrr::%@%()         masks rlang::%@%()
-#> x ggplot2::%+%()       masks crayon::%+%()
-#> x purrr::as_function() masks rlang::as_function()
-#> x rlang::chr()         masks crayon::chr()
-#> x dplyr::filter()      masks stats::filter()
-#> x purrr::flatten()     masks rlang::flatten()
-#> x purrr::flatten_chr() masks rlang::flatten_chr()
-#> x purrr::flatten_dbl() masks rlang::flatten_dbl()
-#> x purrr::flatten_int() masks rlang::flatten_int()
-#> x purrr::flatten_lgl() masks rlang::flatten_lgl()
-#> x purrr::flatten_raw() masks rlang::flatten_raw()
-#> x purrr::invoke()      masks rlang::invoke()
-#> x dplyr::lag()         masks stats::lag()
-#> x purrr::list_along()  masks rlang::list_along()
-#> x purrr::modify()      masks rlang::modify()
-#> x purrr::prepend()     masks rlang::prepend()
-#> x purrr::splice()      masks rlang::splice()
-#> Lade nötiges Paket: magrittr
-#> 
-#> Attache Paket: 'magrittr'
-#> The following object is masked from 'package:purrr':
-#> 
-#>     set_names
-#> The following object is masked from 'package:tidyr':
-#> 
-#>     extract
-#> The following object is masked from 'package:rlang':
-#> 
-#>     set_names
-#> Package wrappedtools is still experimental, be warned that there might be dragons
 compare2numvars(data = mtcars, testvars = c('wt','mpg', "disp"), 
                 groupvar = 'am',
                 gaussian = F,
@@ -80,3 +40,24 @@ compare2numvars(data = mtcars, testvars = c('wt','mpg', "disp"),
 #> 2 mpg      19.2 (15.3/22.8) 17.3 (14.8/19.2) 22.8 (20.6/30.4) 0.002
 #> 3 disp     196 (121/337)    276 (177/360)    120 (79/160)     0.001
 ```
+
+To explain the \*wrapper’ part of the package name, here is another
+example, using the ks.test as test for a Normal distribution, where
+ksnormal simply wrapps around the ks.test function:
+
+``` r
+somedata <- rnorm(100)
+ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
+#> 
+#>  One-sample Kolmogorov-Smirnov test
+#> 
+#> data:  somedata
+#> D = 0.067262, p-value = 0.7562
+#> alternative hypothesis: two-sided
+
+ksnormal(somedata)
+#> [1] 0.7562029
+```
+
+This should give you the general idea, I’ll try to expand this intro
+over time…
