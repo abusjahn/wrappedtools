@@ -1,3 +1,4 @@
+utils::globalVariables(c("rawdata"))
 #'Automatic rounding to a reasonable length, based on largest number
 #'
 #'\code{roundR} returns a matrix of rounded numbers.
@@ -73,16 +74,7 @@ markSign<-function(SignIn,plabel=c('n.s.','+','*','**','***')) {
   SignIn <- as.numeric(SignIn)
   SignOut <- cut(SignIn,breaks = c(-Inf,.001,.01,.05,.1,1),
       labels = rev(plabel))
-  # SignOut<-' '
-  # if (!is.na(SignIn)) {
-  #   SignOut<-plabel[1]
-  #   if (SignIn<=0.1) {SignOut<-plabel[2]}
-  #   if (SignIn<=0.0501) {SignOut<-plabel[3]}
-  #   if (SignIn<=0.01) {SignOut<-plabel[4]}
-  #   if (SignIn<=0.001) {SignOut<-plabel[5]}
-  # }
   return(SignOut)
-  # cut(.1,c(0,.001,.01,.05,.1,1),c('***','**','*','+','n.s.'))
 }
 
 #'Re-format p-values
@@ -155,9 +147,12 @@ formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F,
 #'@examples
 #'FindVars(varnames = c('^c','g'),allnames = colnames(mtcars))
 #'FindVars(varnames = c('^c','g'),allnames = colnames(mtcars),exclude='r')
-FindVars<-function(varnames,allnames=colnames(rawdata),
+FindVars<-function(varnames,allnames=NULL,
                    exact=F,exclude=NA,casesensitive=T,
                    fixed=F) {
+  if(is.null(allnames)){
+    allnames <- colnames(get('rawdata'))
+  }
   if(fixed) {exact <- F}
   allnames_tmp <- allnames
   if(!casesensitive){

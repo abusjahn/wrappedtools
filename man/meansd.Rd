@@ -10,7 +10,7 @@ meansd(
   drop0 = F,
   groupvar = NULL,
   range = F,
-  rangesep = "ARRR",
+  rangesep = " ",
   .n = F,
   .german = F
 )

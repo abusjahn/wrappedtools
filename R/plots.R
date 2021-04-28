@@ -168,7 +168,7 @@ gg_rtree<-function(rpartdata=rpart_out,miny=NULL,
   if(german){
     t$leaf_labels$label <- str_replace(t$leaf_labels$label,'\\.',',')
   }
-  t$leaf_labels<-plyr::arrange(t$leaf_labels,x)
+  t$leaf_labels<-dplyr::arrange(t$leaf_labels,x)
   if(is.null(miny)) {miny<-c(min(t$leaf_labels$y),min(t$leaf_labels$y)/2)}
   for(label_i in seq_along(splitlevel)){
     t$labels$label[which(str_detect(t$labels$label,names(splitlevel)[label_i]))] %<>% 

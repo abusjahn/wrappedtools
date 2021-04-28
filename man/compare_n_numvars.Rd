@@ -10,7 +10,7 @@ compare_n_numvars(
   groupvar,
   round_desc = 2,
   range = F,
-  rangesep = "ARRR",
+  rangesep = " ",
   pretext = F,
   mark = F,
   round_p = 3,

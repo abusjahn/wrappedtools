@@ -14,12 +14,12 @@ Description: Functions were mainly written for my own daily work or teaching, bu
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: stats, boot, knitr, ggalluvial, coin, rlist, utils
-Depends: base, rlang, tidyverse, magrittr
+Imports: stats, boot, knitr, ggalluvial, coin, rlist, utils, testthat, dplyr, 
+  forcats, purrr, ggdendro,ggplot2,glue, rlang,stringr
+Depends: base, tidyverse, magrittr  
 Exports: magrittr, tidyverse
-SUGGESTS: pacman
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Suggests: 
-    testthat (>= 3.0.0)
+Suggests:
+    pacman
 Config/testthat/edition: 3

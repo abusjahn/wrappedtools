@@ -90,11 +90,11 @@ pairwise_ordcat_test <- function(x,group,adjmethod='fdr',plevel=.05,
         if(method=='cmh') {
           print('cmh_test')#(x~group,data=tempdata))
           p_unadj[secondgroup-1,firstgroup]<-
-            pvalue(cmh_test(x~group,data=tempdata))
+            pvalue(coin::cmh_test(x~group,data=tempdata))
         } else {
           print('lbl_test')#(x~group,data=tempdata))
           p_unadj[secondgroup-1,firstgroup]<-
-            pvalue(lbl_test(x~group,data=tempdata))
+            pvalue(coin::lbl_test(x~group,data=tempdata))
         }
       } else {
         p_unadj[secondgroup-1,firstgroup]<-1
@@ -247,11 +247,11 @@ t_var_test <- function(data,formula,cutoff=.05){
   formula <- as.formula(formula)
   t_out <- ''
   var.equal <- try(
-    stats:::var.test.formula(formula=formula,
+    var.test(formula=formula,
                              data=data)$p.value>cutoff,
     silent = T)
   if(is.logical(var.equal)) {
-    t_out <- stats:::t.test.formula(formula=formula,data=data,
+    t_out <- t.test(formula=formula,data=data,
                                     var.equal = var.equal)
   }
   return(t_out)
@@ -283,7 +283,7 @@ compare2numvars <- function(data,testvars,groupvar,
     COMP <- t_var_test
   } else{
     DESC <- median_quart
-    COMP <- stats:::wilcox.test.formula
+    COMP <- wilcox.test
   }
   # descnames <- names(formals(DESC))
   # pnames <- names(formals(COMP))
@@ -311,7 +311,7 @@ compare2numvars <- function(data,testvars,groupvar,
                    silent = T),
                    collapse = ':'),
                  p = formatP(try(
-                   COMP(data=.,formula = Value~Group)$p.value,
+                   COMP(formula = as.formula("Value~Group"),data=.)$p.value,
                    silent = T),
                    ndigits = round_p,pretext = pretext, 
                    mark=mark) %>% as.character()))
@@ -640,7 +640,7 @@ pairwise_t_test<-function(dep_var,indep_var,adjmethod='fdr',plevel=.05,
 compare_n_numvars <- function(.data=rawdata,
                               testvars,groupvar,# gaussian,
                               round_desc=2,range=F,
-                              rangesep='ARRR',
+                              rangesep=' ',
                               pretext=F,mark=F,round_p=3,
                               .n=F) {
   # if(gaussian){
@@ -661,7 +661,7 @@ compare_n_numvars <- function(.data=rawdata,
   t <- .data %>% gather(key = 'Variable',value = 'value',
                         all_of(testvars)) %>%
     nest(data=c(groupvar,value)) %>%
-    mutate(Variable=fct_inorder(Variable),
+    mutate(Variable=forcats::fct_inorder(Variable),
            desc=purrr::map_chr(data,~meansd(.$value,
                                      roundDig = round_desc,
                                      range = range,
@@ -686,7 +686,7 @@ compare_n_numvars <- function(.data=rawdata,
            p_tout=purrr::map(p_tout,~c(.x,''))) %>%
     purrr::map(~set_names(.x,testvars))
 
-  results <- tibble(Variable=fct_inorder(testvars),all=t$desc) %>%
+  results <- tibble(Variable=forcats::fct_inorder(testvars),all=t$desc) %>%
     full_join(reduce(t$desc_grp,rbind) %>%
                 matrix(nrow=length(testvars),byrow=F) %>%
                 as_tibble(.name_repair='unique') %>%
@@ -696,7 +696,7 @@ compare_n_numvars <- function(.data=rawdata,
                             paste(groupvar,glevel)))) %>%
     full_join(purrr::map_df(t$aout, 'Pr(>F)') %>% slice(1) %>%
                 gather(key='Variable',value = 'pANOVA') %>%
-                mutate(Variable=fct_inorder(Variable),
+                mutate(Variable=forcats::fct_inorder(Variable),
                        pANOVA=formatP(pANOVA,
                                       ndigits=round_p,
                                       pretext=pretext,

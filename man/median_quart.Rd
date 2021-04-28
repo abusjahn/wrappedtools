@@ -39,8 +39,7 @@ median_quart(
 
 \item{rangesep}{How should min/max be separated from mean+-sd?}
 
-\item{rangearrow}{What is put between min -> max?
-Default ARRR is my shortcut for newline ^p later in Word.}
+\item{rangearrow}{What is put between min -> max?}
 
 \item{prettynum}{logical, apply prettyNum to results?}
 

@@ -7,7 +7,7 @@
 #'@param range Should min and max be included in output?
 #'@param rangesep How should min/max be separated from mean+-sd?
 #'@param .n Should n be included in output?
-#'Default ARRR is my shortcut for newline ^p later in Word.
+#'e.g. use ARRR as shortcut for newline ^p later in Word.
 #'@param .n Should n be included in output?
 #'@param .german logical, should "." and "," be used as bigmark and decimal?
 #'@examples
@@ -17,7 +17,7 @@
 #' }
 #' @export
 meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
-                 range=F,rangesep='ARRR',.n=F, .german=F) {
+                 range=F,rangesep=' ',.n=F, .german=F) {
   out<-''
   if(length(na.omit(x))>0) {
     if(is.null(groupvar)) {
@@ -72,7 +72,6 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
 #'@param range Should min and max be included in output?
 #'@param rangesep How should min/max be separated from mean+-sd?
 #'@param rangearrow What is put between min -> max?
-#'Default ARRR is my shortcut for newline ^p later in Word.
 #'@param prettynum logical, apply prettyNum to results?
 #'@param .german logical, should "." and "," be used as bigmark and decimal?
 #'@param .n Should n be included in output?

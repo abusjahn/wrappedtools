@@ -6,7 +6,7 @@
 \usage{
 FindVars(
   varnames,
-  allnames = colnames(rawdata),
+  allnames = NULL,
   exact = F,
   exclude = NA,
   casesensitive = T,
