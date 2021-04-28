@@ -62,11 +62,11 @@ ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
 #>  One-sample Kolmogorov-Smirnov test
 #> 
 #> data:  somedata
-#> D = 0.082954, p-value = 0.4969
+#> D = 0.039806, p-value = 0.9974
 #> alternative hypothesis: two-sided
 
 ksnormal(somedata)
-#> [1] 0.4969199
+#> [1] 0.9973834
 ```
 
 This should give you the general idea, I’ll try to expand this intro

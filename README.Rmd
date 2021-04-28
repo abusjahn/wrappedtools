@@ -36,7 +36,7 @@ devtools::install_github("abusjahn/wrappedtools")
 library(wrappedtools)
 ```
 
-## Examples
+## Examples  
 
 This is a basic example which shows you how to solve a common problem,
 that is, describe and test differences in some measures between 2 samples,
