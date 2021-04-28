@@ -129,7 +129,7 @@ formatP<-function(pIn,ndigits=3,text=T,pretext=F,mark=F,
 }
 
 
-#'Find numeric index and names of column name patterns
+#'Find numeric index and names of columns based on patterns
 #'
 #'\code{FindVars} looks up columnames (by default for data-frame rawdata)
 #'based on parts of names, using regular expressions.
@@ -190,9 +190,10 @@ FindVars<-function(varnames,allnames=NULL,
               count=length(vars)))
 }
 
-#'Enhanced kable with definable number of rows/columns for splitting into subtables
+#'Enhanced kable with definable number of rows/columns for splitting 
 #'
-#'\code{print_kable} formats tibbles/df's for markdown
+#'\code{print_kable} formats tibbles/df's for markdown with splitting
+#'into sub-tables with repeated caption and header
 #'
 #'@param t table to print
 #'@param nrows number of rows (30) before splitting

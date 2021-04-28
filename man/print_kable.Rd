@@ -2,7 +2,7 @@
 % Please edit documentation in R/basefunctions.R
 \name{print_kable}
 \alias{print_kable}
-\title{Enhanced kable with definable number of rows/columns for splitting into subtables}
+\title{Enhanced kable with definable number of rows/columns for splitting}
 \usage{
 print_kable(t, nrows = 30, caption = "", ncols = 100, ...)
 }
@@ -18,5 +18,6 @@ print_kable(t, nrows = 30, caption = "", ncols = 100, ...)
 \item{...}{Further arguments passed to \link{kable}}
 }
 \description{
-\code{print_kable} formats tibbles/df's for markdown
+\code{print_kable} formats tibbles/df's for markdown with splitting
+into sub-tables with repeated caption and header
 }

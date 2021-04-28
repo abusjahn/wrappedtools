@@ -2,7 +2,7 @@
 % Please edit documentation in R/basefunctions.R
 \name{FindVars}
 \alias{FindVars}
-\title{Find numeric index and names of column name patterns}
+\title{Find numeric index and names of columns based on patterns}
 \usage{
 FindVars(
   varnames,
