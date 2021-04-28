@@ -90,11 +90,11 @@ pairwise_ordcat_test <- function(x,group,adjmethod='fdr',plevel=.05,
         if(method=='cmh') {
           print('cmh_test')#(x~group,data=tempdata))
           p_unadj[secondgroup-1,firstgroup]<-
-            pvalue(coin::cmh_test(x~group,data=tempdata))
+            coin::pvalue(coin::cmh_test(x~group,data=tempdata))
         } else {
           print('lbl_test')#(x~group,data=tempdata))
           p_unadj[secondgroup-1,firstgroup]<-
-            pvalue(coin::lbl_test(x~group,data=tempdata))
+            coin::pvalue(coin::lbl_test(x~group,data=tempdata))
         }
       } else {
         p_unadj[secondgroup-1,firstgroup]<-1
@@ -687,7 +687,7 @@ compare_n_numvars <- function(.data=rawdata,
     purrr::map(~set_names(.x,testvars))
 
   results <- tibble(Variable=forcats::fct_inorder(testvars),all=t$desc) %>%
-    full_join(reduce(t$desc_grp,rbind) %>%
+    full_join(purrr::reduce(t$desc_grp,rbind) %>%
                 matrix(nrow=length(testvars),byrow=F) %>%
                 as_tibble(.name_repair='unique') %>%
                 mutate(Variable=testvars) %>%
@@ -705,7 +705,7 @@ compare_n_numvars <- function(.data=rawdata,
       p.adjust(.x[lower.tri(.x,T)], method='fdr')),
                                     collapse = ';')) %>%
                 gather(key='Variable',value = 'p between groups' )) %>%
-    full_join(reduce(t$p_tout,rbind) %>%
+    full_join(purrr::reduce(t$p_tout,rbind) %>%
                 matrix(nrow=length(testvars),byrow=F) %>%
                 as_tibble() %>%
                          mutate(Variable=testvars) %>%

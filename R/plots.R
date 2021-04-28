@@ -209,27 +209,27 @@ gg_rtree<-function(rpartdata=rpart_out,miny=NULL,
   t$no$label<-yesno[2]
   
   # t$leaf_labels$y<-c(min(t$leaf_labels$y),0.05)
-  tree<-ggplot2::ggplot(t$segments)+
-    ggplot2::ggtitle(title)+
-    ggplot2::geom_segment(ggplot2::aes(x,y,xend=xend,yend=yend,
+  tree<-ggplot(t$segments)+
+    ggtitle(title)+
+    geom_segment(aes(x,y,xend=xend,yend=yend,
                      linetype=leaf,size=leaf))+
-    ggplot2::scale_size_manual(values=c(.5,1.25),guide=F)+
-    ggplot2::scale_linetype_manual(values=c(1,2),guide=F)+
-    ggplot2::geom_label(data=t$labels,
-                        ggplot2::aes(x,y,
+    scale_size_manual(values=c(.5,1.25),guide=F)+
+    scale_linetype_manual(values=c(1,2),guide=F)+
+    geom_label(data=t$labels,
+                        aes(x,y,
                                      label=gsub('>=',' \u2265 ',label)),
                vjust=-.25,hjust=.5,fontface='bold')+
-    ggplot2::geom_label(data=t$yes,aes(x,y,label=label),vjust=1,size=3,
+    geom_label(data=t$yes,aes(x,y,label=label),vjust=1,size=3,
                label.r=unit(.5,units='lines'),color='white',fill='black',
                fontface='bold')+
-    ggplot2::geom_label(data=t$no,aes(x,y,label=label),vjust=1,size=3,
+    geom_label(data=t$no,aes(x,y,label=label),vjust=1,size=3,
                label.r=unit(.5,units='lines'),color='white',fill='black',
                fontface='bold')+
-    ggplot2::geom_label(data=t$leaf_labels,aes(x,y,label=label),vjust=1,
+    geom_label(data=t$leaf_labels,aes(x,y,label=label),vjust=1,
                label.r=unit(0,'lines'),fontface='bold',fill='lightgrey')+
-    ggplot2::scale_y_continuous(limits=c(0,max(t$labels$y)*1.1))+
+    scale_y_continuous(limits=c(0,max(t$labels$y)*1.1))+
     ggdendro::theme_dendro()+
-    ggplot2::theme(plot.title = element_text(hjust = 0.5,size=rel(2)))
+    theme(plot.title = element_text(hjust = 0.5,size=rel(2)))
   return(tree)
 }
 

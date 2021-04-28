@@ -28,6 +28,16 @@ samples, rounding descriptive statistics to a reasonable precision in
 the process:
 
 ``` r
+# Standard functions to obtain median and quartiles:
+median(mtcars$mpg)
+#> [1] 19.2
+quantile(mtcars$mpg,probs = c(.25,.75))
+#>    25%    75% 
+#> 15.425 22.800
+# wrappedtools adds rounding and pasting:
+median_quart(mtcars$mpg)
+#> 19 (15/23)
+# on a higher level, this logic leads to
 compare2numvars(data = mtcars, testvars = c('wt','mpg', "disp"), 
                 groupvar = 'am',
                 gaussian = F,
@@ -52,11 +62,11 @@ ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
 #>  One-sample Kolmogorov-Smirnov test
 #> 
 #> data:  somedata
-#> D = 0.067262, p-value = 0.7562
+#> D = 0.082954, p-value = 0.4969
 #> alternative hypothesis: two-sided
 
 ksnormal(somedata)
-#> [1] 0.7562029
+#> [1] 0.4969199
 ```
 
 This should give you the general idea, I’ll try to expand this intro

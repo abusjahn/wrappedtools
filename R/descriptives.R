@@ -290,7 +290,7 @@ cat_desc_stats<-function(quelle,separator=' ',
     colnames(zwert) <- glue::glue('desc{levels(factor(groupvar))}')
   }
   if(singleline){
-    zwert <- map(zwert,
+    zwert <- purrr::map(zwert,
                  .f =  function(x)
                    glue::glue_collapse(x,sep = separator)) %>%
       as_tibble()

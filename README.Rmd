@@ -43,6 +43,12 @@ that is, describe and test differences in some measures between 2 samples,
 rounding descriptive statistics to a reasonable precision in the process:   
 
 ```{r example1}
+# Standard functions to obtain median and quartiles:
+median(mtcars$mpg)
+quantile(mtcars$mpg,probs = c(.25,.75))
+# wrappedtools adds rounding and pasting:
+median_quart(mtcars$mpg)
+# on a higher level, this logic leads to
 compare2numvars(data = mtcars, testvars = c('wt','mpg', "disp"), 
                 groupvar = 'am',
                 gaussian = F,

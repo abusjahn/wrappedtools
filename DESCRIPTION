@@ -5,7 +5,7 @@ Description: This is a set of functions data scientists and data janitors
     need frequently, so partly this is yet another toolbelt package. 
     Functions were mainly written for my own daily work or teaching, 
     but may be of use to others as well.
-Version: 0.7.3
+Version: 0.7.4
 Date: 2021-04-26
 Authors@R:
     person(given = "Andreas",
@@ -18,11 +18,12 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: stats, boot, knitr, ggalluvial, coin, rlist, utils, testthat, dplyr, 
-    forcats, purrr, ggdendro,ggplot2,glue, rlang,stringr
-Depends: tidyverse, magrittr  
-Exports: magrittr, tidyverse
+    forcats, purrr, ggdendro, glue, rlang, stringr, magrittr, ggplot2, tibble,
+    tidyr, kableExtra
+Exports: tidyverse
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Suggests: 
-    rmarkdown
+    rmarkdown,
+    tidyverse
