@@ -277,7 +277,8 @@ compare2numvars <- function(data,testvars,groupvar,
                             range=F,
                             rangesep=' ',
                             pretext=F,mark=F,n=F,.n=F){
-  options(warn=-1)
+  `.` <- Group <- Value <- Variable <- desc_groups <- NULL
+    options(warn=-1)
   if(gaussian){
     DESC <- meansd
     COMP <- t_var_test
@@ -643,7 +644,8 @@ compare_n_numvars <- function(.data=rawdata,
                               rangesep=' ',
                               pretext=F,mark=F,round_p=3,
                               .n=F) {
-  # if(gaussian){
+value <- Variable <- lmout <- p_tout <- pANOVA <- NULL
+    # if(gaussian){
   #   desc <- wrappedtools::meansd
   #   # grptest <- lm
   # } else {

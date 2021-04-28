@@ -22,6 +22,7 @@ ggcormat<-function(cor_mat, p_mat=NULL,
                    .low="blue3",.high="red2",
                    .legendtitle=NULL)
 {
+  `.` <- Variable1 <- Variable2 <- value <- size <- x <- y <- NULL
   rownames(cor_mat)<-colnames(cor_mat)
   # dd <- as.dist((1-cor_mat)/2)
   # hc <- hclust(dd)
@@ -155,9 +156,10 @@ ggcormat<-function(cor_mat, p_mat=NULL,
 #'@param title Headline for plot.
 #'@param german Use German numbers.
 #'@export
-gg_rtree<-function(rpartdata=rpart_out,miny=NULL,
-                   title='',german=F)
+gg_rtree<-function(rpartdata, miny=NULL,
+                   title='', german=F)
 {
+  x <- y <- xend <- yend <- leaf <- label <- NULL
   yesno <- c('yes','no')
   splitlevel=attr(rpartdata,'xlevels')
   if(german){yesno <- c('ja','nein')}

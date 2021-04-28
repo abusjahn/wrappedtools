@@ -1,12 +1,12 @@
 Package: wrappedtools
 Type: Package
-Title: Usefull Wrappers Around Commonly Used Functions
+Title: Useful Wrappers Around Commonly Used Functions
 Description: This is a set of functions data scientists and data janitors 
-    need frequently, so partly this is yet another toolbelt package. 
+    need frequently, so partly this is yet another tool-belt package. 
     Functions were mainly written for my own daily work or teaching, 
     but may be of use to others as well.
 Version: 0.7.4
-Date: 2021-04-26
+Date: 2021-04-28
 Authors@R:
     person(given = "Andreas",
            family = "Busjahn",
@@ -16,14 +16,12 @@ Authors@R:
 Maintainer: Andreas Busjahn <andreas@busjahn.net>
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
 Imports: stats, boot, knitr, ggalluvial, coin, rlist, utils, testthat, dplyr, 
     forcats, purrr, ggdendro, glue, rlang, stringr, magrittr, ggplot2, tibble,
     tidyr, kableExtra
-Exports: tidyverse
+Depends: tidyverse
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Suggests: 
-    rmarkdown,
-    tidyverse
+    rmarkdown

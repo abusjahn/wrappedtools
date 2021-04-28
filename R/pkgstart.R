@@ -30,3 +30,10 @@ NULL
 #'@importFrom tidyr gather spread separate nest
 NULL
 
+#'@importFrom utils data
+NULL
+
+#'@import tidyverse
+NULL
+
+

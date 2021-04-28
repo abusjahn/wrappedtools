@@ -4,7 +4,7 @@
 \alias{gg_rtree}
 \title{Plot  a regression tree with ggplot.}
 \usage{
-gg_rtree(rpartdata = rpart_out, miny = NULL, title = "", german = F)
+gg_rtree(rpartdata, miny = NULL, title = "", german = F)
 }
 \arguments{
 \item{rpartdata}{output from rpart.}
