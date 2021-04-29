@@ -2,7 +2,7 @@
 title: "Usage of wrappedtools"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{wrappedtools}
+  %\VignetteIndexEntry{Usage of wrappedtools}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
