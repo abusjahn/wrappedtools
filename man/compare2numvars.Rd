@@ -11,12 +11,12 @@ compare2numvars(
   gaussian,
   round_p = 3,
   round_desc = 2,
-  range = F,
+  range = FALSE,
   rangesep = " ",
-  pretext = F,
-  mark = F,
-  n = F,
-  .n = F
+  pretext = FALSE,
+  mark = FALSE,
+  n = FALSE,
+  .n = FALSE
 )
 }
 \arguments{

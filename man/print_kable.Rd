@@ -7,17 +7,20 @@
 print_kable(t, nrows = 30, caption = "", ncols = 100, ...)
 }
 \arguments{
-\item{t}{table to print}
+\item{t}{table to print.}
 
-\item{nrows}{number of rows (30) before splitting}
+\item{nrows}{number of rows (30) before splitting.}
 
 \item{caption}{header.}
 
-\item{ncols}{number of columns (100) before splitting}
+\item{ncols}{number of columns (100) before splitting.}
 
-\item{...}{Further arguments passed to \link{kable}}
+\item{...}{Further arguments passed to \link{kable}.}
+}
+\value{
+No return value, called for side effects.
 }
 \description{
-\code{print_kable} formats tibbles/df's for markdown with splitting
-into sub-tables with repeated caption and header
+\code{print_kable} formats and prints tibbles/df's in markdown with splitting
+into sub-tables with repeated caption and header.
 }

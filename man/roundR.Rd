@@ -6,34 +6,41 @@
 \usage{
 roundR(
   roundin,
-  smooth = F,
   level = 2,
-  textout = T,
-  drop0 = F,
-  .german = F,
-  .bigmark = F
+  smooth = FALSE,
+  textout = TRUE,
+  drop0 = FALSE,
+  .german = FALSE,
+  .bigmark = FALSE
 )
 }
 \arguments{
 \item{roundin}{A vector or matrix of numbers.}
 
+\item{level}{A number specifying number of relevant digits to keep.}
+
 \item{smooth}{A logical specifying if you want rounding before the dot
 (e.g. 12345 to 12300).}
 
-\item{level}{A number specifying number of relevant digits to keep.}
-
 \item{textout}{A logical if output is converted to text.}
 
-\item{drop0}{A logical if trailing zeros should be dropped}
+\item{drop0}{A logical if trailing zeros should be dropped.}
 
-\item{.german}{A logical if german numbers should be reported}
+\item{.german}{A logical if german numbers should be reported.}
 
 \item{.bigmark}{A logical if big.mark is to be shown, mark itself
-depends on parameter .german}
+depends on parameter .german.}
 }
 \value{
-vector of type character or numeric, depending on parameter textout
+vector of type character (default) or numeric,
+depending on parameter textout.
 }
 \description{
-\code{roundR} returns a matrix of rounded numbers.
+\code{roundR} takes a vector or matrix of numbers and returns rounded values
+with selected precision and various formatting options.
+}
+\examples{
+roundR(1.23456, level=3)
+roundR(1.23456, level=3, .german = TRUE)
+roundR(1234.56, level=2, smooth = TRUE)
 }

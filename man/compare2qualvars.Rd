@@ -10,9 +10,9 @@ compare2qualvars(
   groupvar,
   round_p = 3,
   round_desc = 2,
-  pretext = F,
-  mark = F,
-  singleline = F,
+  pretext = FALSE,
+  mark = FALSE,
+  singleline = FALSE,
   spacer = "&nbsp;",
   linebreak = "\\n"
 )

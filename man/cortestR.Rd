@@ -10,7 +10,7 @@ cortestR(
   digits = 3,
   digits_p = 3,
   sign = "symbol",
-  split = F
+  split = FALSE
 )
 }
 \arguments{

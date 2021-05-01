@@ -18,7 +18,7 @@ ggcormat<-function(cor_mat, p_mat=NULL,
                    method='Correlation', title='',
                    maxpoint=2.1,textsize=5,axistextsize=2,
                    titlesize=3,breaklabels=NULL,
-                   lower_only=T,
+                   lower_only=TRUE,
                    .low="blue3",.high="red2",
                    .legendtitle=NULL)
 {
@@ -47,7 +47,7 @@ ggcormat<-function(cor_mat, p_mat=NULL,
       mutate(Variable1=factor(Variable1,levels=var_order),
              Variable2=factor(Variable2,levels=var_order),
              size=-log10(formatP(as.numeric(size),
-                                 text = F))) %>% 
+                                 text = FALSE))) %>% 
       na.omit() 
     melted_p_mat$size[which(melted_p_mat$size>3)] <- 3
   melted_cor_mat <- full_join(melted_cor_mat[1:3],melted_p_mat,
@@ -157,13 +157,13 @@ ggcormat<-function(cor_mat, p_mat=NULL,
 #'@param german Use German numbers.
 #'@export
 gg_rtree<-function(rpartdata, miny=NULL,
-                   title='', german=F)
+                   title='', german=FALSE)
 {
   x <- y <- xend <- yend <- leaf <- label <- NULL
   yesno <- c('yes','no')
   splitlevel=attr(rpartdata,'xlevels')
   if(german){yesno <- c('ja','nein')}
-  t<-ggdendro::dendro_data(rpartdata,uniform=T,compress=T)
+  t<-ggdendro::dendro_data(rpartdata,uniform=TRUE,compress=TRUE)
   if(is.numeric(t$leaf_labels$label)) {
     t$leaf_labels$label<-prettyNum(as.numeric(t$leaf_labels$label))
   }
@@ -215,8 +215,8 @@ gg_rtree<-function(rpartdata, miny=NULL,
     ggtitle(title)+
     geom_segment(aes(x,y,xend=xend,yend=yend,
                      linetype=leaf,size=leaf))+
-    scale_size_manual(values=c(.5,1.25),guide=F)+
-    scale_linetype_manual(values=c(1,2),guide=F)+
+    scale_size_manual(values=c(.5,1.25),guide=FALSE)+
+    scale_linetype_manual(values=c(1,2),guide=FALSE)+
     geom_label(data=t$labels,
                         aes(x,y,
                                      label=gsub('>=',' \u2265 ',label)),
@@ -265,7 +265,7 @@ alluvialplot<-function(.data,.x,.label=NULL,.fill=NULL,
     geom_label(stat = "stratum", aes(label=after_stat(stratum)))+#infer.label = TRUE) +
     scale_x_discrete(limits = .label,
                      expand = c(.1, .05)) +
-    # scale_fill_viridis_d(option = 'D',guide=F)+
+    # scale_fill_viridis_d(option = 'D',guide=FALSE)+
     scale_y_continuous()+
     theme(panel.grid.major.x = element_blank())
   if(!is.null(.title)) {
@@ -275,10 +275,10 @@ alluvialplot<-function(.data,.x,.label=NULL,.fill=NULL,
   
   if(!is.null(.fillcolors)){
     plottmp <- plottmp+
-      scale_fill_manual(values = .fillcolors,guide=F)
+      scale_fill_manual(values = .fillcolors,guide=FALSE)
   } else {
     plottmp <- plottmp+
-      scale_fill_viridis_d(option = 'D',guide=F)
+      scale_fill_viridis_d(option = 'D',guide=FALSE)
   }
   if(!is.null(.gridrow)){
     plottmp <- plottmp  +

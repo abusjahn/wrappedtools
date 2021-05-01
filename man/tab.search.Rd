@@ -4,7 +4,7 @@
 \alias{tab.search}
 \title{Search within data.frame or tibble}
 \usage{
-tab.search(searchdata = rawdata, pattern, find.all = T, names.only = F)
+tab.search(searchdata = rawdata, pattern, find.all = T, names.only = FALSE)
 }
 \arguments{
 \item{searchdata}{table to search in, predefined as rawdata}

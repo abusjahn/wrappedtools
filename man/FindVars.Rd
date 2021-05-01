@@ -7,10 +7,10 @@
 FindVars(
   varnames,
   allnames = NULL,
-  exact = F,
+  exact = FALSE,
   exclude = NA,
-  casesensitive = T,
-  fixed = F
+  casesensitive = TRUE,
+  fixed = FALSE
 )
 }
 \arguments{
@@ -31,11 +31,13 @@ by default, colnames(rawdata).}
 A list with index, names, backticked names, and symbols
 }
 \description{
-\code{FindVars} looks up columnames (by default for data-frame rawdata)
+\code{FindVars} looks up colnames (by default for data-frame rawdata)
 based on parts of names, using regular expressions.
-exlusion rules may be specified as well.
+Exlusion rules may be specified as well.
 }
 \examples{
 FindVars(varnames = c('^c','g'),allnames = colnames(mtcars))
 FindVars(varnames = c('^c','g'),allnames = colnames(mtcars),exclude='r')
+rawdata <- mtcars
+FindVars(varnames = c('^c','g'))
 }

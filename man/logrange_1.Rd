@@ -3,14 +3,59 @@
 \docType{data}
 \name{logrange_1}
 \alias{logrange_1}
-\title{vector for log-scales at 1}
+\alias{logrange_5}
+\alias{logrange_123456789}
+\alias{logrange_12357}
+\alias{logrange_15}
+\title{Predefined sets of labels for plots with log-scaled axes}
 \format{
 An object of class \code{numeric} of length 41.
+
+An object of class \code{numeric} of length 738.
+
+An object of class \code{numeric} of length 369.
+
+An object of class \code{numeric} of length 205.
+
+An object of class \code{numeric} of length 82.
 }
 \usage{
 logrange_1
+
+logrange_5
+
+logrange_123456789
+
+logrange_12357
+
+logrange_15
+}
+\value{
+numeric vector
+
+numeric vector
 }
 \description{
-vector for log-scales at 1
+\code{logrange_1} returns a vector for log-labels at .1, 1, 100, 1000 ...
+}
+\section{Functions}{
+\itemize{
+\item \code{logrange_5}: vector for log-labels at
+1.0, 1.5, 2.0, 2.5 ... 10, 15, 20, 25 ...
+
+\item \code{logrange_123456789}: vector for log-labels at
+1, 2, 3 ... 9, 10, 20, 30 ... 90, 100 ...
+
+\item \code{logrange_12357}: vector for log-labels at
+1 ,2, 3, 5, 7, 10, 20 ,30, 50, 70 ...
+
+\item \code{logrange_15}: vector for log-labels at
+1, 5, 10, 50 ...
+}}
+
+\examples{
+ggplot(mtcars,aes(wt,mpg))+geom_point()+scale_y_log10(breaks=logrange_5)
+ggplot(mtcars,aes(wt,mpg))+geom_point()+scale_y_log10(breaks=logrange_123456789)
+
 }
 \keyword{datasets}

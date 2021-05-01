@@ -9,12 +9,12 @@ compare_n_numvars(
   testvars,
   groupvar,
   round_desc = 2,
-  range = F,
+  range = FALSE,
   rangesep = " ",
-  pretext = F,
-  mark = F,
+  pretext = FALSE,
+  mark = FALSE,
   round_p = 3,
-  .n = F
+  .n = FALSE
 )
 }
 \arguments{

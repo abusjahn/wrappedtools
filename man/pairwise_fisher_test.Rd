@@ -11,7 +11,7 @@ pairwise_fisher_test(
   adjmethod = "fdr",
   plevel = 0.05,
   symbols = letters[-1],
-  ref = F
+  ref = FALSE
 )
 }
 \arguments{

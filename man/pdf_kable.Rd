@@ -12,7 +12,7 @@ pdf_kable(
   innercaption = NULL,
   caption = "",
   foot = NULL,
-  escape = T
+  escape = TRUE
 )
 }
 \arguments{

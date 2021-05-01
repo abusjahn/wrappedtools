@@ -4,7 +4,7 @@
 \alias{meanse}
 \title{Compute mean and se and put together with the +- symbol.}
 \usage{
-meanse(x, mult = 1, roundDig = 2, drop0 = F)
+meanse(x, mult = 1, roundDig = 2, drop0 = FALSE)
 }
 \arguments{
 \item{x}{Data for computation.}

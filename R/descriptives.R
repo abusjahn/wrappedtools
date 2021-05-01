@@ -11,33 +11,33 @@
 #'@param .n Should n be included in output?
 #'@param .german logical, should "." and "," be used as bigmark and decimal?
 #'@examples
-#' # basic usage of meansd
-#' \dontrun{
-#' meansd(x=mtcars$wt)
-#' }
+#'# basic usage of meansd
+#'meansd(x=mtcars$wt)
+#'# with common options
+#''meansd(x=mtcars$wt, groupvar = mtcars$am, .n = TRUE)
 #' @export
-meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
-                 range=F,rangesep=' ',.n=F, .german=F) {
+meansd<-function(x,roundDig=2,drop0=FALSE,groupvar=NULL,
+                 range=FALSE,rangesep=' ',.n=FALSE, .german=FALSE) {
   out<-''
   if(length(na.omit(x))>0) {
     if(is.null(groupvar)) {
       meansd<-cbind(
-        matrix(c(mean(x,na.rm = T),
-                 sd(x,na.rm = T),
-                 min(x,na.rm = T),
-                 max(x,na.rm = T)),
-               ncol=4,byrow = F),
+        matrix(c(mean(x,na.rm = TRUE),
+                 sd(x,na.rm = TRUE),
+                 min(x,na.rm = TRUE),
+                 max(x,na.rm = TRUE)),
+               ncol=4,byrow = FALSE),
         length(na.omit(x)))
       meansd[1:2] %<>%
         roundR(level=roundDig, drop0=drop0,.german=.german)
       meansd[3:4] %<>%
         roundR(level=roundDig, drop0=drop0,.german=.german)
     } else {
-      meansd<- matrix(c(by(x,groupvar,mean,na.rm=T),
-                        by(x,groupvar,sd,na.rm=T),
-                        by(x,groupvar,min,na.rm=T),
-                        by(x,groupvar,max,na.rm=T)),
-                      ncol=4,byrow=F)%>% na_if(Inf) %>% na_if(-Inf) 
+      meansd<- matrix(c(by(x,groupvar,mean,na.rm=TRUE),
+                        by(x,groupvar,sd,na.rm=TRUE),
+                        by(x,groupvar,min,na.rm=TRUE),
+                        by(x,groupvar,max,na.rm=TRUE)),
+                      ncol=4,byrow=FALSE)%>% na_if(Inf) %>% na_if(-Inf) 
       meansd[,1:2] %<>%
       roundR(level=roundDig, drop0=drop0,.german=.german)
       meansd[,3:4] %<>%
@@ -79,7 +79,7 @@ meansd<-function(x,roundDig=2,drop0=F,groupvar=NULL,
 #'@export
 median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
 qtype=8,roundDig=2,drop0=FALSE,
-groupvar=NULL,range=F,rangesep=' ',
+groupvar=NULL,range=FALSE,rangesep=' ',
 rangearrow=' -> ',
 prettynum=FALSE,.german=FALSE,.n=FALSE) {
   out <- ' '
@@ -89,15 +89,15 @@ prettynum=FALSE,.german=FALSE,.n=FALSE) {
     if(is.null(groupvar)) {
       quart<-matrix(
         c(
-          stats::quantile(x,probs=c(probs,0,1),na.rm=T,type=qtype),
+          stats::quantile(x,probs=c(probs,0,1),na.rm=TRUE,type=qtype),
           length(na.omit(x))),
           ncol=length(probs)+3)
     } else {
       quart<-matrix(
         unlist(
-          by(x,groupvar,quantile,probs=c(probs,0,1),na.rm=T,
+          by(x,groupvar,quantile,probs=c(probs,0,1),na.rm=TRUE,
              type=qtype)),
-        ncol=length(probs)+2,byrow=T)
+        ncol=length(probs)+2,byrow=TRUE)
       quart <- cbind(quart,
                      unlist(by(
                        x,groupvar,function(x){length(na.omit(x))})))
@@ -116,7 +116,7 @@ prettynum=FALSE,.german=FALSE,.n=FALSE) {
       #             format = 'f',
       #             big.mark = bigmark,
       #             decimal.mark = decimal,
-      #             preserve.width = 'common',drop0trailing = F)})
+      #             preserve.width = 'common',drop0trailing = FALSE)})
       }
     } else {
       quart[,-ncol(quart)]<-round(quart[,-ncol(quart)],nround)
@@ -127,7 +127,7 @@ prettynum=FALSE,.german=FALSE,.n=FALSE) {
                   format = 'f',
                   big.mark = bigmark,
                   decimal.mark = decimal,
-                  preserve.width = 'common',drop0trailing = F)})
+                  preserve.width = 'common',drop0trailing = FALSE)})
       }
     }
     out<-str_glue('{quart[,2]} ({quart[,1]}/{quart[,3]})')
@@ -151,9 +151,9 @@ prettynum=FALSE,.german=FALSE,.n=FALSE) {
 #'@param drop0 Should trailing zeros be dropped?
 #'@param mult multiplier for se, default 1, can be set to 2 or 1.96 to create confidence intervals
 #'@export
-meanse<-function(x,mult=1,roundDig=2,drop0=F) {
-  m<-mean(x,na.rm=T)
-  s<-sd(x,na.rm = T)/sqrt(length(na.omit(x)))
+meanse<-function(x,mult=1,roundDig=2,drop0=FALSE) {
+  m<-mean(x,na.rm=TRUE)
+  s<-sd(x,na.rm = TRUE)/sqrt(length(na.omit(x)))
     ms <- roundR(c(m,s*mult),
                  level = roundDig,drop0 = drop0)
     out <- paste(ms[1],ms[2],sep='\u00B1')
@@ -166,7 +166,7 @@ meanse<-function(x,mult=1,roundDig=2,drop0=F) {
 #'@param x Data for computation.
 #'@export
 se_median<-function(x) {
-  mad(x,na.rm=T)/sqrt(length(na.omit(x)))
+  mad(x,na.rm=TRUE)/sqrt(length(na.omit(x)))
 }
 
 #'Compute confidence interval of median by bootstrapping.
@@ -180,10 +180,10 @@ median_cl_boot <- function(x, conf = 0.95, type='basic') {
   lconf <- (1 - conf)/2
   uconf <- 1 - lconf
   # require(boot)
-  bmedian <- function(x, ind) median(x[ind],na.rm=T)
+  bmedian <- function(x, ind) median(x[ind],na.rm=TRUE)
   bt <- boot::boot(x, bmedian, 10000)
   bb <- boot::boot.ci(bt, type = type)
-  data.frame(y = median(x,na.rm=T),
+  data.frame(y = median(x,na.rm=TRUE),
              ymin = quantile(bt$t, lconf),
              ymax = quantile(bt$t, uconf))
 }
@@ -226,18 +226,18 @@ cat_desc_stats<-function(quelle,separator=' ',
   if(is.null(groupvar)) {
     tableout<-matrix(table(quelle),
                      nrow=length(levels(quelle)),
-                     byrow = F)
+                     byrow = FALSE)
     colnames(tableout) <- 'abs'
     pt_temp <- round(100*prop.table(tableout),
                      ndigit)
-    if(.german) {prettynum <- T}
+    if(.german) {prettynum <- TRUE}
     if(prettynum){
       pt_temp <- formatC(pt_temp,
                          digits = ndigit,
                          format = 'f',
                          big.mark = bigmark,
                          decimal.mark = decimal,
-                         preserve.width = 'common',drop0trailing = F)
+                         preserve.width = 'common',drop0trailing = FALSE)
       tableout <- formatC(tableout,
                          digits = 0,
                          format = 'f',
@@ -249,12 +249,12 @@ cat_desc_stats<-function(quelle,separator=' ',
                               pt_temp,
                               percent,')'),
                        nrow=length(levels(quelle)),
-                       byrow = F)
+                       byrow = FALSE)
     colnames(ptableout) <- 'rel'
   } else {
     tableout <- matrix(unlist(by(quelle,groupvar,table)),
                        nrow=length(levels(quelle)),
-                       byrow = F)
+                       byrow = FALSE)
     colnames(tableout) <- glue::glue('abs{levels(factor(groupvar))}')
 
     pt_temp <- round(100*prop.table(tableout,margin = 2),ndigit)
@@ -264,7 +264,7 @@ cat_desc_stats<-function(quelle,separator=' ',
                          format = 'f',
                          big.mark = bigmark,
                          decimal.mark = decimal,
-                         preserve.width = 'common',drop0trailing = F)
+                         preserve.width = 'common',drop0trailing = FALSE)
       tableout <- formatC(tableout,
                           digits = 0,
                           format = 'f',
@@ -276,14 +276,14 @@ cat_desc_stats<-function(quelle,separator=' ',
       paste0(' (',pt_temp,
              percent,')'),
       nrow=length(levels(quelle)),
-      byrow = F)
+      byrow = FALSE)
     colnames(ptableout) <- glue::glue('rel{levels(factor(groupvar))}')
   }
   zwert <- purrr::map2(tableout,ptableout,glue::glue) %>%
     as.character() %>%
     matrix(
       nrow=length(levels(quelle)),
-      byrow = F) %>% as_tibble(.name_repair = 'minimal')
+      byrow = FALSE) %>% as_tibble(.name_repair = 'minimal')
   if(is.null(groupvar)){
     colnames(zwert) <- 'desc'
   } else {
@@ -296,7 +296,7 @@ cat_desc_stats<-function(quelle,separator=' ',
       as_tibble()
   }
   levdesstats<-list(level=level, freq=zwert)
-  if(return_level==T) {
+  if(return_level==TRUE) {
     return(levdesstats)
   } else {
     return(zwert)
@@ -308,7 +308,7 @@ cat_desc_stats<-function(quelle,separator=' ',
 #'@param x Data for computation.
 #'@export
 var_coeff<-function(x) {
-  return(sd(x,na.rm=T)/mean(x,na.rm=T)*100)
+  return(sd(x,na.rm=TRUE)/mean(x,na.rm=TRUE)*100)
 }
 
 #'Compute standard error of mean.
@@ -316,5 +316,5 @@ var_coeff<-function(x) {
 #'@param x Data for computation.
 #'@export
 SEM <- function(x){
-  return(sd(x,na.rm=T)/sqrt(length(na.omit(x))))
+  return(sd(x,na.rm=TRUE)/sqrt(length(na.omit(x))))
 }

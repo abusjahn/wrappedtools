@@ -9,8 +9,15 @@ markSign(SignIn, plabel = c("n.s.", "+", "*", "**", "***"))
 \arguments{
 \item{SignIn}{A single p-value.}
 
-\item{plabel}{A translation table, predefined with the usual symbols}
+\item{plabel}{A translation table, predefined with the usual symbols.}
+}
+\value{
+factor with label as defined in plabel.
 }
 \description{
-\code{markSign} returns a single text element.
+\code{markSign} returns the symbol associated with a significance level.
+}
+\examples{
+markSign(0.012)
+
 }

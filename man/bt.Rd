@@ -4,12 +4,12 @@
 \alias{bt}
 \title{Add backticks to names or remove them}
 \usage{
-bt(x, remove = F)
+bt(x, remove = FALSE)
 }
 \arguments{
 \item{x}{Names to backtick}
 
-\item{remove}{Option to remove existing backticks, default=F}
+\item{remove}{Option to remove existing backticks, default=FALSE}
 }
 \description{
 \code{bt} adds leading and trailing backticks to make illegal variable names

@@ -14,7 +14,7 @@ ggcormat(
   axistextsize = 2,
   titlesize = 3,
   breaklabels = NULL,
-  lower_only = T,
+  lower_only = TRUE,
   .low = "blue3",
   .high = "red2",
   .legendtitle = NULL

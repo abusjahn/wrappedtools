@@ -2,25 +2,42 @@
 % Please edit documentation in R/basefunctions.R
 \name{formatP}
 \alias{formatP}
-\title{Re-format p-values}
+\title{Re-format p-values, avoiding rounding to 0}
 \usage{
-formatP(pIn, ndigits = 3, text = T, pretext = F, mark = F, german_num = F)
+formatP(
+  pIn,
+  ndigits = 3,
+  textout = TRUE,
+  pretext = FALSE,
+  mark = FALSE,
+  german_num = FALSE
+)
 }
 \arguments{
 \item{pIn}{A numeric vector or matrix with p-values.}
 
 \item{ndigits}{Number of digits (default=3).}
 
-\item{text}{Should output be casted to character default=T)?}
+\item{textout}{Should output be casted to character default=TRUE)?}
 
-\item{pretext}{Should = or < be added before p (default=F)?}
+\item{pretext}{Should = or < be added before p (default=FALSE)?}
 
-\item{mark}{Should significance level be added after p (default=F)?}
+\item{mark}{Should significance level be added after p (default=FALSE)?}
 
 \item{german_num}{change dot (default) to comma?}
+}
+\value{
+matrix with type character (default) or numeric,
+depending on parameter textout
 }
 \description{
 \code{formatP} simplifies p-values by rounding to the maximum of p or a
 predefined level. Optionally < or = can be added, as well as
 symbols according to significance level.
+}
+\examples{
+formatP(0.012345)
+formatP(0.012345,ndigits=4)
+formatP(0.000122345,ndigits=3,pretext=TRUE)
+
 }

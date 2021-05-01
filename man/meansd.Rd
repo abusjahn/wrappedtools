@@ -7,12 +7,12 @@
 meansd(
   x,
   roundDig = 2,
-  drop0 = F,
+  drop0 = FALSE,
   groupvar = NULL,
-  range = F,
+  range = FALSE,
   rangesep = " ",
-  .n = F,
-  .german = F
+  .n = FALSE,
+  .german = FALSE
 )
 }
 \arguments{
@@ -34,10 +34,4 @@ meansd(
 }
 \description{
 Compute mean and sd and put together with the +- symbol.
-}
-\examples{
-# basic usage of meansd
-\dontrun{
-meansd(x=mtcars$wt)
-}
 }

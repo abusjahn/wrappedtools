@@ -12,7 +12,7 @@ median_quart(
   roundDig = 2,
   drop0 = FALSE,
   groupvar = NULL,
-  range = F,
+  range = FALSE,
   rangesep = " ",
   rangearrow = " -> ",
   prettynum = FALSE,
