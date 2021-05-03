@@ -192,11 +192,10 @@ pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 #' ksnormal(x = mtcars$wt)
 #' @export
 ksnormal <- function(x) {
-  options(warn = -1)
+  suppressWarnings(
   ksout <- ks.test(x, "pnorm", mean(x, na.rm = TRUE), sd(x, na.rm = TRUE),
     exact = FALSE
-  )$p.value
-  options(warn = 0)
+  )$p.value)
   return(ksout)
 }
 
@@ -403,7 +402,6 @@ compare2numvars <- function(data, dep_vars, indep_var,
                             rangesep = " ",
                             pretext = FALSE, mark = FALSE, n = FALSE, add_n = FALSE) {
   `.` <- Group <- Value <- Variable <- desc_groups <- NULL
-  options(warn = -1)
   if (gaussian) {
     DESC <- meansd
     COMP <- t_var_test
@@ -445,7 +443,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
       collapse = ":"
       ),
       p = formatP(try(
-        COMP(formula = as.formula("Value~Group"), data = .)$p.value,
+        suppressWarnings(COMP(formula = as.formula("Value~Group"), data = .)$p.value),
         silent = TRUE
       ),
       ndigits = round_p, pretext = pretext,
@@ -471,7 +469,6 @@ compare2numvars <- function(data, dep_vars, indep_var,
   if (n == FALSE) {
     out <- dplyr::select(out, -n, -starts_with("n "))
   }
-  options(warn = 0)
   return(out)
 }
 
