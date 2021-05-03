@@ -23,7 +23,8 @@ ggcormat(
 \arguments{
 \item{cor_mat}{correlation matrix as produced by cor.}
 
-\item{p_mat}{Optional matrix of p-values; if provided, this is used to define size of dots rather than absolute correlation}
+\item{p_mat}{Optional matrix of p-values; if provided, this is used to define
+size of dots rather than absolute correlation.}
 
 \item{method}{text specifying type of correlation.}
 
@@ -47,6 +48,18 @@ ggcormat(
 
 \item{.legendtitle}{Optional name for color legend.}
 }
+\value{
+A ggplot object, allowing further styling.
+}
 \description{
 Print graphical representation of a correlation matrix.
+}
+\examples{
+coeff_pvalues <- cortestR(mtcars[,c('wt','mpg','qsec','hp')],
+                         split = TRUE,sign_symbol = FALSE)
+# focus on coefficients:
+ggcormat(cor_mat = coeff_pvalues$corout,maxpoint = 5)
+ggcormat(cor_mat = coeff_pvalues$corout,
+        p_mat = coeff_pvalues$pout, maxpoint = 5)
+        
 }
