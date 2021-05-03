@@ -42,6 +42,5 @@ between all group levels with corrections for multiple testing based on
 \link{wilcox_test} from package coin.
 }
 \examples{
-pairwise_wilcox_test(dep_var = mtcars$wt,indep_var = mtcars$cyl)
-
+pairwise_wilcox_test(dep_var = mtcars$wt, indep_var = mtcars$cyl)
 }

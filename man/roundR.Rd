@@ -40,7 +40,7 @@ depending on parameter textout.
 with selected precision and various formatting options.
 }
 \examples{
-roundR(1.23456, level=3)
-roundR(1.23456, level=3, .german = TRUE)
-roundR(1234.56, level=2, smooth = TRUE)
+roundR(1.23456, level = 3)
+roundR(1.23456, level = 3, .german = TRUE)
+roundR(1234.56, level = 2, smooth = TRUE)
 }

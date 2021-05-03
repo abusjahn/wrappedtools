@@ -48,9 +48,12 @@ number of rows is number of dep_vars.
 descriptive statistics for a group of categorical dependent variables.
 }
 \examples{
-compare2qualvars(data=mtcars,dep_vars = c('gear','cyl','carb'),indep_var = 'am',
-                spacer=' ')
-compare2qualvars(data=mtcars,dep_vars = c('gear','cyl','carb'),indep_var = 'am',
-                spacer=' ', singleline=TRUE)
-
+compare2qualvars(
+  data = mtcars, dep_vars = c("gear", "cyl", "carb"), indep_var = "am",
+  spacer = " "
+)
+compare2qualvars(
+  data = mtcars, dep_vars = c("gear", "cyl", "carb"), indep_var = "am",
+  spacer = " ", singleline = TRUE
+)
 }

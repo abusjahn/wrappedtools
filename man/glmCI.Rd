@@ -22,7 +22,6 @@ A list with coefficient, CIs, and pasted coef([CIs]).
 \code{glm_CI} computes and formats of CIs for glm.
 }
 \examples{
-glm_out <- glm(am~mpg,family=binomial,data=mtcars)
+glm_out <- glm(am ~ mpg, family = binomial, data = mtcars)
 glmCI(glm_out)
-
 }

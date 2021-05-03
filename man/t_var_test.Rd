@@ -21,8 +21,7 @@ A list from \link{t.test}
 and calls t.test, setting the option var.equal accordingly.
 }
 \examples{
-t_var_test(mtcars,wt~am)
+t_var_test(mtcars, wt ~ am)
 # may be used in pipes:
-mtcars \%>\% t_var_test(wt~am)
-
+mtcars \%>\% t_var_test(wt ~ am)
 }

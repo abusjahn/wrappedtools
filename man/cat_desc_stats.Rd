@@ -51,8 +51,7 @@ categorical data with a number of formatting options.
 }
 \examples{
 cat_desc_stats(mtcars$gear)
-cat_desc_stats(mtcars$gear,return_level=FALSE)
-cat_desc_stats(mtcars$gear,groupvar=mtcars$am)
-cat_desc_stats(mtcars$gear,groupvar=mtcars$am, singleline=TRUE)
-
+cat_desc_stats(mtcars$gear, return_level = FALSE)
+cat_desc_stats(mtcars$gear, groupvar = mtcars$am)
+cat_desc_stats(mtcars$gear, groupvar = mtcars$am, singleline = TRUE)
 }

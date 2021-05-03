@@ -55,8 +55,7 @@ Compute median and quartiles and put together.
 }
 \examples{
 # basic usage of median_quart
-median_quart(x=mtcars$wt)
+median_quart(x = mtcars$wt)
 # with additional options
-median_quart(x=mtcars$wt, groupvar = mtcars$am, add_n = TRUE)
-
+median_quart(x = mtcars$wt, groupvar = mtcars$am, add_n = TRUE)
 }

@@ -16,6 +16,5 @@ numeric vector with SEM.
 \code{SEM} computes standard error of mean.
 }
 \examples{
-SEM(x=mtcars$wt)
-
+SEM(x = mtcars$wt)
 }

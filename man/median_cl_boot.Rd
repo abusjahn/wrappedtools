@@ -24,6 +24,5 @@ estimated median, based on bootstrapping.
 }
 \examples{
 # basic usage of meanse
-median_cl_boot(x=mtcars$wt)
-
+median_cl_boot(x = mtcars$wt)
 }

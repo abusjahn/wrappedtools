@@ -42,8 +42,7 @@ reported separately.
 }
 \examples{
 # with defaults
-cortestR(mtcars[,c('wt','mpg','qsec')],split = FALSE,sign_symbol = TRUE)
+cortestR(mtcars[, c("wt", "mpg", "qsec")], split = FALSE, sign_symbol = TRUE)
 # separate coefficients and p-values
-cortestR(mtcars[,c('wt','mpg','qsec')],split = TRUE,sign_symbol = FALSE)
-
+cortestR(mtcars[, c("wt", "mpg", "qsec")], split = TRUE, sign_symbol = FALSE)
 }

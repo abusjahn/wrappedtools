@@ -36,8 +36,8 @@ based on parts of names, using regular expressions.
 Exlusion rules may be specified as well.
 }
 \examples{
-FindVars(varnames = c('^c','g'),allnames = colnames(mtcars))
-FindVars(varnames = c('^c','g'),allnames = colnames(mtcars),exclude='r')
+FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars))
+FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars), exclude = "r")
 rawdata <- mtcars
-FindVars(varnames = c('^c','g'))
+FindVars(varnames = c("^c", "g"))
 }

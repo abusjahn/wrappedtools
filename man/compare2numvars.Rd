@@ -54,11 +54,14 @@ depending on parameter gaussian. Descriptive statistics, depending on distributi
 are reported as well.
 }
 \examples{
-#Assuming Normal distribution:
-compare2numvars(data=mtcars,dep_vars = c('wt','mpg','qsec'),indep_var = 'am',
-               gaussian = TRUE)
-#Ordinal scale:
-compare2numvars(data=mtcars,dep_vars = c('wt','mpg','qsec'),indep_var = 'am',
-               gaussian = FALSE)
-               
+# Assuming Normal distribution:
+compare2numvars(
+  data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
+  gaussian = TRUE
+)
+# Ordinal scale:
+compare2numvars(
+  data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
+  gaussian = FALSE
+)
 }

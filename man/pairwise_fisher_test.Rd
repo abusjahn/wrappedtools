@@ -36,9 +36,8 @@ A list with elements "methods" (character), "p.value" (matrix),
 group levels with corrections for multiple testing.
 }
 \examples{
-#All pairwise comparisons
-pairwise_fisher_test(dep_var=mtcars$cyl,indep_var=mtcars$gear)
-#Only comparison against reference gear=3
-pairwise_fisher_test(dep_var=mtcars$cyl, indep_var=mtcars$gear,ref = TRUE)
-
+# All pairwise comparisons
+pairwise_fisher_test(dep_var = mtcars$cyl, indep_var = mtcars$gear)
+# Only comparison against reference gear=3
+pairwise_fisher_test(dep_var = mtcars$cyl, indep_var = mtcars$gear, ref = TRUE)
 }

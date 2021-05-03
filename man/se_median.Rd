@@ -17,6 +17,5 @@ numeric vector with SE Median.
 }
 \examples{
 # basic usage of meanse
-se_median(x=mtcars$wt)
-
+se_median(x = mtcars$wt)
 }

@@ -17,10 +17,11 @@ p.value from \link{ks.test}.
 Normal distribution
 }
 \examples{
-#original ks.test:
-ks.test(x = mtcars$wt, pnorm, mean=mean(mtcars$wt, na.rm=TRUE),
-       sd=sd(mtcars$wt, na.rm=TRUE))
+# original ks.test:
+ks.test(
+  x = mtcars$wt, pnorm, mean = mean(mtcars$wt, na.rm = TRUE),
+  sd = sd(mtcars$wt, na.rm = TRUE)
+)
 # wrapped version:
 ksnormal(x = mtcars$wt)
-
 }

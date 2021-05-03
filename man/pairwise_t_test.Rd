@@ -33,6 +33,5 @@ matrix of p-values, and character vector with significance indicators.
 with corrections for multiple testing based on \link{pairwise.t.test}
 }
 \examples{
-pairwise_t_test(dep_var = mtcars$wt,indep_var = mtcars$cyl)
-
+pairwise_t_test(dep_var = mtcars$wt, indep_var = mtcars$cyl)
 }

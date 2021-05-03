@@ -19,5 +19,4 @@ factor with label as defined in plabel.
 }
 \examples{
 markSign(0.012)
-
 }

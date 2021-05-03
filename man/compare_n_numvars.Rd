@@ -18,23 +18,21 @@ compare_n_numvars(
 )
 }
 \arguments{
-\item{.data}{name of dataset (tibble/data.frame)to analyze, defaults to rawdata.}
+\item{.data}{name of dataset (tibble/data.frame) to analyze, defaults to rawdata.}
 
 \item{dep_vars}{vector of column names.}
 
 \item{indep_var}{name of grouping variable.}
 
-\item{round_desc}{number of significant digits for rounding of descriptive stats}
+\item{round_desc}{number of significant digits for rounding of descriptive stats.}
 
 \item{range}{include min/max?}
 
-\item{rangesep}{text between statistics and range or other elements}
+\item{rangesep}{text between statistics and range or other elements.}
 
-\item{pretext}{for function formatP}
+\item{pretext, mark}{for function formatP.}
 
-\item{mark}{for function formatP}
-
-\item{round_p}{level for rounding p-value}
+\item{round_p}{level for rounding p-value.}
 
 \item{add_n}{add n to descriptive statistics?}
 }
@@ -48,12 +46,15 @@ and descriptives pasted with significance.
 Comparison for columns of Gaussian measures for n groups
 }
 \examples{
-#Usually,only the result table is relevant:
-compare_n_numvars(.data=mtcars, dep_vars = c('wt','mpg','qsec'),
-                  indep_var = 'cyl')$results
-#For a report, result columns may be filtered as needed:
-compare_n_numvars(.data=mtcars, dep_vars = c('wt','mpg','qsec'),
-                  indep_var = 'cyl')$results \%>\% 
-                  dplyr::select(Variable,`cyl 4 fn`:`cyl 8 fn`,pANOVA)
-
+# Usually,only the result table is relevant:
+compare_n_numvars(
+  .data = mtcars, dep_vars = c("wt", "mpg", "qsec"),
+  indep_var = "cyl"
+)$results
+# For a report, result columns may be filtered as needed:
+compare_n_numvars(
+  .data = mtcars, dep_vars = c("wt", "mpg", "qsec"),
+  indep_var = "cyl"
+)$results \%>\%
+  dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, pANOVA)
 }

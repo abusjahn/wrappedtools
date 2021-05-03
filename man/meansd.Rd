@@ -40,8 +40,7 @@ Compute mean and sd and put together with the ± symbol.
 }
 \examples{
 # basic usage of meansd
-meansd(x=mtcars$wt)
+meansd(x = mtcars$wt)
 # with additional options
-meansd(x=mtcars$wt, groupvar = mtcars$am, add_n = TRUE)
-
+meansd(x = mtcars$wt, groupvar = mtcars$am, add_n = TRUE)
 }

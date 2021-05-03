@@ -41,10 +41,9 @@ A list with elements "methods" (character), "p.value" (matrix),
 categories between all group levels with corrections for multiple testing.
 }
 \examples{
-#All pairwise comparisons
-mtcars2 <- mutate(mtcars, cyl=factor(cyl,ordered=TRUE))
-pairwise_ordcat_test(dep_var=mtcars2$cyl,indep_var=mtcars2$gear)
-#Only comparison against reference gear=3
-pairwise_ordcat_test(dep_var=mtcars2$cyl,indep_var=mtcars2$gear,ref = TRUE)
-
+# All pairwise comparisons
+mtcars2 <- mutate(mtcars, cyl = factor(cyl, ordered = TRUE))
+pairwise_ordcat_test(dep_var = mtcars2$cyl, indep_var = mtcars2$gear)
+# Only comparison against reference gear=3
+pairwise_ordcat_test(dep_var = mtcars2$cyl, indep_var = mtcars2$gear, ref = TRUE)
 }

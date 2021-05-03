@@ -49,14 +49,19 @@ number of rows is number of dep_vars.
 Comparison for columns of factors for more than 2 groups with post-hoc
 }
 \examples{
-#Separate lines for each factor level:
-compare_n_qualvars(data=mtcars,dep_vars = c('am','cyl','carb'),indep_var = 'gear',
-                  spacer=' ')
-#All levels in one row but with linebreaks: 
-compare_n_qualvars(data=mtcars,dep_vars = c('am','cyl','carb'),indep_var = 'gear',
-                  singleline=TRUE)
-#All levels in one row, separateted by ";":
-compare_n_qualvars(data=mtcars,dep_vars = c('am','cyl','carb'),indep_var = 'gear',
-                  singleline=TRUE, linebreak='; ')
-
+# Separate lines for each factor level:
+compare_n_qualvars(
+  data = mtcars, dep_vars = c("am", "cyl", "carb"), indep_var = "gear",
+  spacer = " "
+)
+# All levels in one row but with linebreaks:
+compare_n_qualvars(
+  data = mtcars, dep_vars = c("am", "cyl", "carb"), indep_var = "gear",
+  singleline = TRUE
+)
+# All levels in one row, separateted by ";":
+compare_n_qualvars(
+  data = mtcars, dep_vars = c("am", "cyl", "carb"), indep_var = "gear",
+  singleline = TRUE, linebreak = "; "
+)
 }

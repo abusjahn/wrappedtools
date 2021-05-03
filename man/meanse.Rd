@@ -24,6 +24,5 @@ character vector with mean ± SEM, rounded to desired precision
 }
 \examples{
 # basic usage of meanse
-meanse(x=mtcars$wt)
-
+meanse(x = mtcars$wt)
 }

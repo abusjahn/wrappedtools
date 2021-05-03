@@ -16,6 +16,5 @@ numeric vector with coefficient of variance.
 \code{var_coeff computes relative variability as standard deviation/mean *100}
 }
 \examples{
-var_coeff(x=mtcars$wt)
-
+var_coeff(x = mtcars$wt)
 }
