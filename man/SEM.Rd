@@ -2,13 +2,20 @@
 % Please edit documentation in R/descriptives.R
 \name{SEM}
 \alias{SEM}
-\title{Compute standard error of mean.}
+\title{Standard Error of Mean.}
 \usage{
 SEM(x)
 }
 \arguments{
 \item{x}{Data for computation.}
 }
+\value{
+numeric vector with SEM.
+}
 \description{
-Compute standard error of mean.
+\code{SEM} computes standard error of mean.
+}
+\examples{
+SEM(x=mtcars$wt)
+
 }

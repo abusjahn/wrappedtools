@@ -47,7 +47,7 @@ ggcormat<-function(cor_mat, p_mat=NULL,
       mutate(Variable1=factor(Variable1,levels=var_order),
              Variable2=factor(Variable2,levels=var_order),
              size=-log10(formatP(as.numeric(size),
-                                 text = FALSE))) %>% 
+                                 textout = FALSE))) %>% 
       na.omit() 
     melted_p_mat$size[which(melted_p_mat$size>3)] <- 3
   melted_cor_mat <- full_join(melted_cor_mat[1:3],melted_p_mat,

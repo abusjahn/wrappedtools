@@ -4,7 +4,7 @@
 \alias{median_cl_boot}
 \title{Compute confidence interval of median by bootstrapping.}
 \usage{
-median_cl_boot(x, conf = 0.95, type = "basic")
+median_cl_boot(x, conf = 0.95, type = "basic", nrepl = 10^3)
 }
 \arguments{
 \item{x}{Data for computation.}
@@ -12,7 +12,18 @@ median_cl_boot(x, conf = 0.95, type = "basic")
 \item{conf}{confidence interval with default 95\%.}
 
 \item{type}{type for function boot.ci.}
+
+\item{nrepl}{number of bootstrap replications, defaults to 1000.}
+}
+\value{
+A tibble with one row and three columns: Median, CIlow, CIhigh.
 }
 \description{
-Compute confidence interval of median by bootstrapping.
+\code{median_cl_boot} computes lower and upper confidence limits for the
+estimated median, based on bootstrapping.
+}
+\examples{
+# basic usage of meanse
+median_cl_boot(x=mtcars$wt)
+
 }

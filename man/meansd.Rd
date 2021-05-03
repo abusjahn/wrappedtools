@@ -2,7 +2,7 @@
 % Please edit documentation in R/descriptives.R
 \name{meansd}
 \alias{meansd}
-\title{Compute mean and sd and put together with the +- symbol.}
+\title{Compute mean and sd and put together with the ± symbol.}
 \usage{
 meansd(
   x,
@@ -32,6 +32,16 @@ meansd(
 
 \item{.german}{logical, should "." and "," be used as bigmark and decimal?}
 }
+\value{
+character vector with mean ± SD, rounded to desired precision
+}
 \description{
-Compute mean and sd and put together with the +- symbol.
+Compute mean and sd and put together with the ± symbol.
+}
+\examples{
+# basic usage of meansd
+meansd(x=mtcars$wt)
+# with additional options
+meansd(x=mtcars$wt, groupvar = mtcars$am, .n = TRUE)
+
 }

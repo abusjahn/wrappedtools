@@ -47,6 +47,16 @@ median_quart(
 
 \item{.n}{Should n be included in output?}
 }
+\value{
+character vector with median \code{[1stQuartile/3rdQuartile]}, rounded to desired precision
+}
 \description{
 Compute median and quartiles and put together.
+}
+\examples{
+# basic usage of median_quart
+median_quart(x=mtcars$wt)
+# with additional options
+median_quart(x=mtcars$wt, groupvar = mtcars$am, .n = TRUE)
+
 }

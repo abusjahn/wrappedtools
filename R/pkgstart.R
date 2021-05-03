@@ -19,6 +19,8 @@ NULL
 NULL
 
 #'@importFrom magrittr %<>% %>%
+#'@name%<>%
+#'export
 NULL
 
 #'@import ggplot2 

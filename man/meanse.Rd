@@ -2,19 +2,28 @@
 % Please edit documentation in R/descriptives.R
 \name{meanse}
 \alias{meanse}
-\title{Compute mean and se and put together with the +- symbol.}
+\title{Compute mean and standard error of mean and put together with the ± symbol.}
 \usage{
 meanse(x, mult = 1, roundDig = 2, drop0 = FALSE)
 }
 \arguments{
 \item{x}{Data for computation.}
 
-\item{mult}{multiplier for se, default 1, can be set to 2 or 1.96 to create confidence intervals}
+\item{mult}{multiplier for SEM, default 1, can be set to
+e.g. 2 or 1.96 to create confidence intervals}
 
 \item{roundDig}{Number of relevant digits for roundR.}
 
 \item{drop0}{Should trailing zeros be dropped?}
 }
+\value{
+character vector with mean ± SEM, rounded to desired precision
+}
 \description{
-Compute mean and se and put together with the +- symbol.
+\code{meanse} computes SEM based on Standard Deviation/square root(n)
+}
+\examples{
+# basic usage of meanse
+meanse(x=mtcars$wt)
+
 }

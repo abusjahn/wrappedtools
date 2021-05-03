@@ -9,6 +9,14 @@ se_median(x)
 \arguments{
 \item{x}{Data for computation.}
 }
+\value{
+numeric vector with SE Median.
+}
 \description{
-Compute standard error of median.
+\code{median_cl_boot} is based on \code{\link{mad}}/square root(n)
+}
+\examples{
+# basic usage of meanse
+se_median(x=mtcars$wt)
+
 }

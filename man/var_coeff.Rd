@@ -9,6 +9,13 @@ var_coeff(x)
 \arguments{
 \item{x}{Data for computation.}
 }
+\value{
+numeric vector with coefficient of variance.
+}
 \description{
-Compute coefficient of variance.
+\code{var_coeff computes relative variability as standard deviation/mean *100}
+}
+\examples{
+var_coeff(x=mtcars$wt)
+
 }

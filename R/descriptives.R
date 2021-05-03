@@ -1,4 +1,4 @@
-#'Compute mean and sd and put together with the +- symbol.
+#'Compute mean and sd and put together with the ± symbol.
 #'
 #'@param x Data for computation.
 #'@param roundDig Number of relevant digits for roundR.
@@ -10,11 +10,14 @@
 #'e.g. use ARRR as shortcut for newline ^p later in Word.
 #'@param .n Should n be included in output?
 #'@param .german logical, should "." and "," be used as bigmark and decimal?
+#'@return character vector with mean ± SD, rounded to desired precision
+#'
 #'@examples
 #'# basic usage of meansd
 #'meansd(x=mtcars$wt)
-#'# with common options
-#''meansd(x=mtcars$wt, groupvar = mtcars$am, .n = TRUE)
+#'# with additional options
+#'meansd(x=mtcars$wt, groupvar = mtcars$am, .n = TRUE)
+#'
 #' @export
 meansd<-function(x,roundDig=2,drop0=FALSE,groupvar=NULL,
                  range=FALSE,rangesep=' ',.n=FALSE, .german=FALSE) {
@@ -39,7 +42,7 @@ meansd<-function(x,roundDig=2,drop0=FALSE,groupvar=NULL,
                         by(x,groupvar,max,na.rm=TRUE)),
                       ncol=4,byrow=FALSE)%>% na_if(Inf) %>% na_if(-Inf) 
       meansd[,1:2] %<>%
-      roundR(level=roundDig, drop0=drop0,.german=.german)
+        roundR(level=roundDig, drop0=drop0,.german=.german)
       meansd[,3:4] %<>%
         # as.numeric() %>% 
         roundR(level=roundDig, drop0=drop0,.german=.german)
@@ -75,13 +78,19 @@ meansd<-function(x,roundDig=2,drop0=FALSE,groupvar=NULL,
 #'@param prettynum logical, apply prettyNum to results?
 #'@param .german logical, should "." and "," be used as bigmark and decimal?
 #'@param .n Should n be included in output?
-
+#'@return character vector with median \code{[1stQuartile/3rdQuartile]}, rounded to desired precision
+#'@examples
+#'# basic usage of median_quart
+#'median_quart(x=mtcars$wt)
+#'# with additional options
+#'median_quart(x=mtcars$wt, groupvar = mtcars$am, .n = TRUE)
+#'
 #'@export
 median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
-qtype=8,roundDig=2,drop0=FALSE,
-groupvar=NULL,range=FALSE,rangesep=' ',
-rangearrow=' -> ',
-prettynum=FALSE,.german=FALSE,.n=FALSE) {
+                       qtype=8,roundDig=2,drop0=FALSE,
+                       groupvar=NULL,range=FALSE,rangesep=' ',
+                       rangearrow=' -> ',
+                       prettynum=FALSE,.german=FALSE,.n=FALSE) {
   out <- ' '
   bigmark <- ifelse(.german,".",",")
   decimal <- ifelse(.german,",",".")
@@ -91,7 +100,7 @@ prettynum=FALSE,.german=FALSE,.n=FALSE) {
         c(
           stats::quantile(x,probs=c(probs,0,1),na.rm=TRUE,type=qtype),
           length(na.omit(x))),
-          ncol=length(probs)+3)
+        ncol=length(probs)+3)
     } else {
       quart<-matrix(
         unlist(
@@ -105,18 +114,18 @@ prettynum=FALSE,.german=FALSE,.n=FALSE) {
     if(is.null(nround)) {
       colcount <- ncol(quart)
       quart[,1:(colcount-3)]<-roundR(quart[,1:(colcount-3)],
-                                   level=roundDig,drop0=drop0,.german = .german)
+                                     level=roundDig,drop0=drop0,.german = .german)
       quart[,(colcount-2):(colcount-1)]<-
         roundR(as.numeric(quart[,(colcount-2):(colcount-1)]),
                level=roundDig,drop0=drop0,.german = .german)
       if(prettynum){
-      #   quart <- apply(quart,1:2,function(x){
-      #     formatC(as.numeric(x),
-      #             digits = roundDig-1,
-      #             format = 'f',
-      #             big.mark = bigmark,
-      #             decimal.mark = decimal,
-      #             preserve.width = 'common',drop0trailing = FALSE)})
+        #   quart <- apply(quart,1:2,function(x){
+        #     formatC(as.numeric(x),
+        #             digits = roundDig-1,
+        #             format = 'f',
+        #             big.mark = bigmark,
+        #             decimal.mark = decimal,
+        #             preserve.width = 'common',drop0trailing = FALSE)})
       }
     } else {
       quart[,-ncol(quart)]<-round(quart[,-ncol(quart)],nround)
@@ -140,30 +149,49 @@ prettynum=FALSE,.german=FALSE,.n=FALSE) {
       out<-str_glue('{out}{rangesep} [n={quart[,length(probs)+3]}]')
     }
   }
+  out <- as.character(out)
   return(out)
-    }
+}
 
 
-#'Compute mean and se and put together with the +- symbol.
+#'Compute mean and standard error of mean and put together with the ± symbol.
 #'
+#'\code{meanse} computes SEM based on Standard Deviation/square root(n)
 #'@param x Data for computation.
 #'@param roundDig Number of relevant digits for roundR.
 #'@param drop0 Should trailing zeros be dropped?
-#'@param mult multiplier for se, default 1, can be set to 2 or 1.96 to create confidence intervals
+#'@param mult multiplier for SEM, default 1, can be set to 
+#'e.g. 2 or 1.96 to create confidence intervals
+#'
+#'@return character vector with mean ± SEM, rounded to desired precision
+#'
+#'@examples
+#'# basic usage of meanse
+#'meanse(x=mtcars$wt)
+#'
 #'@export
 meanse<-function(x,mult=1,roundDig=2,drop0=FALSE) {
   m<-mean(x,na.rm=TRUE)
   s<-sd(x,na.rm = TRUE)/sqrt(length(na.omit(x)))
-    ms <- roundR(c(m,s*mult),
-                 level = roundDig,drop0 = drop0)
-    out <- paste(ms[1],ms[2],sep='\u00B1')
+  ms <- roundR(c(m,s*mult),
+               level = roundDig,drop0 = drop0)
+  out <- paste(ms[1],ms[2],sep='\u00B1')
   return(out)
 }
 
 
 #'Compute standard error of median.
 #'
+#'\code{median_cl_boot} is based on \code{\link{mad}}/square root(n)
+#'
 #'@param x Data for computation.
+#'
+#'@return numeric vector with SE Median.
+#'
+#'@examples
+#'# basic usage of meanse
+#'se_median(x=mtcars$wt)
+#'
 #'@export
 se_median<-function(x) {
   mad(x,na.rm=TRUE)/sqrt(length(na.omit(x)))
@@ -171,24 +199,37 @@ se_median<-function(x) {
 
 #'Compute confidence interval of median by bootstrapping.
 #'
+#'\code{median_cl_boot} computes lower and upper confidence limits for the
+#'estimated median, based on bootstrapping.
+#'
 #'@param x Data for computation.
 #'@param conf confidence interval with default 95%.
 #'@param type type for function boot.ci.
+#'@param nrepl number of bootstrap replications, defaults to 1000.
+#'
+#'@return A tibble with one row and three columns: Median, CIlow, CIhigh.
+#'
+#'@examples
+#'# basic usage of meanse
+#'median_cl_boot(x=mtcars$wt)
+#'
 #'@export
-median_cl_boot <- function(x, conf = 0.95, type='basic') {
+median_cl_boot <- function(x, conf = 0.95, type='basic', nrepl=10^3) {
   x <- na.omit(x)
   lconf <- (1 - conf)/2
   uconf <- 1 - lconf
-  # require(boot)
   bmedian <- function(x, ind) median(x[ind],na.rm=TRUE)
-  bt <- boot::boot(x, bmedian, 10000)
+  bt <- boot::boot(x, bmedian, nrepl)
   bb <- boot::boot.ci(bt, type = type)
-  data.frame(y = median(x,na.rm=TRUE),
-             ymin = quantile(bt$t, lconf),
-             ymax = quantile(bt$t, uconf))
+  tibble(Median = median(x,na.rm=TRUE),
+             CIlow = quantile(bt$t, lconf),
+             CIhigh = quantile(bt$t, uconf))
 }
 
 #'Compute absolute and relative frequencies.
+#'
+#'\code{cat_desc_stats} computes absolute and relative frequencies for 
+#'categorical data with a number of formatting options.
 #'
 #'@param quelle Data for computation.
 #'@param separator delimiter between results per level, preset as ' '.
@@ -198,7 +239,24 @@ median_cl_boot <- function(x, conf = 0.95, type='basic') {
 #'@param singleline Put all group levels in  a single line?
 #'@param percent Logical, add percent-symbol after relative frequencies?
 #'@param prettynum logical, apply prettyNum to results?
-#'@param .german logical, should "." and "," be used as bigmark and decimal? Sets prettynum to TRUE
+#'@param .german logical, should "." and "," be used as bigmark and decimal? 
+#'Sets prettynum to TRUE.
+#'
+#'@return
+#'Structure depends on parameter return_level:
+#'if FALSE than a tibble with descriptives, otherwise a list with two tibbles
+#'with levels of factor and descriptives. 
+#'If parameter singleline is FALSE (default), results for each factor level is
+#'reported in a separate line, otherwise they are pasted.
+#'Number of columns for result tibbles is one or number of levels of the 
+#'additional grouping variable.
+#' 
+#'@examples
+#'cat_desc_stats(mtcars$gear)
+#'cat_desc_stats(mtcars$gear,return_level=FALSE)
+#'cat_desc_stats(mtcars$gear,groupvar=mtcars$am)
+#'cat_desc_stats(mtcars$gear,groupvar=mtcars$am, singleline=TRUE)
+#'
 #'@export
 cat_desc_stats<-function(quelle,separator=' ',
                          return_level=TRUE,
@@ -239,11 +297,11 @@ cat_desc_stats<-function(quelle,separator=' ',
                          decimal.mark = decimal,
                          preserve.width = 'common',drop0trailing = FALSE)
       tableout <- formatC(tableout,
-                         digits = 0,
-                         format = 'f',
-                         big.mark = bigmark,
-                         decimal.mark = decimal,
-                         preserve.width = 'common')
+                          digits = 0,
+                          format = 'f',
+                          big.mark = bigmark,
+                          decimal.mark = decimal,
+                          preserve.width = 'common')
     }
     ptableout<- matrix(paste0(' (',
                               pt_temp,
@@ -256,7 +314,7 @@ cat_desc_stats<-function(quelle,separator=' ',
                        nrow=length(levels(quelle)),
                        byrow = FALSE)
     colnames(tableout) <- glue::glue('abs{levels(factor(groupvar))}')
-
+    
     pt_temp <- round(100*prop.table(tableout,margin = 2),ndigit)
     if(prettynum){
       pt_temp <- formatC(pt_temp,
@@ -291,8 +349,8 @@ cat_desc_stats<-function(quelle,separator=' ',
   }
   if(singleline){
     zwert <- purrr::map(zwert,
-                 .f =  function(x)
-                   glue::glue_collapse(x,sep = separator)) %>%
+                        .f =  function(x)
+                          glue::glue_collapse(x,sep = separator)) %>%
       as_tibble()
   }
   levdesstats<-list(level=level, freq=zwert)
@@ -305,15 +363,31 @@ cat_desc_stats<-function(quelle,separator=' ',
 
 #'Compute coefficient of variance.
 #'
+#'\code{var_coeff computes relative variability as standard deviation/mean *100}
+#'
 #'@param x Data for computation.
+#'
+#'@return numeric vector with coefficient of variance.
+#'
+#'@examples
+#'var_coeff(x=mtcars$wt)
+#'
 #'@export
 var_coeff<-function(x) {
   return(sd(x,na.rm=TRUE)/mean(x,na.rm=TRUE)*100)
 }
 
-#'Compute standard error of mean.
+#'Standard Error of Mean.
+#'
+#'\code{SEM} computes standard error of mean.
 #'
 #'@param x Data for computation.
+#'
+#'@return numeric vector with SEM.
+#'
+#'@examples
+#'SEM(x=mtcars$wt)
+#'
 #'@export
 SEM <- function(x){
   return(sd(x,na.rm=TRUE)/sqrt(length(na.omit(x))))
