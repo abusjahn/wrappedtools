@@ -2,7 +2,7 @@ Package: wrappedtools
 Type: Package
 Title: Useful Wrappers Around Commonly Used Functions
 Description: The main functionalities of wrappedtools are:
-    adding backtics to variable names; rounding to desired precision 
+    adding backticks to variable names; rounding to desired precision 
     with special case for p-values; 
     selecting columns based on pattern and storing their position, name, 
     and backticked name; computing and formatting of descriptive statistics 
@@ -11,7 +11,7 @@ Description: The main functionalities of wrappedtools are:
     or regression trees. Functions were mainly written for my own daily work or 
     teaching, but may be of use to others as well.
 Version: 0.7.5
-Date: 2021-04-30
+Date: 2021-05-03
 Authors@R:
     person(given = "Andreas",
            family = "Busjahn",
