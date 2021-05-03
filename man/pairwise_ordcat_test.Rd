@@ -2,23 +2,22 @@
 % Please edit documentation in R/tests.R
 \name{pairwise_ordcat_test}
 \alias{pairwise_ordcat_test}
-\title{Calculate pairwise comparisons for ordinal categories between group levels
-with corrections for multiple testing}
+\title{Pairwise comparison for ordinal categories}
 \usage{
 pairwise_ordcat_test(
-  x,
-  group,
+  dep_var,
+  indep_var,
   adjmethod = "fdr",
   plevel = 0.05,
   symbols = letters[-1],
   ref = FALSE,
-  method = "cmh"
+  cmh = TRUE
 )
 }
 \arguments{
-\item{x}{dependent variable, containing the data}
+\item{dep_var}{dependent variable, containing the data}
 
-\item{group}{independent variable, should be factor}
+\item{indep_var}{independent variable, should be factor}
 
 \item{adjmethod}{method for adjusting p values (see \link{p.adjust})}
 
@@ -29,11 +28,23 @@ differences, e.g. b means different from group 2}
 
 \item{ref}{is the 1st subgroup the reference (like in Dunnett test)}
 
-\item{method}{which function should be used for individual testing?
-Predefined to cmh from package coin
-export}
+\item{cmh}{Should  Cochran-Mantel-Haenszel test (\link{cmh_test}) be used for
+testing? If false, the linear-by-linear association test (\link{lbl_test})
+is applied.}
+}
+\value{
+A list with elements "methods" (character), "p.value" (matrix),
+"plevel" (numeric), and "sign_colwise" (vector of length number of levels - 1)
 }
 \description{
-Calculate pairwise comparisons for ordinal categories between group levels
-with corrections for multiple testing
+\code{pairwise_ordcat_test} calculates pairwise comparisons for ordinal
+categories between all group levels with corrections for multiple testing.
+}
+\examples{
+#All pairwise comparisons
+mtcars2 <- mutate(mtcars, cyl=factor(cyl,ordered=TRUE))
+pairwise_ordcat_test(dep_var=mtcars2$cyl,indep_var=mtcars2$gear)
+#Only comparison against reference gear=3
+pairwise_ordcat_test(dep_var=mtcars2$cyl,indep_var=mtcars2$gear,ref = TRUE)
+
 }

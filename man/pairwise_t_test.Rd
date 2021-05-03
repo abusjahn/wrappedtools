@@ -2,8 +2,7 @@
 % Please edit documentation in R/tests.R
 \name{pairwise_t_test}
 \alias{pairwise_t_test}
-\title{Calculate pairwise comparisons between group levels with corrections for
-multiple testing, extension of pairwise.t.test}
+\title{Extended pairwise t-test}
 \usage{
 pairwise_t_test(
   dep_var,
@@ -25,7 +24,15 @@ pairwise_t_test(
 \item{symbols}{predefined as b,c, d...;  provides footnotes to mark group
 differences, e.g. b means different from group 2}
 }
+\value{
+A list with method output of pairwise.t.test,
+matrix of p-values, and character vector with significance indicators.
+}
 \description{
-Calculate pairwise comparisons between group levels with corrections for
-multiple testing, extension of pairwise.t.test
+\code{pairwise_t_test }calculate pairwise comparisons between group levels
+with corrections for multiple testing based on \link{pairwise.t.test}
+}
+\examples{
+pairwise_t_test(dep_var = mtcars$wt,indep_var = mtcars$cyl)
+
 }

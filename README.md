@@ -36,24 +36,24 @@ quantile(mtcars$mpg,probs = c(.25,.75))
 #> 15.425 22.800
 # wrappedtools adds rounding and pasting:
 median_quart(mtcars$mpg)
-#> 19 (15/23)
+#> [1] "19 (15/23)"
 # on a higher level, this logic leads to
-compare2numvars(data = mtcars, testvars = c('wt','mpg', "disp"), 
-                groupvar = 'am',
+compare2numvars(data = mtcars, dep_vars = c('wt','mpg', "disp"), 
+                indep_var = 'am',
                 gaussian = F,
                 round_desc = 3)
 #> # A tibble: 3 x 5
 #> # Groups:   Variable [3]
-#>   Variable desc_all         `am 0`           `am 1`           p    
-#>   <fct>    <glue>           <chr>            <chr>            <chr>
-#> 1 wt       3.32 (2.53/3.66) 3.52 (3.44/3.84) 2.32 (1.90/2.81) 0.001
-#> 2 mpg      19.2 (15.3/22.8) 17.3 (14.8/19.2) 22.8 (20.6/30.4) 0.002
-#> 3 disp     196 (121/337)    276 (177/360)    120 (79/160)     0.001
+#>   Variable desc_all    `am 0`                        `am 1`                p    
+#>   <fct>    <chr>       <chr>                         <chr>                 <chr>
+#> 1 wt       3.32 (2.53~ "Error in DESC(x = .$Value, ~ " \n  unbenutztes Ar~ 0.001
+#> 2 mpg      19.2 (15.3~ "Error in DESC(x = .$Value, ~ " \n  unbenutztes Ar~ 0.002
+#> 3 disp     196 (121/3~ "Error in DESC(x = .$Value, ~ " \n  unbenutztes Ar~ 0.001
 ```
 
 To explain the \*wrapper’ part of the package name, here is another
 example, using the ks.test as test for a Normal distribution, where
-ksnormal simply wrapps around the ks.test function:
+ksnormal simply wraps around the ks.test function:
 
 ``` r
 somedata <- rnorm(100)
@@ -62,11 +62,11 @@ ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
 #>  One-sample Kolmogorov-Smirnov test
 #> 
 #> data:  somedata
-#> D = 0.039806, p-value = 0.9974
+#> D = 0.051386, p-value = 0.9544
 #> alternative hypothesis: two-sided
 
 ksnormal(somedata)
-#> [1] 0.9973834
+#> [1] 0.9543852
 ```
 
 This should give you the general idea, I’ll try to expand this intro

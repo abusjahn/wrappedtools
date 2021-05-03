@@ -6,8 +6,8 @@
 \usage{
 compare_n_qualvars(
   data,
-  testvars,
-  groupvar,
+  dep_vars,
+  indep_var,
   round_p = 3,
   round_desc = 2,
   pretext = FALSE,
@@ -21,9 +21,9 @@ compare_n_qualvars(
 \arguments{
 \item{data}{name of data set (tibble/data.frame) to analyze.}
 
-\item{testvars}{vector of column names.}
+\item{dep_vars}{vector of column names.}
 
-\item{groupvar}{name of grouping variable, has to translate to 2 groups.}
+\item{indep_var}{name of grouping variable, has to translate to 2 groups.}
 
 \item{round_p}{level for rounding p-value.}
 
@@ -35,12 +35,28 @@ compare_n_qualvars(
 
 \item{singleline}{Put all group levels in  a single line?}
 
-\item{spacer}{Text element to indent levels.}
+\item{spacer}{Text element to indent levels, defaults to " ".}
 
 \item{linebreak}{place holder for newline.}
 
 \item{prettynum}{Apply prettyNum to results?}
 }
+\value{
+A tibble with variable names, descriptive statistics, and p-value,
+number of rows is number of dep_vars.
+}
 \description{
 Comparison for columns of factors for more than 2 groups with post-hoc
+}
+\examples{
+#Separate lines for each factor level:
+compare_n_qualvars(data=mtcars,dep_vars = c('am','cyl','carb'),indep_var = 'gear',
+                  spacer=' ')
+#All levels in one row but with linebreaks: 
+compare_n_qualvars(data=mtcars,dep_vars = c('am','cyl','carb'),indep_var = 'gear',
+                  singleline=TRUE)
+#All levels in one row, separateted by ";":
+compare_n_qualvars(data=mtcars,dep_vars = c('am','cyl','carb'),indep_var = 'gear',
+                  singleline=TRUE, linebreak='; ')
+
 }

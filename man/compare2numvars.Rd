@@ -6,8 +6,8 @@
 \usage{
 compare2numvars(
   data,
-  testvars,
-  groupvar,
+  dep_vars,
+  indep_var,
   gaussian,
   round_p = 3,
   round_desc = 2,
@@ -16,34 +16,49 @@ compare2numvars(
   pretext = FALSE,
   mark = FALSE,
   n = FALSE,
-  .n = FALSE
+  add_n = FALSE
 )
 }
 \arguments{
 \item{data}{name of dataset (tibble/data.frame) to analyze.}
 
-\item{testvars}{vector of column names.}
+\item{dep_vars}{vector of column names for independent variables.}
 
-\item{groupvar}{name of grouping variable, has to translate to 2 groups.}
+\item{indep_var}{name of grouping variable, has to translate to 2 groups.}
 
 \item{gaussian}{logical specifying normal or ordinal values.}
 
-\item{round_p}{level for rounding p-value}
+\item{round_p}{level for rounding p-value.}
 
-\item{round_desc}{number of significant digits for rounding of descriptive stats}
+\item{round_desc}{number of significant digits for rounding of descriptive stats.}
 
 \item{range}{include min/max?}
 
-\item{rangesep}{text between statistics and range or other elements}
+\item{rangesep}{text between statistics and range or other elements.}
 
-\item{pretext}{for function \link{formatP}}
+\item{pretext}{for function \link{formatP}.}
 
-\item{mark}{for function \link{formatP}}
+\item{mark}{for function \link{formatP}.}
 
 \item{n}{create columns for n per group?}
 
-\item{.n}{add n to descriptive statistics?}
+\item{add_n}{add n to descriptive statistics?}
+}
+\value{
+A tibble with variable names, descriptive statistics, and p-value,
+number of rows is number of dep_vars.
 }
 \description{
-Comparison for columns of numbers for 2 groups
+\code{compare2numvars} computes either \link{t_var_test} or \link{wilcox.test},
+depending on parameter gaussian. Descriptive statistics, depending on distribution,
+are reported as well.
+}
+\examples{
+#Assuming Normal distribution:
+compare2numvars(data=mtcars,dep_vars = c('wt','mpg','qsec'),indep_var = 'am',
+               gaussian = TRUE)
+#Ordinal scale:
+compare2numvars(data=mtcars,dep_vars = c('wt','mpg','qsec'),indep_var = 'am',
+               gaussian = FALSE)
+               
 }

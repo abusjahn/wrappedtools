@@ -6,9 +6,8 @@
 #'@param groupvar Optional grouping variable for subgroups.
 #'@param range Should min and max be included in output?
 #'@param rangesep How should min/max be separated from mean+-sd?
-#'@param .n Should n be included in output?
-#'e.g. use ARRR as shortcut for newline ^p later in Word.
-#'@param .n Should n be included in output?
+#'@param add_n Should n be included in output?
+#'@param add_n Should n be included in output?
 #'@param .german logical, should "." and "," be used as bigmark and decimal?
 #'@return character vector with mean ± SD, rounded to desired precision
 #'
@@ -16,11 +15,11 @@
 #'# basic usage of meansd
 #'meansd(x=mtcars$wt)
 #'# with additional options
-#'meansd(x=mtcars$wt, groupvar = mtcars$am, .n = TRUE)
+#'meansd(x=mtcars$wt, groupvar = mtcars$am, add_n = TRUE)
 #'
 #' @export
 meansd<-function(x,roundDig=2,drop0=FALSE,groupvar=NULL,
-                 range=FALSE,rangesep=' ',.n=FALSE, .german=FALSE) {
+                 range=FALSE,rangesep=' ',add_n=FALSE, .german=FALSE) {
   out<-''
   if(length(na.omit(x))>0) {
     if(is.null(groupvar)) {
@@ -55,7 +54,7 @@ meansd<-function(x,roundDig=2,drop0=FALSE,groupvar=NULL,
                   apply(matrix(meansd[,3:4],ncol=2),1,paste,
                         collapse=' -> '),']') #\u22ef
     }
-    if(.n) {
+    if(add_n) {
       out<-paste0(out,rangesep, ' [n=',
                   meansd[,5],']') #\u22ef
     }
@@ -77,20 +76,20 @@ meansd<-function(x,roundDig=2,drop0=FALSE,groupvar=NULL,
 #'@param rangearrow What is put between min -> max?
 #'@param prettynum logical, apply prettyNum to results?
 #'@param .german logical, should "." and "," be used as bigmark and decimal?
-#'@param .n Should n be included in output?
+#'@param add_n Should n be included in output?
 #'@return character vector with median \code{[1stQuartile/3rdQuartile]}, rounded to desired precision
 #'@examples
 #'# basic usage of median_quart
 #'median_quart(x=mtcars$wt)
 #'# with additional options
-#'median_quart(x=mtcars$wt, groupvar = mtcars$am, .n = TRUE)
+#'median_quart(x=mtcars$wt, groupvar = mtcars$am, add_n = TRUE)
 #'
 #'@export
 median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
                        qtype=8,roundDig=2,drop0=FALSE,
                        groupvar=NULL,range=FALSE,rangesep=' ',
                        rangearrow=' -> ',
-                       prettynum=FALSE,.german=FALSE,.n=FALSE) {
+                       prettynum=FALSE,.german=FALSE,add_n=FALSE) {
   out <- ' '
   bigmark <- ifelse(.german,".",",")
   decimal <- ifelse(.german,",",".")
@@ -145,7 +144,7 @@ median_quart<-function(x,nround=NULL,probs=c(.25,.5,.75),
                       {apply(matrix(quart[,(length(probs)+1):(length(probs)+2)],ncol=2),1,glue::glue_collapse,
                       sep=rangearrow)}]')
     }
-    if(.n) {
+    if(add_n) {
       out<-str_glue('{out}{rangesep} [n={quart[,length(probs)+3]}]')
     }
   }

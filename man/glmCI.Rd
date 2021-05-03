@@ -2,21 +2,27 @@
 % Please edit documentation in R/tests.R
 \name{glmCI}
 \alias{glmCI}
-\title{Computation and formatting of CIs for glm}
+\title{Confidence interval for generalized linear models}
 \usage{
 glmCI(model, min = .01, max = 100, cisep = '\U000022ef', ndigit=2)
 }
 \arguments{
-\item{model}{Output from glm .}
+\item{model}{Output from \link{glm}.}
 
-\item{min}{Smallest OR to report.}
-
-\item{max}{Largest OR to report.}
+\item{min, max}{Lower and upper limits for CIs, usefull for extremely wide CIs.}
 
 \item{cisep}{Separator between CI values.}
 
 \item{ndigit}{rounding level.}
 }
+\value{
+A list with coefficient, CIs, and pasted coef([CIs]).
+}
 \description{
-\code{glmCI} returns a list with coefficient, CIs, and coef [CIs].
+\code{glm_CI} computes and formats of CIs for glm.
+}
+\examples{
+glm_out <- glm(am~mpg,family=binomial,data=mtcars)
+glmCI(glm_out)
+
 }

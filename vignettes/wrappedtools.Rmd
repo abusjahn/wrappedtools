@@ -54,8 +54,8 @@ quantile(mtcars$mpg,probs = c(.25,.75))
 # wrappedtools adds rounding and pasting:
 median_quart(mtcars$mpg)
 # on a higher level, this logic leads to
-compare2numvars(data = mtcars, testvars = c('wt','mpg', "disp"), 
-                groupvar = 'am',
+compare2numvars(data = mtcars, dep_vars = c('wt','mpg', "disp"), 
+                indep_var = 'am',
                 gaussian = F,
                 round_desc = 3)
 ```

@@ -2,13 +2,25 @@
 % Please edit documentation in R/tests.R
 \name{ksnormal}
 \alias{ksnormal}
-\title{Convinience function around ks.test, testing against Normal distribution}
+\title{Kolmogorov-Smirnov-Test against Normal distribution}
 \usage{
-ksnormal(ksdata)
+ksnormal(x)
 }
 \arguments{
-\item{ksdata}{Vector of data to test.}
+\item{x}{Vector of data to test.}
+}
+\value{
+p.value from \link{ks.test}.
 }
 \description{
-\code{ksnormal} returns p.value from ks.test.
+\code{ksnormal} is a convenience function around \link{ks.test}, testing against
+Normal distribution
+}
+\examples{
+#original ks.test:
+ks.test(x = mtcars$wt, pnorm, mean=mean(mtcars$wt, na.rm=TRUE),
+       sd=sd(mtcars$wt, na.rm=TRUE))
+# wrapped version:
+ksnormal(x = mtcars$wt)
+
 }

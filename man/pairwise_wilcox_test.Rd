@@ -2,8 +2,7 @@
 % Please edit documentation in R/tests.R
 \name{pairwise_wilcox_test}
 \alias{pairwise_wilcox_test}
-\title{Calculate pairwise comparisons between group levels with corrections for
-multiple testing}
+\title{Pairwise Wilcoxon tests}
 \usage{
 pairwise_wilcox_test(
   dep_var,
@@ -17,24 +16,32 @@ pairwise_wilcox_test(
 )
 }
 \arguments{
-\item{dep_var}{dependent variable, containing the data}
+\item{dep_var}{dependent variable, containing the data.}
 
-\item{indep_var}{independent variable, should be factor}
+\item{indep_var}{independent variable, should be factor.}
 
-\item{strat_var}{optiona factor for stratification}
+\item{strat_var}{optional factor for stratification.}
 
 \item{adjmethod}{method for adjusting p values (see \link{p.adjust})}
 
-\item{distr}{The conditional null distribution of the test statistic is used to obtain p-values and an asymptotic approximation of the exact distribution is used by default (distribution = "asymptotic"). Alternatively, the distribution can be approximated via Monte Carlo resampling or computed exactly for univariate two-sample problems by setting distribution to "approximate" or "exact" respectively.}
+\item{distr}{Computation of p-values, see \link{wilcox_test}.}
 
-\item{plevel}{threshold for significance}
+\item{plevel}{threshold for significance.}
 
 \item{symbols}{predefined as b,c, d...;  provides footnotes to mark group
-differences, e.g. b means different from group 2}
+differences, e.g. b means different from group 2.}
 
-\item{sep}{text between statistics and range or other elements}
+\item{sep}{text between statistics and range or other elements.}
+}
+\value{
+A list with matrix of p-values and character vector with significance indicators.
 }
 \description{
-Calculate pairwise comparisons between group levels with corrections for
-multiple testing
+\code{pairwise_wilcox_test} calculates pairwise comparisons on ordinal data
+between all group levels with corrections for multiple testing based on
+\link{wilcox_test} from package coin.
+}
+\examples{
+pairwise_wilcox_test(dep_var = mtcars$wt,indep_var = mtcars$cyl)
+
 }

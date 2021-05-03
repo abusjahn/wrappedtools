@@ -2,15 +2,16 @@
 % Please edit documentation in R/tests.R
 \name{cortestR}
 \alias{cortestR}
-\title{correlation matrix with p-values based on cor.test}
+\title{Correlations with significance}
 \usage{
 cortestR(
   cordata,
   method = "pearson",
   digits = 3,
   digits_p = 3,
-  sign = "symbol",
-  split = FALSE
+  sign_symbol = TRUE,
+  split = FALSE,
+  space = "&nbsp;"
 )
 }
 \arguments{
@@ -22,11 +23,27 @@ cortestR(
 
 \item{digits_p}{rounding level for p value.}
 
-\item{sign}{if 'symbol', add significance indicator.}
+\item{sign_symbol}{If true, use significance indicator instead of p-value.}
 
-\item{split}{logical, report correlation and p combined (default) or split in list}
+\item{split}{logical, report correlation and p combined (default)
+or split in list.}
+
+\item{space}{character to fill empty uper triangle.}
+}
+\value{
+Depending on parameters split and sign_symbol,
+either a single data frame with coefficient and p-values or significance symbols
+or a list with two data frames.
 }
 \description{
-\code{cortestR} returns a data frame with coefficient,p-values,
-and significance symbols.
+\code{cortestR} computes correlations and their significance level
+based on \link{cor.test}. Coefficients and p-values may be combined or
+reported separately.
+}
+\examples{
+# with defaults
+cortestR(mtcars[,c('wt','mpg','qsec')],split = FALSE,sign_symbol = TRUE)
+# separate coefficients and p-values
+cortestR(mtcars[,c('wt','mpg','qsec')],split = TRUE,sign_symbol = FALSE)
+
 }

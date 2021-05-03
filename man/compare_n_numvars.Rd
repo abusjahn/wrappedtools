@@ -6,23 +6,23 @@
 \usage{
 compare_n_numvars(
   .data = rawdata,
-  testvars,
-  groupvar,
+  dep_vars,
+  indep_var,
   round_desc = 2,
   range = FALSE,
   rangesep = " ",
   pretext = FALSE,
   mark = FALSE,
   round_p = 3,
-  .n = FALSE
+  add_n = FALSE
 )
 }
 \arguments{
 \item{.data}{name of dataset (tibble/data.frame)to analyze, defaults to rawdata.}
 
-\item{testvars}{vector of column names.}
+\item{dep_vars}{vector of column names.}
 
-\item{groupvar}{name of grouping variable.}
+\item{indep_var}{name of grouping variable.}
 
 \item{round_desc}{number of significant digits for rounding of descriptive stats}
 
@@ -36,8 +36,24 @@ compare_n_numvars(
 
 \item{round_p}{level for rounding p-value}
 
-\item{.n}{add n to descriptive statistics?}
+\item{add_n}{add n to descriptive statistics?}
+}
+\value{
+A list with elements "results": tibble with descriptive statistics,
+p-value from ANOVA, p-values for pairwise comparisons, significance indicators,
+and descriptives pasted with significance.
+"raw": nested list with output from all underlying analyses.
 }
 \description{
 Comparison for columns of Gaussian measures for n groups
+}
+\examples{
+#Usually,only the result table is relevant:
+compare_n_numvars(.data=mtcars, dep_vars = c('wt','mpg','qsec'),
+                  indep_var = 'cyl')$results
+#For a report, result columns may be filtered as needed:
+compare_n_numvars(.data=mtcars, dep_vars = c('wt','mpg','qsec'),
+                  indep_var = 'cyl')$results \%>\% 
+                  dplyr::select(Variable,`cyl 4 fn`:`cyl 8 fn`,pANOVA)
+
 }

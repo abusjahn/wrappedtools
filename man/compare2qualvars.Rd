@@ -6,8 +6,8 @@
 \usage{
 compare2qualvars(
   data,
-  testvars,
-  groupvar,
+  dep_vars,
+  indep_var,
   round_p = 3,
   round_desc = 2,
   pretext = FALSE,
@@ -20,24 +20,37 @@ compare2qualvars(
 \arguments{
 \item{data}{name of data set (tibble/data.frame) to analyze.}
 
-\item{testvars}{vector of column names.}
+\item{dep_vars}{vector of column names for dependent variables.}
 
-\item{groupvar}{name of grouping variable, has to translate to 2 groups.}
+\item{indep_var}{name of grouping variable, has to translate to 2 groups.}
 
 \item{round_p}{level for rounding p-value.}
 
-\item{round_desc}{number of significant digits for rounding of descriptive stats}
+\item{round_desc}{number of significant digits for rounding of descriptive stats.}
 
-\item{pretext}{for function \link{formatP}}
+\item{pretext}{for function \link{formatP}.}
 
-\item{mark}{for function \link{formatP}}
+\item{mark}{for function \link{formatP}.}
 
 \item{singleline}{Put all group levels in  a single line?}
 
-\item{spacer}{Text element to indent levels.}
+\item{spacer}{Text element to indent levels and fill empty cells,
+defaults to " ".}
 
 \item{linebreak}{place holder for newline.}
 }
+\value{
+A tibble with variable names, descriptive statistics, and p-value,
+number of rows is number of dep_vars.
+}
 \description{
-Comparison for columns of factors for 2 groups
+\code{compare2qualvars} computes \link{fisher.test} with simulated p-value and
+descriptive statistics for a group of categorical dependent variables.
+}
+\examples{
+compare2qualvars(data=mtcars,dep_vars = c('gear','cyl','carb'),indep_var = 'am',
+                spacer=' ')
+compare2qualvars(data=mtcars,dep_vars = c('gear','cyl','carb'),indep_var = 'am',
+                spacer=' ', singleline=TRUE)
+
 }

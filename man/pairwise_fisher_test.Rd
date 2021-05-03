@@ -2,12 +2,11 @@
 % Please edit documentation in R/tests.R
 \name{pairwise_fisher_test}
 \alias{pairwise_fisher_test}
-\title{Calculate pairwise comparisons between group levels with corrections for
-multiple testing}
+\title{Pairwise Fisher's exact tests}
 \usage{
 pairwise_fisher_test(
-  x,
-  group,
+  dep_var,
+  indep_var,
   adjmethod = "fdr",
   plevel = 0.05,
   symbols = letters[-1],
@@ -15,21 +14,31 @@ pairwise_fisher_test(
 )
 }
 \arguments{
-\item{x}{dependent variable, containing the data}
+\item{dep_var}{dependent variable, containing the data.}
 
-\item{group}{independent variable, should be factor}
+\item{indep_var}{independent variable, should be factor or coercible.}
 
-\item{adjmethod}{method for adjusting p values (see \link{p.adjust})}
+\item{adjmethod}{method for adjusting p values (see \link{p.adjust}).}
 
-\item{plevel}{threshold for significance}
+\item{plevel}{threshold for significance.}
 
 \item{symbols}{predefined as b,c, d...;  provides footnotes to mark group
 differences, e.g. b means different from group 2}
 
-\item{ref}{is the 1st subgroup the reference (like in Dunnett test)
-export}
+\item{ref}{is the 1st subgroup the reference (like in Dunnett test)?}
+}
+\value{
+A list with elements "methods" (character), "p.value" (matrix),
+"plevel" (numeric), and "sign_colwise" (vector of length number of levels - 1)
 }
 \description{
-Calculate pairwise comparisons between group levels with corrections for
-multiple testing
+\code{pairwise_fisher-test} calculates pairwise comparisons between
+group levels with corrections for multiple testing.
+}
+\examples{
+#All pairwise comparisons
+pairwise_fisher_test(dep_var=mtcars$cyl,indep_var=mtcars$gear)
+#Only comparison against reference gear=3
+pairwise_fisher_test(dep_var=mtcars$cyl, indep_var=mtcars$gear,ref = TRUE)
+
 }

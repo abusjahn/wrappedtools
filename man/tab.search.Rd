@@ -13,7 +13,12 @@ tab.search(searchdata = rawdata, pattern, find.all = T, names.only = FALSE)
 
 \item{find.all}{return all row indices or only 1st per column,default=TRUE}
 
-\item{names.only}{return only vector of colnames rather than list with names and rows, default=FALSE}
+\item{names.only}{return only vector of colnames rather than list with names
+and rows, default=FALSE}
+}
+\value{
+A list with numeric vectors for each column giving row numbers
+of matched elements
 }
 \description{
 \code{tab.search} searches for pattern within a data-frame or tibble,

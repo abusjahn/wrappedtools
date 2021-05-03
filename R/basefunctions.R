@@ -318,11 +318,18 @@ bt<-function(x,remove=FALSE) {
 #'@param searchdata table to search in, predefined as rawdata
 #'@param pattern regex, for exact matches add ^findme$
 #'@param find.all return all row indices or only 1st per column,default=TRUE
-#'@param names.only return only vector of colnames rather than list with names and rows, default=FALSE
+#'@param names.only return only vector of colnames rather than list with names 
+#'and rows, default=FALSE
+#'
+#'@return A list with numeric vectors for each column giving row numbers 
+#'of matched elements
 #'@export
 tab.search <- function(searchdata=rawdata, pattern,
                        find.all = T,names.only=FALSE)
 {
+  if(!is.character(pattern)){
+    pattern <- as.character(pattern)
+  }
   positions <- purrr::map(searchdata,str_which,pattern=pattern) %>% purrr::compact()
   if(!find.all) {
     positions <- purrr::map(positions,nth,n=1)

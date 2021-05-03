@@ -17,7 +17,7 @@ median_quart(
   rangearrow = " -> ",
   prettynum = FALSE,
   .german = FALSE,
-  .n = FALSE
+  add_n = FALSE
 )
 }
 \arguments{
@@ -45,7 +45,7 @@ median_quart(
 
 \item{.german}{logical, should "." and "," be used as bigmark and decimal?}
 
-\item{.n}{Should n be included in output?}
+\item{add_n}{Should n be included in output?}
 }
 \value{
 character vector with median \code{[1stQuartile/3rdQuartile]}, rounded to desired precision
@@ -57,6 +57,6 @@ Compute median and quartiles and put together.
 # basic usage of median_quart
 median_quart(x=mtcars$wt)
 # with additional options
-median_quart(x=mtcars$wt, groupvar = mtcars$am, .n = TRUE)
+median_quart(x=mtcars$wt, groupvar = mtcars$am, add_n = TRUE)
 
 }

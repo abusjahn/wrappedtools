@@ -2,7 +2,7 @@
 % Please edit documentation in R/tests.R
 \name{t_var_test}
 \alias{t_var_test}
-\title{Two independent sample t-test with decision for var.equal based on var.test}
+\title{Independent sample t-test with test for equal variance}
 \usage{
 t_var_test(data, formula, cutoff = 0.05)
 }
@@ -11,8 +11,18 @@ t_var_test(data, formula, cutoff = 0.05)
 
 \item{formula}{Formula object with dependent and independent variable.}
 
-\item{cutoff}{is significance threshold for equal variances}
+\item{cutoff}{is significance threshold for equal variances.}
+}
+\value{
+A list from \link{t.test}
 }
 \description{
-Two independent sample t-test with decision for var.equal based on var.test
+\code{t_var_test} tests for equal variance based on \link{var.test}
+and calls t.test, setting the option var.equal accordingly.
+}
+\examples{
+t_var_test(mtcars,wt~am)
+# may be used in pipes:
+mtcars \%>\% t_var_test(wt~am)
+
 }

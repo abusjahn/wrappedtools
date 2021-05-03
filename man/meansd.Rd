@@ -11,7 +11,7 @@ meansd(
   groupvar = NULL,
   range = FALSE,
   rangesep = " ",
-  .n = FALSE,
+  add_n = FALSE,
   .german = FALSE
 )
 }
@@ -28,7 +28,7 @@ meansd(
 
 \item{rangesep}{How should min/max be separated from mean+-sd?}
 
-\item{.n}{Should n be included in output?}
+\item{add_n}{Should n be included in output?}
 
 \item{.german}{logical, should "." and "," be used as bigmark and decimal?}
 }
@@ -42,6 +42,6 @@ Compute mean and sd and put together with the ± symbol.
 # basic usage of meansd
 meansd(x=mtcars$wt)
 # with additional options
-meansd(x=mtcars$wt, groupvar = mtcars$am, .n = TRUE)
+meansd(x=mtcars$wt, groupvar = mtcars$am, add_n = TRUE)
 
 }
