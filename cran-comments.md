@@ -6,11 +6,10 @@
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
 
-There were 2 NOTES:
+There was 1 NOTES:
 
 * checking CRAN incoming feasibility ... NOTE 
 Maintainer: ‘Andreas Busjahn <andreas@busjahn.net>’ 
 New submission
 
-* checking for future file timestamps ... NOTE 
-unable to verify current time
+Possibly mis-spelled words in DESCRIPTION: backticked (8:9)

@@ -7,8 +7,14 @@
 cn(data = rawdata)
 }
 \arguments{
-\item{data}{Data structure to read colnames from.}
+\item{data}{Data structure to read column names from.}
+}
+\value{
+Character vector with column names.
 }
 \description{
-\code{cn} lists colnames, by default for variable rawdata.
+\code{cn} lists column names, by default for variable rawdata.
+}
+\examples{
+cn(mtcars)
 }

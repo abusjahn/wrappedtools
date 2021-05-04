@@ -18,7 +18,7 @@ formatP(
 
 \item{ndigits}{Number of digits (default=3).}
 
-\item{textout}{Should output be casted to character default=TRUE)?}
+\item{textout}{Cast output to character (default=TRUE)?}
 
 \item{pretext}{Should = or < be added before p (default=FALSE)?}
 

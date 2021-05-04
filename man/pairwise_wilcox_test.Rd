@@ -39,7 +39,7 @@ A list with matrix of p-values and character vector with significance indicators
 \description{
 \code{pairwise_wilcox_test} calculates pairwise comparisons on ordinal data
 between all group levels with corrections for multiple testing based on
-\link{wilcox_test} from package coin.
+\link{wilcox_test} from package 'coin'.
 }
 \examples{
 pairwise_wilcox_test(dep_var = mtcars$wt, indep_var = mtcars$cyl)

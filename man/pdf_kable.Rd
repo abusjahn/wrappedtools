@@ -32,6 +32,9 @@ pdf_kable(
 
 \item{escape}{see kable}
 }
+\value{
+A character vector of the table source code.
+}
 \description{
 \code{pdf_kable} formats tibbles/df's for markdown
 }

@@ -28,13 +28,13 @@ size of dots rather than absolute correlation.}
 
 \item{method}{text specifying type of correlation.}
 
-\item{title}{plottitle.}
+\item{title}{plot title.}
 
 \item{maxpoint}{maximum for scale_size_manual, may need adjustment depending on plotsize.}
 
 \item{textsize}{for theme text.}
 
-\item{axistextsize}{relativ text size for axes.}
+\item{axistextsize}{relative text size for axes.}
 
 \item{titlesize}{as you already guessed, relative text size for title.}
 
@@ -55,11 +55,14 @@ A ggplot object, allowing further styling.
 Print graphical representation of a correlation matrix.
 }
 \examples{
-coeff_pvalues <- cortestR(mtcars[,c('wt','mpg','qsec','hp')],
-                         split = TRUE,sign_symbol = FALSE)
+coeff_pvalues <- cortestR(mtcars[, c("wt", "mpg", "qsec", "hp")],
+  split = TRUE, sign_symbol = FALSE
+)
 # focus on coefficients:
-ggcormat(cor_mat = coeff_pvalues$corout,maxpoint = 5)
-ggcormat(cor_mat = coeff_pvalues$corout,
-        p_mat = coeff_pvalues$pout, maxpoint = 5)
-        
+ggcormat(cor_mat = coeff_pvalues$corout, maxpoint = 5)
+# size take from p-value:
+ggcormat(
+  cor_mat = coeff_pvalues$corout,
+  p_mat = coeff_pvalues$pout, maxpoint = 5
+)
 }
