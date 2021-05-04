@@ -2,10 +2,10 @@
 #'
 #' @param cor_mat correlation matrix as produced by cor.
 #' @param method text specifying type of correlation.
-#' @param title plottitle.
+#' @param title plot title.
 #' @param maxpoint maximum for scale_size_manual, may need adjustment depending on plotsize.
 #' @param textsize for theme text.
-#' @param axistextsize relativ text size for axes.
+#' @param axistextsize relative text size for axes.
 #' @param titlesize as you already guessed, relative text size for title.
 #' @param breaklabels currently not used, intended for str_wrap.
 #' @param .low Color for heatmap.

@@ -1,7 +1,7 @@
 Package: wrappedtools
 Type: Package
 Title: Useful Wrappers Around Commonly Used Functions
-Description: The main functionalities of wrappedtools are:
+Description: The main functionalities of 'wrappedtools' are:
     adding backticks to variable names; rounding to desired precision 
     with special case for p-values; 
     selecting columns based on pattern and storing their position, name, 
@@ -10,7 +10,7 @@ Description: The main functionalities of wrappedtools are:
     descriptive statics and p-values; creating specialized plots for correlation 
     or regression trees. Functions were mainly written for my own daily work or 
     teaching, but may be of use to others as well.
-Version: 0.7.5
+Version: 0.7.6
 Date: 2021-05-03
 Authors@R:
     person(given = "Andreas",

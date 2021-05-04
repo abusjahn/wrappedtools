@@ -1,5 +1,5 @@
 ---
-title: "Usage of wrappedtools"
+title: "Usage of 'wrappedtools'"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Usage of wrappedtools}
@@ -18,12 +18,12 @@ knitr::opts_chunk$set(
 library(wrappedtools)
 ```
 
-# wrappedtools
+# 'wrappedtools'
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of wrappedtools is to make my (and possibly your) life a bit easier 
+The goal of 'wrappedtools' is to make my (and possibly your) life a bit easier 
 by a set of convenience functions for many common tasks like e.g. computation
 of mean and SD and pasting them with ±. Instead of   
 paste(round(mean(x),some_level), round(sd(x),some_level), sep='±')  
@@ -32,7 +32,7 @@ a simple meansd(x, roundDig = some_level) is enough.
 
 ## Installation
 
-You can install the released version of wrappedtools from github with:
+You can install the released version of 'wrappedtools' from github with:
 
 ``` r
 devtools::install_github("abusjahn/wrappedtools")

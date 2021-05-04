@@ -6,7 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of wrappedtools is to make my (and possibly your) life a bit
+The goal of ‘wrappedtools’ is to make my (and possibly your) life a bit
 easier by a set of convenience functions for many common tasks like
 e.g. computation of mean and SD and pasting them with ±. Instead of  
 paste(round(mean(x),some\_level), round(sd(x),some\_level), sep=‘±’)  
@@ -14,7 +14,7 @@ a simple meansd(x, roundDig = some\_level) is enough.
 
 ## Installation
 
-You can install the released version of wrappedtools from github with:
+You can install the released version of ‘wrappedtools’ from github with:
 
 ``` r
 devtools::install_github("abusjahn/wrappedtools")
@@ -62,11 +62,11 @@ ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
 #>  One-sample Kolmogorov-Smirnov test
 #> 
 #> data:  somedata
-#> D = 0.051386, p-value = 0.9544
+#> D = 0.04477, p-value = 0.9881
 #> alternative hypothesis: two-sided
 
 ksnormal(somedata)
-#> [1] 0.9543852
+#> [1] 0.9881144
 ```
 
 This should give you the general idea, I’ll try to expand this intro

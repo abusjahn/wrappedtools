@@ -97,7 +97,7 @@ markSign <- function(SignIn, plabel = c("n.s.", "+", "*", "**", "***")) {
 #'
 #' @param pIn A numeric vector or matrix with p-values.
 #' @param ndigits Number of digits (default=3).
-#' @param textout Should output be casted to character default=TRUE)?
+#' @param textout Cast output to character (default=TRUE)?
 #' @param pretext Should = or < be added before p (default=FALSE)?
 #' @param mark Should significance level be added after p (default=FALSE)?
 #' @param german_num change dot (default) to comma?
@@ -282,7 +282,8 @@ print_kable <- function(t, nrows = 30, caption = "",
 #' @param caption header
 #' @param foot footnote
 #' @param escape see kable
-
+#'
+#'@return A character vector of the table source code. 
 #' @export
 pdf_kable <- function(.input, width1 = 6,
                       twidth = 14,
@@ -326,9 +327,14 @@ pdf_kable <- function(.input, width1 = 6,
 
 #' Shortcut for colnames()
 #'
-#' \code{cn} lists colnames, by default for variable rawdata.
+#' \code{cn} lists column names, by default for variable rawdata.
 #'
-#' @param data Data structure to read colnames from.
+#' @param data Data structure to read column names from.
+#' 
+#' @return Character vector with column names.
+#' 
+#' @examples 
+#' cn(mtcars)
 #' @export
 cn <- function(data = rawdata) {
   colnames(data)
@@ -339,8 +345,14 @@ cn <- function(data = rawdata) {
 #' \code{bt} adds leading and trailing backticks to make illegal variable names
 #' usable. Optionally removes them.
 #'
-#' @param x Names to backtick
-#' @param remove Option to remove existing backticks, default=FALSE
+#' @param x Names to add backtick to.
+#' @param remove Option to remove existing backticks, default=FALSE.
+#' 
+#' @return Character vector with backticks added.
+#' 
+#' @examples
+#' bt('name 1')
+#' 
 #' @export
 bt <- function(x, remove = FALSE) {
   if (remove) {
