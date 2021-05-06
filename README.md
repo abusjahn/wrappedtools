@@ -40,15 +40,15 @@ median_quart(mtcars$mpg)
 # on a higher level, this logic leads to
 compare2numvars(data = mtcars, dep_vars = c('wt','mpg', "disp"), 
                 indep_var = 'am',
-                gaussian = F,
+                gaussian = FALSE,
                 round_desc = 3)
 #> # A tibble: 3 x 5
 #> # Groups:   Variable [3]
-#>   Variable desc_all    `am 0`                        `am 1`                p    
-#>   <fct>    <chr>       <chr>                         <chr>                 <chr>
-#> 1 wt       3.32 (2.53~ "Error in DESC(x = .$Value, ~ " \n  unbenutztes Ar~ 0.001
-#> 2 mpg      19.2 (15.3~ "Error in DESC(x = .$Value, ~ " \n  unbenutztes Ar~ 0.002
-#> 3 disp     196 (121/3~ "Error in DESC(x = .$Value, ~ " \n  unbenutztes Ar~ 0.001
+#>   Variable desc_all         `am 0`           `am 1`           p    
+#>   <fct>    <chr>            <chr>            <chr>            <chr>
+#> 1 wt       3.32 (2.53/3.66) 3.52 (3.44/3.84) 2.32 (1.90/2.81) 0.001
+#> 2 mpg      19.2 (15.3/22.8) 17.3 (14.8/19.2) 22.8 (20.6/30.4) 0.002
+#> 3 disp     196 (121/337)    276 (177/360)    120 (79/160)     0.001
 ```
 
 To explain the \*wrapper’ part of the package name, here is another
@@ -62,11 +62,55 @@ ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
 #>  One-sample Kolmogorov-Smirnov test
 #> 
 #> data:  somedata
-#> D = 0.04477, p-value = 0.9881
+#> D = 0.057193, p-value = 0.8991
 #> alternative hypothesis: two-sided
 
 ksnormal(somedata)
-#> [1] 0.9881144
+#> [1] 0.899124
+```
+
+Saving variable selections: Variables may fall into different groups:
+Some are following a Gaussian distribution, others are ordinal or
+factorial. There may be several grouping variables like treatment,
+gender… To refer to such variables, it is convenient to have their index
+and name stored. The name may be needed as character or , symbol,
+complex variable names like “size \[cm\]” may need to be surrounded by
+backtics in some function calls but must not have those in others.  
+Function FindVars finds columns in tibbles or dataframes, based on name
+pattern. This is comparable to the selection helpers in ‘tidyselect’,
+but does not select the content of matching variables, but names,
+positions, and count:
+
+``` r
+gaussvars <- FindVars(varnames = c('wt','mpg'),
+                      allnames = colnames(mtcars))
+gaussvars
+#> $index
+#> [1] 1 6
+#> 
+#> $names
+#> [1] "mpg" "wt" 
+#> 
+#> $bticked
+#> [1] "`mpg`" "`wt`" 
+#> 
+#> $symbols
+#> $symbols[[1]]
+#> mpg
+#> 
+#> $symbols[[2]]
+#> wt
+#> 
+#> 
+#> $count
+#> [1] 2
+
+#Exclusion based on pattern
+factorvars <- FindVars(varnames = c('a','cy'),
+                      allnames = colnames(mtcars),
+                      exclude = c('t'))
+factorvars$names
+#> [1] "cyl"  "am"   "gear" "carb"
 ```
 
 This should give you the general idea, I’ll try to expand this intro

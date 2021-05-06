@@ -434,7 +434,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
       ),
       desc_groups = paste(try(
         DESC(
-          x = .$Value, indep_var = .$Group,
+          x = .$Value, groupvar = .$Group,
           roundDig = round_desc, range = range,
           rangesep = rangesep, add_n = add_n
         ),

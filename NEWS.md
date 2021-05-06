@@ -1,4 +1,9 @@
+#wrappedtools 0.7.7
+- bugfix in function compare2numvars
+- extended vignette
+
 #wrappedtools 0.7.6
+- released on CRAN
 - added missing value tags
 - put package names in single quotes
 
