@@ -21,8 +21,8 @@ Authors@R:
 Maintainer: Andreas Busjahn <andreas@busjahn.net>
 License: GPL-3
 Encoding: UTF-8
-Imports: stats, boot, knitr, ggalluvial, coin, rlist, utils, testthat, dplyr, 
-    forcats, purrr, ggdendro, glue, rlang, stringr, magrittr, ggplot2, tibble,
+Imports: stats, boot, knitr, coin, utils, testthat, dplyr, 
+    forcats, purrr, glue, rlang, stringr, magrittr, ggplot2, tibble,
     tidyr, kableExtra
 Depends: tidyverse
 Roxygen: list(markdown = TRUE)
