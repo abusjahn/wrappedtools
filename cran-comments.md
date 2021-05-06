@@ -6,10 +6,4 @@
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
 
-There was 1 NOTES:
-
-* checking CRAN incoming feasibility ... NOTE 
-Maintainer: ‘Andreas Busjahn <andreas@busjahn.net>’ 
-New submission
-
-Possibly mis-spelled words in DESCRIPTION: backticked (8:9)
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔

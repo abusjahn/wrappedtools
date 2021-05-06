@@ -28,7 +28,7 @@ cortestR(
 \item{split}{logical, report correlation and p combined (default)
 or split in list.}
 
-\item{space}{character to fill empty uper triangle.}
+\item{space}{character to fill empty upper triangle.}
 }
 \value{
 Depending on parameters split and sign_symbol,
