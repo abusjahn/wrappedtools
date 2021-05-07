@@ -1,3 +1,6 @@
+#wrappedtools 0.7.8
+- moved testthat from imports to suggests
+
 #wrappedtools 0.7.7
 - bugfix in function compare2numvars
 - extended vignette

@@ -10,7 +10,7 @@ Description: The main functionalities of 'wrappedtools' are:
     descriptive statics and p-values; creating specialized plots for correlation 
     or regression trees. Functions were mainly written for my own daily work or 
     teaching, but may be of use to others as well.
-Version: 0.7.7
+Version: 0.7.8
 Date: 2021-05-06
 Authors@R:
     person(given = "Andreas",
