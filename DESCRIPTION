@@ -21,12 +21,11 @@ Authors@R:
 Maintainer: Andreas Busjahn <andreas@busjahn.net>
 License: GPL-3
 Encoding: UTF-8
-Imports: stats, boot, knitr, coin, utils, testthat, dplyr, 
-    forcats, purrr, glue, rlang, stringr, magrittr, ggplot2, tibble,
-    tidyr, kableExtra
+Imports: stats, boot, knitr, coin, utils, 
+            dplyr, forcats, purrr, glue, rlang, stringr, magrittr, ggplot2, 
+            tibble, tidyr, kableExtra
 Depends: tidyverse
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
-Suggests: 
-    rmarkdown
+Suggests: rmarkdown, testthat

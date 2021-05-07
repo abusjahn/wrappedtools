@@ -16,8 +16,8 @@ NULL
 #' @import stringr
 NULL
 
-#'@import testthat
-NULL
+# #'@importFrom testthat test_that expect_equal
+# NULL
 
 #' @importFrom stats anova as.formula confint cor.test fisher.test ks.test mad median na.omit p.adjust pairwise.t.test pnorm power.prop.test power.t.test qnorm quantile rpois sd wilcox.test t.test var.test
 NULL
