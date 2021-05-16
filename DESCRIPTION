@@ -7,11 +7,11 @@ Description: The main functionalities of 'wrappedtools' are:
     selecting columns based on pattern and storing their position, name, 
     and backticked name; computing and formatting of descriptive statistics 
     (e.g. mean±SD), comparing groups and creating publication-ready tables with 
-    descriptive statics and p-values; creating specialized plots for correlation 
-    or regression trees. Functions were mainly written for my own daily work or 
+    descriptive statistics and p-values; creating specialized plots for 
+    correlation matrices. Functions were mainly written for my own daily work or 
     teaching, but may be of use to others as well.
-Version: 0.7.8
-Date: 2021-05-06
+Version: 0.7.9.900
+Date: 2021-05-16
 Authors@R:
     person(given = "Andreas",
            family = "Busjahn",
@@ -24,7 +24,9 @@ Encoding: UTF-8
 Imports: stats, boot, knitr, coin, utils, 
             dplyr, forcats, purrr, glue, rlang, stringr, magrittr, ggplot2, 
             tibble, tidyr, kableExtra
-Depends: tidyverse
+Depends: 
+    R (>= 2.10),
+    tidyverse
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
