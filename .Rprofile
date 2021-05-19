@@ -15,5 +15,6 @@ options(
   ),
   usethis.protocol  = "ssh"  
 )
+cranlogs::cran_downloads('wrappedtools',when = 'last-month')
 dplyr::summarize(cranlogs::cran_downloads('wrappedtools',when = 'last-month'),
                  total=sum(count))
