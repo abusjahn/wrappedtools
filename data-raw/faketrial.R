@@ -36,4 +36,4 @@ for(lab_i in seq_len(10)){
                                ((lab_i%%2)*(Sex=='male')*.25),sdlog = .1))
 }
 
-usethis::use_data(faketrial, overwrite = TRUE)
+usethis::use_data(faketrial, overwrite = TRUE, version = 3)

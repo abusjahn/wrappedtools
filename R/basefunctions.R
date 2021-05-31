@@ -52,9 +52,9 @@ roundR <- function(roundin, level = 2, smooth = FALSE,
     roundout[which(!is.na(roundout))] <-
       round(
         roundin[which(!is.na(roundin))] /
-          10^round(log10(max(abs(roundin), na.rm = TRUE)) - level)
+          10^ceiling(log10(max(abs(roundin), na.rm = TRUE)) - level)
       ) *
-        10^round(log10(max(abs(roundin), na.rm = TRUE)) - level)
+        10^ceiling(log10(max(abs(roundin), na.rm = TRUE)) - level)
   }
   if (textout) {
     roundout[which(!is.na(roundout))] <-
