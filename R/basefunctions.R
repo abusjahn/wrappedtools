@@ -102,7 +102,7 @@ markSign <- function(SignIn, plabel = c("n.s.", "+", "*", "**", "***")) {
 #' @param mark Should significance level be added after p (default=FALSE)?
 #' @param german_num change dot (default) to comma?
 #'
-#' @returns matrix with type character (default) or numeric,
+#' @returns vector or matrix (depending on type of pIn) with type character (default) or numeric,
 #' depending on parameter textout
 #'
 #' @examples
@@ -115,7 +115,8 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE, mark = FA
   decimal.mark <- ifelse(german_num, ",", ".")
   formatp <- ""
   if (is.numeric(pIn)) {
-    if (!is.matrix(pIn)) {
+    pIn_is_matrix <- is.matrix(pIn)
+    if (!pIn_is_matrix) {
       pIn <- matrix(pIn)
     }
     formatp <- apply(
@@ -153,6 +154,9 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE, mark = FA
     if (textout == FALSE & pretext == FALSE) {
       formatp <- apply(formatp, MARGIN = c(1, 2), as.numeric)
     }
+  }
+  if(!pIn_is_matrix){
+    formatp <- as.vector(formatp)
   }
   return(formatp)
 }
