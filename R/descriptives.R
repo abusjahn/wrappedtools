@@ -58,7 +58,7 @@ meansd <- function(x, roundDig = 2, drop0 = FALSE, groupvar = NULL,
           length(na.omit(x))
         }))
     }
-    out <- paste(meansd[, 1], meansd[, 2], sep = "\u00B1")
+    out <- paste(meansd[, 1], meansd[, 2], sep = " \u00B1 ")
     if (range) {
       out <- paste0(
         out, rangesep, " [",

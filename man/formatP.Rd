@@ -27,7 +27,7 @@ formatP(
 \item{german_num}{change dot (default) to comma?}
 }
 \value{
-matrix with type character (default) or numeric,
+vector or matrix (depending on type of pIn) with type character (default) or numeric,
 depending on parameter textout
 }
 \description{

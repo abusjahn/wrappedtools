@@ -1,3 +1,9 @@
+# wrappedtools 0.7.9
+- formatP returns vector or matrix, depending on input pIn,
+this makes piping easier
+- meansd adds spaces around ±
+- compare2numvars handles cases with more than 2 groups by lumping
+
 # wrappedtools 0.7.8
 - moved testthat from imports to suggests
 
