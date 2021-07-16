@@ -1,5 +1,8 @@
 ---
 output: github_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -13,35 +16,37 @@ knitr::opts_chunk$set(
 )
 ```
 
-# wrappedtools
+# wrappedtools ![](wrappedtools_hex.png "wrappedtools hex"){width=20%}
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
-The goal of 'wrappedtools' is to make my (and possibly your) life a bit easier 
-by a set of convenience functions for many common tasks like e.g. computation
-of mean and SD and pasting them with ±. Instead of   
+The goal of 'wrappedtools' is to make my (and possibly your) life a bit
+easier by a set of convenience functions for many common tasks like e.g.
+computation of mean and SD and pasting them with ±. Instead of  
 paste(round(mean(x),some_level), round(sd(x),some_level), sep='±')  
-a simple meansd(x, roundDig = some_level) is enough.   
-
+a simple meansd(x, roundDig = some_level) is enough.
 
 ## Installation
 
-You can install the released version of 'wrappedtools' from CRAN 
-or the latest development version from github with:
+You can install the released version of 'wrappedtools' from CRAN or the
+latest development version from github with:
 
 ``` r
 devtools::install_github("abusjahn/wrappedtools")
 ```
+
 ```{r include=FALSE}
 library(wrappedtools)
 ```
 
-## Examples  
+## Examples
 
 This is a basic example which shows you how to solve a common problem,
-that is, describe and test differences in some measures between 2 samples,
-rounding descriptive statistics to a reasonable precision in the process:   
+that is, describe and test differences in some measures between 2
+samples, rounding descriptive statistics to a reasonable precision in
+the process:
 
 ```{r example1}
 # Standard functions to obtain median and quartiles:
@@ -56,9 +61,10 @@ compare2numvars(data = mtcars, dep_vars = c('wt','mpg', "disp"),
                 round_desc = 3)
 ```
 
-To explain the *wrapper' part of the package name, here is another example, 
-using the ks.test as test for a Normal distribution, where ksnormal simply
-wraps around the ks.test function:   
+To explain the \*wrapper' part of the package name, here is another
+example, using the ks.test as test for a Normal distribution, where
+ksnormal simply wraps around the ks.test function:
+
 ```{r example2}
 somedata <- rnorm(100)
 ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
@@ -66,16 +72,18 @@ ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
 ksnormal(somedata)
 ```
 
-Saving variable selections:
-Variables may fall into different groups: Some are following a Gaussian 
-distribution, others are ordinal or factorial. There may be several grouping 
-variables like treatment, gender... To refer to such variables, it is convenient 
-to have their index and name stored. The name may be needed as character or ,
-symbol, complex variable names like "size [cm]" may need to be surrounded by 
+Saving variable selections: Variables may fall into different groups:
+Some are following a Gaussian distribution, others are ordinal or
+factorial. There may be several grouping variables like treatment,
+gender... To refer to such variables, it is convenient to have their
+index and name stored. The name may be needed as character or , symbol,
+complex variable names like "size [cm]" may need to be surrounded by
 backtics in some function calls but must not have those in others.  
-Function FindVars finds columns in tibbles or dataframes, based on name pattern. 
-This is comparable to the selection helpers in 'tidyselect', but does
-not select the content of matching variables, but names, positions, and count: 
+Function FindVars finds columns in tibbles or dataframes, based on name
+pattern. This is comparable to the selection helpers in 'tidyselect',
+but does not select the content of matching variables, but names,
+positions, and count:
+
 ```{r example3}
 gaussvars <- FindVars(varnames = c('wt','mpg'),
                       allnames = colnames(mtcars))
@@ -88,4 +96,5 @@ factorvars <- FindVars(varnames = c('a','cy'),
 factorvars$names
 ```
 
-This should give you the general idea, I'll try to expand this intro over time...
+This should give you the general idea, I'll try to expand this intro
+over time...

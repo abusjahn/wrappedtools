@@ -1,14 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# wrappedtools
+# wrappedtools <img src="wrappedtools_hex.png" title="wrappedtools hex" style="width:20.0%" />
 
 <!-- badges: start -->
 <!-- badges: end -->
 
 The goal of ‘wrappedtools’ is to make my (and possibly your) life a bit
-easier by a set of convenience functions for many common tasks like
-e.g. computation of mean and SD and pasting them with ±. Instead of  
+easier by a set of convenience functions for many common tasks like e.g.
+computation of mean and SD and pasting them with ±. Instead of  
 paste(round(mean(x),some\_level), round(sd(x),some\_level), sep=‘±’)  
 a simple meansd(x, roundDig = some\_level) is enough.
 
@@ -63,11 +63,11 @@ ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
 #>  One-sample Kolmogorov-Smirnov test
 #> 
 #> data:  somedata
-#> D = 0.063512, p-value = 0.8147
+#> D = 0.054673, p-value = 0.9261
 #> alternative hypothesis: two-sided
 
 ksnormal(somedata)
-#> [1] 0.8146581
+#> [1] 0.9260646
 ```
 
 Saving variable selections: Variables may fall into different groups:

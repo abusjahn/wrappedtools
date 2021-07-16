@@ -10,4 +10,5 @@
 ^\.github$
 ^CRAN-RELEASE$
 Hammer_.*
+wrappedtools_hex.png
 ^\\.Rprofile$

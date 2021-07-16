@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library(wrappedtools)
 ```
 
-# 'wrappedtools'
+# 'wrappedtools' ![](wrappedtools_hex.png "wrappedtools hex"){width=20%}
 
 <!-- badges: start -->
 <!-- badges: end -->

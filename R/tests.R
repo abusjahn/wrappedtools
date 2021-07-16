@@ -369,7 +369,7 @@ t_var_test <- function(data, formula, cutoff = .05) {
 #'
 #' @param data name of dataset (tibble/data.frame) to analyze.
 #' @param dep_vars vector of column names for independent variables.
-#' @param indep_var name of grouping variable, has to translate to 2 groups. If more levels are encountered, all but the most frequent one will be lumped into 'Other'.
+#' @param indep_var name of grouping variable, has to translate to 2 groups. If more levels are encountered, an error is produced'.
 #' @param gaussian logical specifying normal or ordinal values.
 #' @param round_p level for rounding p-value.
 #' @param round_desc number of significant digits for rounding of descriptive stats.
@@ -417,11 +417,14 @@ compare2numvars <- function(data, dep_vars, indep_var,
       Group = all_of(indep_var),
       all_of(dep_vars)
     ) %>%
-    mutate(Group = factor(Group) %>% fct_drop() %>% fct_lump_n(n = 1)) %>%
+    mutate(Group = factor(Group) %>% fct_drop()) %>%
     gather(key = Variable, value = Value, -Group) %>%
     mutate(Variable = forcats::fct_inorder(Variable)) %>%
     # na.omit() %>%
     as_tibble()
+  if(nlevels(data_l$Group)!=2){
+    stop(paste0('More than 2 groups provided for ',indep_var,': ',
+               paste(levels(data_l$Group),collapse='/')))}
   out <- data_l %>%
     group_by(Variable) %>%
     do(summarise(

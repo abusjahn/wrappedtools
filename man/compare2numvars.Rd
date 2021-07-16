@@ -24,7 +24,7 @@ compare2numvars(
 
 \item{dep_vars}{vector of column names for independent variables.}
 
-\item{indep_var}{name of grouping variable, has to translate to 2 groups. If more levels are encountered, all but the most frequent one will be lumped into 'Other'.}
+\item{indep_var}{name of grouping variable, has to translate to 2 groups. If more levels are encountered, an error is produced'.}
 
 \item{gaussian}{logical specifying normal or ordinal values.}
 
