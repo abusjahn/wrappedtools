@@ -14,7 +14,8 @@ a simple meansd(x, roundDig = some\_level) is enough.
 
 ## Installation
 
-You can install the released version of ‘wrappedtools’ from github with:
+You can install the released version of ‘wrappedtools’ from CRAN or the
+latest development version from github with:
 
 ``` r
 devtools::install_github("abusjahn/wrappedtools")
@@ -62,11 +63,11 @@ ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
 #>  One-sample Kolmogorov-Smirnov test
 #> 
 #> data:  somedata
-#> D = 0.057193, p-value = 0.8991
+#> D = 0.063512, p-value = 0.8147
 #> alternative hypothesis: two-sided
 
 ksnormal(somedata)
-#> [1] 0.899124
+#> [1] 0.8146581
 ```
 
 Saving variable selections: Variables may fall into different groups:

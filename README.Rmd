@@ -27,7 +27,8 @@ a simple meansd(x, roundDig = some_level) is enough.
 
 ## Installation
 
-You can install the released version of 'wrappedtools' from github with:
+You can install the released version of 'wrappedtools' from CRAN 
+or the latest development version from github with:
 
 ``` r
 devtools::install_github("abusjahn/wrappedtools")
