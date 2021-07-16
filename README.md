@@ -1,8 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# wrappedtools <img src="wrappedtools_hex.png" title="wrappedtools hex" style="width:20.0%" />
+# wrappedtools <a><img src='wrappedtools_hex.png' align="right" height="139" /></a>
 
+<!-- ![](wrappedtools_hex.png "wrappedtools hex"){width=20%} -->
 <!-- badges: start -->
 <!-- badges: end -->
 
@@ -63,11 +64,11 @@ ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
 #>  One-sample Kolmogorov-Smirnov test
 #> 
 #> data:  somedata
-#> D = 0.054673, p-value = 0.9261
+#> D = 0.03584, p-value = 0.9995
 #> alternative hypothesis: two-sided
 
 ksnormal(somedata)
-#> [1] 0.9260646
+#> [1] 0.9995284
 ```
 
 Saving variable selections: Variables may fall into different groups:
