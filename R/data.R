@@ -12,4 +12,5 @@
 #'   \item{Med xxx}{Pseudo-medications, factors with levels 'y','n'}
 #'   \item{Biomarker x [units]}{Biomarkers with log-normal distribution}
 #' }
+#' 
 "faketrial"

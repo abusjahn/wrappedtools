@@ -58,4 +58,6 @@ Compute median and quartiles and put together.
 median_quart(x = mtcars$wt)
 # with additional options
 median_quart(x = mtcars$wt, groupvar = mtcars$am, add_n = TRUE)
+data(faketrial)
+median_quart(x=faketrial$`Biomarker 1 [units]`,groupvar = faketrial$Treatment)
 }
