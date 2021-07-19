@@ -24,7 +24,7 @@ compare2numvars(
 
 \item{dep_vars}{vector of column names for independent variables.}
 
-\item{indep_var}{name of grouping variable, has to translate to 2 groups. If more levels are encountered, an error is produced'.}
+\item{indep_var}{name of grouping variable, has to translate to 2 groups. If more levels are encountered, an error is produced.}
 
 \item{gaussian}{logical specifying normal or ordinal values.}
 
@@ -64,4 +64,8 @@ compare2numvars(
   data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
   gaussian = FALSE
 )
+# If dependent variable has more than 2 levels, consider fct_lump:
+mtcars \%>\% mutate(gear=factor(gear) \%>\% fct_lump_n(n=1)) \%>\% 
+compare2numvars(dep_vars="wt",indep_var="gear",gaussian=TRUE)
+
 }

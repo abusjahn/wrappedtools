@@ -2,7 +2,9 @@
 - formatP returns vector or matrix, depending on input pIn,
 this makes piping easier
 - meansd adds spaces around ±
-- compare2numvars handles cases with more than 2 groups by lumping
+- compare2numvars handles cases with more than 2 groups by producing an error
+- cortestR converts input to matrix
+- cortestR has bugfix and empty string as changed default for space
 
 # wrappedtools 0.7.8
 - moved testthat from imports to suggests

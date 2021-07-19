@@ -11,7 +11,7 @@ cortestR(
   digits_p = 3,
   sign_symbol = TRUE,
   split = FALSE,
-  space = "&nbsp;"
+  space = ""
 )
 }
 \arguments{

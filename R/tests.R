@@ -274,10 +274,13 @@ cortestR <- function(cordata, method = "pearson",
                      digits = 3, digits_p = 3,
                      sign_symbol = TRUE,
                      split = FALSE,
-                     space = "&nbsp;") {
+                     space = "") {
+  if(!is.matrix(cordata)){
+    cordata <- as.matrix(cordata)
+  }
   n <- ncol(cordata)
   corout <- as.data.frame(
-    matrix("&nbsp;", nrow = n, ncol = n)
+    matrix(space, nrow = n, ncol = n)
   )
   colnames(corout) <- colnames(cordata)
   rownames(corout) <- colnames(corout)
@@ -369,7 +372,7 @@ t_var_test <- function(data, formula, cutoff = .05) {
 #'
 #' @param data name of dataset (tibble/data.frame) to analyze.
 #' @param dep_vars vector of column names for independent variables.
-#' @param indep_var name of grouping variable, has to translate to 2 groups. If more levels are encountered, an error is produced'.
+#' @param indep_var name of grouping variable, has to translate to 2 groups. If more levels are encountered, an error is produced.
 #' @param gaussian logical specifying normal or ordinal values.
 #' @param round_p level for rounding p-value.
 #' @param round_desc number of significant digits for rounding of descriptive stats.
@@ -395,6 +398,10 @@ t_var_test <- function(data, formula, cutoff = .05) {
 #'   data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
 #'   gaussian = FALSE
 #' )
+#' # If dependent variable has more than 2 levels, consider fct_lump:
+#' mtcars %>% mutate(gear=factor(gear) %>% fct_lump_n(n=1)) %>% 
+#' compare2numvars(dep_vars="wt",indep_var="gear",gaussian=TRUE)
+#' 
 #' @export
 compare2numvars <- function(data, dep_vars, indep_var,
                             gaussian, round_p = 3, round_desc = 2,
