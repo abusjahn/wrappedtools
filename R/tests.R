@@ -560,20 +560,22 @@ compare2qualvars <- function(data, dep_vars, indep_var,
 
   p <-
     purrr::map2(data[dep_vars], data[indep_var],
-      .f = function(x, y) {
-        formatP(try(
-          fisher.test(
-            x = x, y = y,
-            simulate.p.value = TRUE,
-            B = 10^4
-          )$p.value,
-          silent = TRUE
-        ),
-        mark = mark, pretext = pretext
-        )
-      }
-    )
-
+                .f = function(x, y) {
+                  try(formatP(try(
+                    fisher.test(
+                      x = x, y = y,
+                      simulate.p.value = TRUE,
+                      B = 10^4
+                    )$p.value,
+                    silent = TRUE
+                  ),
+                  mark = mark, pretext = pretext
+                  ),silent=TRUE) %>% 
+                    as.character()
+                }
+    ) %>% 
+    map(~case_when(str_detect(.,'.\\d+') ~ .,TRUE~''))
+  
   out <- tibble(
     Variable = character(), desc_all = character(),
     g1 = character(), g2 = character(), p = character()
