@@ -170,16 +170,16 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 #' Find numeric index and names of columns based on patterns
 #'
 #' \code{FindVars} looks up colnames (by default for data-frame rawdata)
-#' based on parts of names, using regular expressions.
+#' based on parts of names, using regular expressions. Be warned that
+#' special characters as e.g. `[` `(` need to be escaped or replaced by .
 #' Exlusion rules may be specified as well.
 #'
 #' @param varnames Vector of pattern to look for.
-#' @param allnames Vector of values to detect pattern in;
-#' by default, colnames(rawdata).
+#' @param allnames Vector of values to detect pattern in; by default, colnames(rawdata).
 #' @param exact Partial matching or exact only (adding ^ and $)?
 #' @param exclude Vector of pattern to exclude from found names.
 #' @param casesensitive Logical if case is respected in matching (default FALSE: a<>A)
-#' @param fixed Logical, treat pattern as regex?
+#' @param fixed Logical, match as is, argument is passed to [grep()]. 
 #' @export
 #' @return A list with index, names, backticked names, and symbols
 #' @examples

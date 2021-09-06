@@ -16,8 +16,7 @@ FindVars(
 \arguments{
 \item{varnames}{Vector of pattern to look for.}
 
-\item{allnames}{Vector of values to detect pattern in;
-by default, colnames(rawdata).}
+\item{allnames}{Vector of values to detect pattern in; by default, colnames(rawdata).}
 
 \item{exact}{Partial matching or exact only (adding ^ and $)?}
 
@@ -25,14 +24,15 @@ by default, colnames(rawdata).}
 
 \item{casesensitive}{Logical if case is respected in matching (default FALSE: a<>A)}
 
-\item{fixed}{Logical, treat pattern as regex?}
+\item{fixed}{Logical, match as is, argument is passed to \code{\link[=grep]{grep()}}.}
 }
 \value{
 A list with index, names, backticked names, and symbols
 }
 \description{
 \code{FindVars} looks up colnames (by default for data-frame rawdata)
-based on parts of names, using regular expressions.
+based on parts of names, using regular expressions. Be warned that
+special characters as e.g. \code{[} \code{(} need to be escaped or replaced by .
 Exlusion rules may be specified as well.
 }
 \examples{
