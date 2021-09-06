@@ -33,7 +33,7 @@ pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
   if (is.ordered(indep_var)) {
     indep_var <- factor(indep_var, ordered = F)
   }
-
+  
   ngroups <- length(levels(indep_var))
   pft_data <- data.frame(dep_var, indep_var)
   pft_data <- na.omit(pft_data)
@@ -60,9 +60,9 @@ pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
   sign_colwise <- character()
   if (!ref) {
     p_adj <- matrix(p.adjust(as.vector(p_unadj), method = adjmethod),
-      byrow = FALSE,
-      nrow = ngroups - 1, ncol = ngroups - 1,
-      dimnames = list(c(2:ngroups), c(1:(ngroups - 1)))
+                    byrow = FALSE,
+                    nrow = ngroups - 1, ncol = ngroups - 1,
+                    dimnames = list(c(2:ngroups), c(1:(ngroups - 1)))
     )
     for (col_i in 1:ncol(p_adj)) {
       temp <- " "
@@ -147,9 +147,9 @@ pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
   sign_colwise <- character()
   if (!ref) {
     p_adj <- matrix(p.adjust(as.vector(p_unadj), method = adjmethod),
-      byrow = FALSE,
-      nrow = ngroups - 1, ncol = ngroups - 1,
-      dimnames = list(c(2:ngroups), c(1:(ngroups - 1)))
+                    byrow = FALSE,
+                    nrow = ngroups - 1, ncol = ngroups - 1,
+                    dimnames = list(c(2:ngroups), c(1:(ngroups - 1)))
     )
     for (col_i in 1:ncol(p_adj)) {
       temp <- " "
@@ -193,9 +193,9 @@ pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 #' @export
 ksnormal <- function(x) {
   suppressWarnings(
-  ksout <- ks.test(x, "pnorm", mean(x, na.rm = TRUE), sd(x, na.rm = TRUE),
-    exact = FALSE
-  )$p.value)
+    ksout <- ks.test(x, "pnorm", mean(x, na.rm = TRUE), sd(x, na.rm = TRUE),
+                     exact = FALSE
+    )$p.value)
   return(ksout)
 }
 
@@ -237,7 +237,7 @@ glmCI <- function(model, min = .01, max = 100, cisep = "\U000022ef", ndigit = 2)
       ciRow[which(as.numeric(ciRow) < min)] <- paste0("<", min)
       ciRow[which(as.numeric(ciRow) > max)] <- paste0(">", max)
       ciTmp <- paste(ciTmp, paste(ciRow, collapse = cisep),
-        sep = "/"
+                     sep = "/"
       )
     }
     glmReturn$ci <- c(glmReturn$ci, gsub("^/", "", ciTmp))
@@ -290,7 +290,7 @@ cortestR <- function(cordata, method = "pearson",
   for (row_i in 1:n) {
     for (col_i in 1:row_i) {
       ct <- cor.test(cordata[, row_i], cordata[, col_i],
-        method = method
+                     method = method
       )
       corout[row_i, col_i] <-
         round(ct$estimate, digits)
@@ -418,7 +418,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
   }
   # descnames <- names(formals(DESC))
   # pnames <- names(formals(COMP))
-
+  
   data_l <- data %>%
     dplyr::select(
       Group = all_of(indep_var),
@@ -431,16 +431,19 @@ compare2numvars <- function(data, dep_vars, indep_var,
     as_tibble()
   if(nlevels(data_l$Group)!=2){
     stop(paste0('More than 2 groups provided for ',indep_var,': ',
-               paste(levels(data_l$Group),collapse='/')))}
+                paste(levels(data_l$Group),collapse='/')))
+    }
+  data_l <- data_l %>% 
+    filter(!is.na(Group))
   out <- data_l %>%
     group_by(Variable) %>%
     do(summarise(
       .data = .,
       n_groups = paste(table(.$Group[which(!is.na(.$Value))]), collapse = ":"),
       desc_all = DESC(.$Value,
-        roundDig = round_desc,
-        range = range, rangesep = rangesep,
-        add_n = add_n
+                      roundDig = round_desc,
+                      range = range, rangesep = rangesep,
+                      add_n = add_n
       ),
       desc_groups = paste(try(
         DESC(
@@ -462,20 +465,20 @@ compare2numvars <- function(data, dep_vars, indep_var,
     ))
   out$desc_groups[!str_detect(out$desc_groups, ":")] <- " : "
   out <- separate(out,
-    col = desc_groups,
-    into = glue::glue("{indep_var} {levels(data_l$Group)}"),
-    sep = ":"
+                  col = desc_groups,
+                  into = glue::glue("{indep_var} {levels(data_l$Group)}"),
+                  sep = ":"
   )
   out <- separate(out,
-    col = n_groups,
-    into = glue::glue("n {indep_var} {levels(data_l$Group)}"),
-    sep = ":"
+                  col = n_groups,
+                  into = glue::glue("n {indep_var} {levels(data_l$Group)}"),
+                  sep = ":"
   )
   out$n <- apply(out[, 2:3], 1, function(x) {
     sum(as.numeric(x))
   })
   out %<>% dplyr::select(1, n, starts_with("n "), everything())
-
+  
   if (n == FALSE) {
     out <- dplyr::select(out, -n, -starts_with("n "))
   }
@@ -526,38 +529,38 @@ compare2qualvars <- function(data, dep_vars, indep_var,
   }
   freq <-
     purrr::map(data[dep_vars],
-      .f = function(x) {
-        cat_desc_stats(
-          x,
-          return_level = FALSE, singleline = singleline,
-          ndigit = round_desc
-        )
-      }
+               .f = function(x) {
+                 cat_desc_stats(
+                   x,
+                   return_level = FALSE, singleline = singleline,
+                   ndigit = round_desc
+                 )
+               }
     ) %>%
     purrr::map(as_tibble)
-
-
+  
+  
   levels <-
     purrr::map(data[dep_vars],
-      .f = function(x) {
-        cat_desc_stats(x,
-          singleline = singleline
-        )$level
-      }
+               .f = function(x) {
+                 cat_desc_stats(x,
+                                singleline = singleline
+                 )$level
+               }
     ) %>%
     purrr::map(as_tibble)
   freqBYgroup <-
     purrr::map(data[dep_vars],
-      .f = function(x) {
-        cat_desc_stats(x,
-          groupvar = data[[indep_var]],
-          return_level = FALSE,
-          ndigit = round_desc,
-          singleline = singleline
-        )
-      }
+               .f = function(x) {
+                 cat_desc_stats(x,
+                                groupvar = data[[indep_var]],
+                                return_level = FALSE,
+                                ndigit = round_desc,
+                                singleline = singleline
+                 )
+               }
     )
-
+  
   p <-
     purrr::map2(data[dep_vars], data[indep_var],
                 .f = function(x, y) {
@@ -574,7 +577,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
                     as.character()
                 }
     ) %>% 
-    map(~case_when(str_detect(.,'.\\d+') ~ .,TRUE~''))
+    purrr::map(~case_when(str_detect(.,'.\\d+') ~ .,TRUE~''))
   
   out <- tibble(
     Variable = character(), desc_all = character(),
@@ -583,32 +586,32 @@ compare2qualvars <- function(data, dep_vars, indep_var,
   for (var_i in seq_along(dep_vars)) {
     if (!singleline) {
       out <- add_row(out,
-        Variable = c(
-          dep_vars[var_i],
-          glue::glue(
-            "{indentor}{levels[[var_i]][[1]]}"
-          )
-        ),
-        desc_all = c(spacer, freq[[var_i]][[1]]),
-        g1 = c(spacer, freqBYgroup[[var_i]][[1]]),
-        g2 = c(spacer, freqBYgroup[[var_i]][[2]]),
-        p = c(
-          p[[var_i]][[1]],
-          rep(spacer, nrow(freqBYgroup[[var_i]]))
-        )
+                     Variable = c(
+                       dep_vars[var_i],
+                       glue::glue(
+                         "{indentor}{levels[[var_i]][[1]]}"
+                       )
+                     ),
+                     desc_all = c(spacer, freq[[var_i]][[1]]),
+                     g1 = c(spacer, freqBYgroup[[var_i]][[1]]),
+                     g2 = c(spacer, freqBYgroup[[var_i]][[2]]),
+                     p = c(
+                       p[[var_i]][[1]],
+                       rep(spacer, nrow(freqBYgroup[[var_i]]))
+                     )
       )
     } else {
       out <- add_row(out,
-        Variable = paste(
-          dep_vars[var_i],
-          # rep(spacer,
-          #     nrow(freqBYgroup[[var_i]])-1)),
-          levels[[var_i]][[1]]
-        ),
-        desc_all = freq[[var_i]][[1]],
-        g1 = freqBYgroup[[var_i]][[1]],
-        g2 = freqBYgroup[[var_i]][[2]],
-        p = p[[var_i]][[1]]
+                     Variable = paste(
+                       dep_vars[var_i],
+                       # rep(spacer,
+                       #     nrow(freqBYgroup[[var_i]])-1)),
+                       levels[[var_i]][[1]]
+                     ),
+                     desc_all = freq[[var_i]][[1]],
+                     g1 = freqBYgroup[[var_i]][[1]],
+                     g2 = freqBYgroup[[var_i]][[2]],
+                     p = p[[var_i]][[1]]
       )
     }
   }
@@ -670,64 +673,64 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
                                linebreak = "\n",
                                prettynum = FALSE) {
   indentor <- paste0(rep(spacer, 5), collapse = "")
-
+  
   if (!(is.factor(data %>% pull(indep_var)))) {
     data %<>% mutate(!!indep_var := factor(!!sym(indep_var)))
   }
   # groups <- levels(data[[indep_var]])
   freq <-
     purrr::map(data[dep_vars],
-      .f = function(x) {
-        cat_desc_stats(
-          x,
-          return_level = FALSE, singleline = singleline,
-          ndigit = round_desc, separator = linebreak,
-          prettynum = prettynum
-        )
-      }
+               .f = function(x) {
+                 cat_desc_stats(
+                   x,
+                   return_level = FALSE, singleline = singleline,
+                   ndigit = round_desc, separator = linebreak,
+                   prettynum = prettynum
+                 )
+               }
     ) %>%
     purrr::map(as_tibble)
-
-
+  
+  
   levels <-
     purrr::map(data[dep_vars],
-      .f = function(x) {
-        cat_desc_stats(x,
-          singleline = singleline,
-          separator = linebreak
-        )$level
-      }
+               .f = function(x) {
+                 cat_desc_stats(x,
+                                singleline = singleline,
+                                separator = linebreak
+                 )$level
+               }
     ) %>%
     purrr::map(as_tibble)
   freqBYgroup <-
     purrr::map(data[dep_vars],
-      .f = function(x) {
-        cat_desc_stats(x,
-          groupvar = data[[indep_var]],
-          return_level = FALSE,
-          ndigit = round_desc,
-          singleline = singleline,
-          separator = linebreak,
-          prettynum = prettynum
-        )
-      }
+               .f = function(x) {
+                 cat_desc_stats(x,
+                                groupvar = data[[indep_var]],
+                                return_level = FALSE,
+                                ndigit = round_desc,
+                                singleline = singleline,
+                                separator = linebreak,
+                                prettynum = prettynum
+                 )
+               }
     )
-
+  
   p <-
     purrr::map2(data[dep_vars], data[indep_var],
-      .f = function(x, y) {
-        formatP(try(
-          fisher.test(
-            x = x, y = y, simulate.p.value = TRUE,
-            B = 10^4
-          )$p.value,
-          silent = TRUE
-        ),
-        mark = mark, pretext = pretext
-        )
-      }
+                .f = function(x, y) {
+                  formatP(try(
+                    fisher.test(
+                      x = x, y = y, simulate.p.value = TRUE,
+                      B = 10^4
+                    )$p.value,
+                    silent = TRUE
+                  ),
+                  mark = mark, pretext = pretext
+                  )
+                }
     )
-
+  
   out <- tibble(Variable = character(), desc_all = character()) %>%
     left_join(freqBYgroup[[1]] %>% slice(0), by = character()) %>%
     mutate(p = character())
@@ -741,13 +744,13 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
       str_replace("^ $", spacer)
     if (!singleline) {
       out_tmp <- add_row(out_template,
-        Variable = c(
-          dep_vars[var_i],
-          str_glue(
-            "{indentor}{levels[[var_i]][[1]]}"
-          )
-        ),
-        desc_all = c(spacer, freq[[var_i]][[1]])
+                         Variable = c(
+                           dep_vars[var_i],
+                           str_glue(
+                             "{indentor}{levels[[var_i]][[1]]}"
+                           )
+                         ),
+                         desc_all = c(spacer, freq[[var_i]][[1]])
       )
       out_tmp[1, groupcols] <- c(pairwise_p, spacer) %>% as.list()
       out_tmp[-1, groupcols] <- freqBYgroup[[var_i]]
@@ -757,13 +760,13 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
       )
     } else {
       out_tmp <- add_row(out_template,
-        Variable = paste(
-          dep_vars[var_i],
-          # rep(spacer,
-          # nrow(freqBYgroup[[var_i]])-1),
-          levels[[var_i]][[1]]
-        ),
-        desc_all = freq[[var_i]][[1]]
+                         Variable = paste(
+                           dep_vars[var_i],
+                           # rep(spacer,
+                           # nrow(freqBYgroup[[var_i]])-1),
+                           levels[[var_i]][[1]]
+                         ),
+                         desc_all = freq[[var_i]][[1]]
       )
       out_tmp[1, groupcols] <- paste(freqBYgroup[[var_i]], c(pairwise_p, spacer)) %>%
         as.list()
@@ -813,8 +816,8 @@ pairwise_wilcox_test <-
       strat_var <- factor(strat_var)
     }
     pwt_data <- tibble(dep_var,
-      indep_var = as.numeric(indep_var),
-      strat_var
+                       indep_var = as.numeric(indep_var),
+                       strat_var
     )
     p_unadj <- matrix(
       nrow = ngroups - 1, ncol = ngroups - 1,
@@ -831,8 +834,8 @@ pairwise_wilcox_test <-
         if (length(levels(as.factor(tempdata$dep_var))) > 1) {
           p_unadj[secondgroup - 1, firstgroup] <-
             coin::pvalue(coin::wilcox_test(tempdata$dep_var ~ tempdata$indep_var |
-              tempdata$strat_var,
-            distribution = distr
+                                             tempdata$strat_var,
+                                           distribution = distr
             ))
         }
         else {
@@ -841,25 +844,25 @@ pairwise_wilcox_test <-
       }
     }
     p_adj <- matrix(p.adjust(as.vector(p_unadj), method = adjmethod),
-      byrow = FALSE,
-      nrow = ngroups - 1, ncol = ngroups - 1,
-      dimnames = list(
-        group2 = levels(indep_var)[-1],
-        group1 = levels(indep_var)[-ngroups]
-      )
+                    byrow = FALSE,
+                    nrow = ngroups - 1, ncol = ngroups - 1,
+                    dimnames = list(
+                      group2 = levels(indep_var)[-1],
+                      group1 = levels(indep_var)[-ngroups]
+                    )
     )
     sign_colwise <- character()
     for (col_i in 1:ncol(p_adj)) {
       temp <- " "
       for (row_i in col_i:nrow(p_adj)) {
         if (!is.na(p_adj[row_i, col_i]) &
-          p_adj[row_i, col_i] < plevel) {
+            p_adj[row_i, col_i] < plevel) {
           temp <- paste(temp, symbols[row_i], sep = sep)
         }
       }
       sign_colwise <- c(sign_colwise, temp)
     }
-
+    
     return(list(
       p_adj = p_adj,
       sign_colwise = sign_colwise
@@ -892,7 +895,7 @@ pairwise_t_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
     temp <- " "
     for (row_i in col_i:nrow(p_colwise)) {
       if (!is.na(p_colwise[row_i, col_i]) &
-        p_colwise[row_i, col_i] < plevel) {
+          p_colwise[row_i, col_i] < plevel) {
         temp <- paste0(temp, symbols[row_i])
       }
     }
@@ -953,9 +956,9 @@ compare_n_numvars <- function(.data = rawdata,
   #   # grptest <- kruskal.test
   # }
   if (!is.factor(.data[[indep_var]]) |
-    is.ordered(.data[[indep_var]])) {
+      is.ordered(.data[[indep_var]])) {
     .data[[indep_var]] <- factor(.data[[indep_var]],
-      ordered = FALSE
+                                 ordered = FALSE
     )
   }
   glevel <- forcats::fct_inorder(levels(.data[[indep_var]]))
@@ -972,17 +975,17 @@ compare_n_numvars <- function(.data = rawdata,
     mutate(
       Variable = forcats::fct_inorder(Variable),
       desc = purrr::map_chr(data, ~ meansd(.$value,
-        roundDig = round_desc,
-        range = range,
-        rangesep = rangesep,
-        add_n = add_n
+                                           roundDig = round_desc,
+                                           range = range,
+                                           rangesep = rangesep,
+                                           add_n = add_n
       )),
       desc_grp = purrr::map(data, ~ meansd(.$value,
-        groupvar = .[indep_var],
-        roundDig = round_desc,
-        range = range,
-        rangesep = rangesep,
-        add_n = add_n
+                                           groupvar = .[indep_var],
+                                           roundDig = round_desc,
+                                           range = range,
+                                           rangesep = rangesep,
+                                           add_n = add_n
       )) %>%
         purrr::map(~ set_names(
           .x,
@@ -991,9 +994,9 @@ compare_n_numvars <- function(.data = rawdata,
       lmout = purrr::map(data, ~ lm(value ~ !!sym(indep_var), data = .x)),
       aout = purrr::map(lmout, anova),
       ptout = purrr::map(data, ~ pairwise.t.test(.x[["value"]],
-        g = .x[[indep_var]],
-        pool.sd = TRUE,
-        p.adjust.method = "none"
+                                                 g = .x[[indep_var]],
+                                                 pool.sd = TRUE,
+                                                 p.adjust.method = "none"
       )$p.value),
       p_tout = purrr::map(data, ~ pairwise_t_test(
         .x[["value"]],
@@ -1002,27 +1005,27 @@ compare_n_numvars <- function(.data = rawdata,
       p_tout = purrr::map(p_tout, ~ c(.x, ""))
     ) %>%
     purrr::map(~ set_names(.x, dep_vars))
-
+  
   results <- tibble(Variable = forcats::fct_inorder(dep_vars), all = t$desc) %>%
     full_join(purrr::reduce(t$desc_grp, rbind) %>%
-      matrix(nrow = length(dep_vars), byrow = FALSE) %>%
-      as_tibble(.name_repair = "unique") %>%
-      mutate(Variable = dep_vars) %>%
-      dplyr::select(Variable, everything()) %>%
-      set_names(c(
-        "Variable",
-        paste(indep_var, glevel)
-      ))) %>%
+                matrix(nrow = length(dep_vars), byrow = FALSE) %>%
+                as_tibble(.name_repair = "unique") %>%
+                mutate(Variable = dep_vars) %>%
+                dplyr::select(Variable, everything()) %>%
+                set_names(c(
+                  "Variable",
+                  paste(indep_var, glevel)
+                ))) %>%
     full_join(purrr::map_df(t$aout, "Pr(>F)") %>% slice(1) %>%
-      gather(key = "Variable", value = "pANOVA") %>%
-      mutate(
-        Variable = forcats::fct_inorder(Variable),
-        pANOVA = formatP(pANOVA,
-          ndigits = round_p,
-          pretext = pretext,
-          mark = mark
-        ) %>% as.vector()
-      )) %>%
+                gather(key = "Variable", value = "pANOVA") %>%
+                mutate(
+                  Variable = forcats::fct_inorder(Variable),
+                  pANOVA = formatP(pANOVA,
+                                   ndigits = round_p,
+                                   pretext = pretext,
+                                   mark = mark
+                  ) %>% as.vector()
+                )) %>%
     full_join(purrr::map_df(t$ptout, ~ paste(formatP(
       p.adjust(.x[lower.tri(.x, TRUE)], method = "fdr")
     ),
@@ -1030,12 +1033,12 @@ compare_n_numvars <- function(.data = rawdata,
     )) %>%
       gather(key = "Variable", value = "p between groups")) %>%
     full_join(purrr::reduce(t$p_tout, rbind) %>%
-      matrix(nrow = length(dep_vars), byrow = FALSE) %>%
-      as_tibble() %>%
-      mutate(Variable = dep_vars) %>%
-      set_names(c(paste("sign", glevel), "Variable"))) %>%
+                matrix(nrow = length(dep_vars), byrow = FALSE) %>%
+                as_tibble() %>%
+                mutate(Variable = dep_vars) %>%
+                set_names(c(paste("sign", glevel), "Variable"))) %>%
     full_join(purrr::map_df(t$ptout, ~ paste(formatP(p.adjust(.x[, 1],
-      method = "fdr"
+                                                              method = "fdr"
     )),
     collapse = ";"
     )) %>%
@@ -1051,7 +1054,7 @@ compare_n_numvars <- function(.data = rawdata,
   ) %>%
     as_tibble(.name_repair = "unique")
   # todo: p vs. ref symbol
-
+  
   return(list(results = results, raw = t))
 }
 # cnn <- compare_n_numvars(.data = diamonds,

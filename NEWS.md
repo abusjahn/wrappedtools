@@ -6,6 +6,8 @@ this makes piping easier
 - compare2numvars handles cases with more than 2 groups by producing an error
 - cortestR converts input to matrix
 - cortestR has bugfix and empty string as changed default for space
+- compare2numvars has bugfix: Overall n now takes only cases with valid grouping
+variable content
 
 # wrappedtools 0.7.8
 - moved testthat from imports to suggests
