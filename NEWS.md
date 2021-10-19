@@ -1,3 +1,7 @@
+# wrappedtools 0.8.0
+- new function surprisal (Shannon information from p-value)
+- formatP can add surprisal to output
+
 # wrappedtools 0.7.9
 - formatP returns vector or matrix, depending on input pIn,
 this makes piping easier
