@@ -24,3 +24,6 @@ No return value, called for side effects.
 \code{print_kable} formats and prints tibbles/df's in markdown with splitting
 into sub-tables with repeated caption and header.
 }
+\examples{
+print_kable(mtcars, caption = "test")
+}

@@ -23,7 +23,7 @@ compare_n_qualvars(
 
 \item{dep_vars}{vector of column names.}
 
-\item{indep_var}{name of grouping variable, has to translate to 2 groups.}
+\item{indep_var}{name of grouping variable.}
 
 \item{round_p}{level for rounding p-value.}
 
@@ -42,8 +42,8 @@ compare_n_qualvars(
 \item{prettynum}{Apply prettyNum to results?}
 }
 \value{
-A tibble with variable names, descriptive statistics, and p-value,
-number of rows is number of dep_vars.
+A tibble with variable names, descriptive statistics, and p-value of \link{fisher.test}
+and \link{pairwise_fisher_test}, number of rows is number of dep_vars.
 }
 \description{
 Comparison for columns of factors for more than 2 groups with post-hoc

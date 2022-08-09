@@ -23,6 +23,6 @@ A tibble with one row and three columns: Median, CIlow, CIhigh.
 estimated median, based on bootstrapping.
 }
 \examples{
-# basic usage of meanse
+# basic usage of median_cl_boot
 median_cl_boot(x = mtcars$wt)
 }

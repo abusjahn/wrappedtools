@@ -5,7 +5,7 @@
 \title{Compute absolute and relative frequencies.}
 \usage{
 cat_desc_stats(
-  quelle,
+  source,
   separator = " ",
   return_level = TRUE,
   ndigit = 0,
@@ -17,7 +17,7 @@ cat_desc_stats(
 )
 }
 \arguments{
-\item{quelle}{Data for computation.}
+\item{source}{Data for computation.}
 
 \item{separator}{delimiter between results per level, preset as ' '.}
 

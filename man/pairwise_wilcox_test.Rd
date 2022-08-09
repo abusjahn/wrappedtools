@@ -34,7 +34,7 @@ differences, e.g. b means different from group 2.}
 \item{sep}{text between statistics and range or other elements.}
 }
 \value{
-A list with matrix of p-values and character vector with significance indicators.
+A list with matrix of adjusted p-values and character vector with significance indicators.
 }
 \description{
 \code{pairwise_wilcox_test} calculates pairwise comparisons on ordinal data

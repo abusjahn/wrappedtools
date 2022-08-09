@@ -212,17 +212,17 @@ meanse <- function(x, mult = 1, roundDig = 2, drop0 = FALSE) {
 
 #' Compute standard error of median.
 #'
-#' \code{median_cl_boot} is based on \code{\link{mad}}/square root(n)
+#' \code{medianse} is based on \code{\link{mad}}/square root(n)
 #'
 #' @param x Data for computation.
 #'
 #' @return numeric vector with SE Median.
 #'
 #' @examples
-#' # basic usage of meanse
-#' se_median(x = mtcars$wt)
+#' # basic usage of medianse
+#' medianse(x = mtcars$wt)
 #' @export
-se_median <- function(x) {
+medianse <- function(x) {
   mad(x, na.rm = TRUE) / sqrt(length(na.omit(x)))
 }
 
@@ -239,7 +239,7 @@ se_median <- function(x) {
 #' @return A tibble with one row and three columns: Median, CIlow, CIhigh.
 #'
 #' @examples
-#' # basic usage of meanse
+#' # basic usage of median_cl_boot
 #' median_cl_boot(x = mtcars$wt)
 #' @export
 median_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3) {
@@ -261,7 +261,7 @@ median_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3) {
 #' \code{cat_desc_stats} computes absolute and relative frequencies for
 #' categorical data with a number of formatting options.
 #'
-#' @param quelle Data for computation.
+#' @param source Data for computation.
 #' @param separator delimiter between results per level, preset as ' '.
 #' @param return_level Should levels be reported?
 #' @param ndigit Digits for rounding of relative frequencies.
@@ -287,7 +287,7 @@ median_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3) {
 #' cat_desc_stats(mtcars$gear, groupvar = mtcars$am)
 #' cat_desc_stats(mtcars$gear, groupvar = mtcars$am, singleline = TRUE)
 #' @export
-cat_desc_stats <- function(quelle, separator = " ",
+cat_desc_stats <- function(source, separator = " ",
                            return_level = TRUE,
                            ndigit = 0,
                            groupvar = NULL,
@@ -298,21 +298,21 @@ cat_desc_stats <- function(quelle, separator = " ",
   percent <- ifelse(percent, "%", "")
   bigmark <- ifelse(.german, ".", ",")
   decimal <- ifelse(.german, ",", ".")
-  if (!is.factor(quelle)) {
-    # if(is.numeric(quelle)) {
-    #   quelle<-factor(quelle,
-    #                  levels=sort(unique(quelle)),
-    #                  labels=sort(unique(quelle)))
+  if (!is.factor(source)) {
+    # if(is.numeric(source)) {
+    #   source<-factor(source,
+    #                  levels=sort(unique(source)),
+    #                  labels=sort(unique(source)))
     # } else {
-    quelle <- factor(quelle)
+    source <- factor(source)
   }
-  level <- levels(quelle) %>% enframe(name = NULL)
+  level <- levels(source) %>% enframe(name = NULL)
   if (singleline) {
-    level <- paste(levels(quelle), sep = "", collapse = separator)
+    level <- paste(levels(source), sep = "", collapse = separator)
   }
   if (is.null(groupvar)) {
-    tableout <- matrix(table(quelle),
-      nrow = length(levels(quelle)),
+    tableout <- matrix(table(source),
+      nrow = length(levels(source)),
       byrow = FALSE
     )
     colnames(tableout) <- "abs"
@@ -344,13 +344,13 @@ cat_desc_stats <- function(quelle, separator = " ",
       pt_temp,
       percent, ")"
     ),
-    nrow = length(levels(quelle)),
+    nrow = length(levels(source)),
     byrow = FALSE
     )
     colnames(ptableout) <- "rel"
   } else {
-    tableout <- matrix(unlist(by(quelle, groupvar, table)),
-      nrow = length(levels(quelle)),
+    tableout <- matrix(unlist(by(source, groupvar, table)),
+      nrow = length(levels(source)),
       byrow = FALSE
     )
     colnames(tableout) <- glue::glue("abs{levels(factor(groupvar))}")
@@ -377,36 +377,36 @@ cat_desc_stats <- function(quelle, separator = " ",
         " (", pt_temp,
         percent, ")"
       ),
-      nrow = length(levels(quelle)),
+      nrow = length(levels(source)),
       byrow = FALSE
     )
     colnames(ptableout) <- glue::glue("rel{levels(factor(groupvar))}")
   }
-  zwert <- purrr::map2(tableout, ptableout, glue::glue) %>%
+  Z_val <- purrr::map2(tableout, ptableout, glue::glue) %>%
     as.character() %>%
     matrix(
-      nrow = length(levels(quelle)),
+      nrow = length(levels(source)),
       byrow = FALSE
     ) %>%
     as_tibble(.name_repair = "minimal")
   if (is.null(groupvar)) {
-    colnames(zwert) <- "desc"
+    colnames(Z_val) <- "desc"
   } else {
-    colnames(zwert) <- glue::glue("desc{levels(factor(groupvar))}")
+    colnames(Z_val) <- glue::glue("desc{levels(factor(groupvar))}")
   }
   if (singleline) {
-    zwert <- purrr::map(zwert,
+    Z_val <- purrr::map(Z_val,
       .f = function(x) {
         glue::glue_collapse(x, sep = separator)
       }
     ) %>%
       as_tibble()
   }
-  levdesstats <- list(level = level, freq = zwert)
+  levdesstats <- list(level = level, freq = Z_val)
   if (return_level == TRUE) {
     return(levdesstats)
   } else {
-    return(zwert)
+    return(Z_val)
   }
 }
 

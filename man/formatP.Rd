@@ -2,7 +2,7 @@
 % Please edit documentation in R/basefunctions.R
 \name{formatP}
 \alias{formatP}
-\title{Re-format p-values, avoiding rounding to 0}
+\title{Re-format p-values, avoiding rounding to 0 and adding surprisal if requested}
 \usage{
 formatP(
   pIn,
@@ -10,7 +10,9 @@ formatP(
   textout = TRUE,
   pretext = FALSE,
   mark = FALSE,
-  german_num = FALSE
+  german_num = FALSE,
+  add.surprisal = FALSE,
+  sprecision = 1
 )
 }
 \arguments{
@@ -25,6 +27,10 @@ formatP(
 \item{mark}{Should significance level be added after p (default=FALSE)?}
 
 \item{german_num}{change dot (default) to comma?}
+
+\item{add.surprisal}{Add surprisal aka Shannon information to p-value (default=FALSE)?}
+
+\item{sprecision}{Rounding level for surprisal (default=1).}
 }
 \value{
 vector or matrix (depending on type of pIn) with type character (default) or numeric,
@@ -37,6 +43,7 @@ symbols according to significance level.
 }
 \examples{
 formatP(0.012345)
+formatP(0.012345, surprisal = TRUE)
 formatP(0.012345, ndigits = 4)
 formatP(0.000122345, ndigits = 3, pretext = TRUE)
 }

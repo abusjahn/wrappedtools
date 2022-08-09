@@ -51,8 +51,8 @@ numeric vector
 
 \item \code{logrange_15}: vector for log-labels at
 1, 5, 10, 50 ...
-}}
 
+}}
 \examples{
 ggplot(mtcars, aes(wt, mpg)) +
   geom_point() +
