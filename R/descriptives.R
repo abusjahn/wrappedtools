@@ -226,6 +226,22 @@ medianse <- function(x) {
   mad(x, na.rm = TRUE) / sqrt(length(na.omit(x)))
 }
 
+#' Compute standard error of median (Note to signal deprecation. Please see \code{\link{medianse}, which is the same but named more consistently).
+#'
+#' \code{se_median} is based on \code{\link{mad}}/square root(n)
+#'
+#' @param x Data for computation.
+#'
+#' @return numeric vector with SE Median.
+#'
+#' @examples
+#' # basic usage of se_median
+#' se_median(x = mtcars$wt)
+#' @export
+se_median <- function(x) {
+  mad(x, na.rm = TRUE) / sqrt(length(na.omit(x)))
+}
+
 #' Compute confidence interval of median by bootstrapping.
 #'
 #' \code{median_cl_boot} computes lower and upper confidence limits for the
