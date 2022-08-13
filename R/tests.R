@@ -952,13 +952,11 @@ compare_n_numvars <- function(.data = rawdata,
                               add_n = FALSE) {
   value <- Variable <- lm_out <- p_tout <- pANOVA <- NULL
   if(gaussian){
-    DescFun <- wrappedtools::meansd
+    desc_fun <- wrappedtools::meansd
     grptest <- lm
-    #datatype <- gau
   } else {
-    DescFun <- wrappedtools::median_quart
+    desc_fun <- wrappedtools::median_quart
     grptest <- kruskal.test
-    #datatype <- nongau
   }
   # if (gaussian) {
   if (!is.factor(.data[[indep_var]]) |
@@ -979,13 +977,13 @@ compare_n_numvars <- function(.data = rawdata,
     nest(data = c(indep_var, value)) %>%
     mutate(
       Variable = forcats::fct_inorder(as.factor(Variable)),
-      descTab = purrr::map_chr(data, ~ DescFun(.$value,
+      desc_tab = purrr::map_chr(data, ~ desc_fun(.$value,
                                                roundDig = round_desc,
                                                range = range,
                                                rangesep = rangesep,
                                                add_n = add_n
       )),
-      desc_grp = purrr::map(data, ~ DescFun(.$value,
+      desc_grp = purrr::map(data, ~ desc_fun(.$value,
                                             groupvar = .[indep_var],
                                             roundDig = round_desc,
                                             range = range,
@@ -999,11 +997,11 @@ compare_n_numvars <- function(.data = rawdata,
       klm_out = if (gaussian){
         lm_out = purrr::map(data, ~ lm(value ~ !!sym(indep_var), data = .x))
       } else {
-        KruskalOut = purrr::map(data, ~ kruskal.test(value ~ !!sym(indep_var), data = .x))
+        kruskal_out = purrr::map(data, ~ kruskal.test(value ~ !!sym(indep_var), data = .x))
       },
       anova_out= if (gaussian){anova_out = purrr::map(klm_out, anova)} else
       {anova_out = purrr::map(klm_out, kruskal.test)},
-      `p_Wcox/t_out` = if (gaussian) {
+      `p_wcox/t_out` = if (gaussian) {
         ptout = purrr::map(data, ~ pairwise.t.test(.x[["value"]],
                                                    g = .x[[indep_var]],
                                                    pool.sd = TRUE,
@@ -1014,7 +1012,7 @@ compare_n_numvars <- function(.data = rawdata,
                                                          # alternative = c("two.sided", "less", "greater"),
                                                          p.adjust.method= "none")$p.value)
         },
-      P_wcox_t_out = if (gaussian) {
+      p_wcox_t_out = if (gaussian) {
         p_tout = purrr::map(data, ~ pairwise_t_test(
           .x[["value"]],
           .x[[indep_var]]
@@ -1026,25 +1024,25 @@ compare_n_numvars <- function(.data = rawdata,
             distr = "as"
             #)
           )$sign_colwise)},
-      P_wcox_t_out = purrr::map(P_wcox_t_out, ~ c(.x, ""))
+      p_wcox_t_out = purrr::map(p_wcox_t_out, ~ c(.x, ""))
     ) %>%
     purrr::map(~ set_names(.x, dep_vars))
   
   
-  PResults <- NULL
+  p_results <- NULL
   if (gaussian) {
-    PResults <- "Pr(>F)"
+    p_results <- "Pr(>F)"
   } else {
-    PResults <- "p.value"
+    p_esults <- "p.value"
   }
-  MultiVarP <- NULL
+  multivar_p <- NULL
   if (gaussian) {
-    MultiVarP <- "pANOVA"
+    multivar_p <- "pANOVA"
   } else {
-    MultiVarP <- "pKW"
+    multivar_p <- "pKW"
   }
   results <- NULL
-  results <- tibble(Variable = forcats::fct_inorder(dep_vars), all = t$descTab) %>%
+  results <- tibble(Variable = forcats::fct_inorder(dep_vars), all = t$desc_tab) %>%
     full_join(purrr::reduce(t$desc_grp, rbind) %>%
                 matrix(nrow = length(dep_vars), byrow = FALSE) %>%
                 as_tibble(.name_repair = "unique") %>%
@@ -1054,10 +1052,10 @@ compare_n_numvars <- function(.data = rawdata,
                   "Variable",
                   paste(indep_var, glevel)
                 ))) %>%
-    full_join(purrr::map_df(t$anova_out, PResults) %>% slice(1) %>%
-                gather(key = "Variable", value = MultiVarP)%>%
+    full_join(purrr::map_df(t$anova_out, p_results) %>% slice(1) %>%
+                gather(key = "Variable", value = multivar_p)%>%
                 mutate(Variable = forcats::fct_inorder(Variable)) %>%
-                mutate(MultiVarP = formatP(MultiVarP,
+                mutate(multivar_p = formatP(multivar_p,
                                            ndigits = round_p,
                                            pretext = pretext,
                                            mark = mark))) %>% #as.vector()%>%
@@ -1065,12 +1063,12 @@ compare_n_numvars <- function(.data = rawdata,
       p.adjust(.x[lower.tri(.x, TRUE)], method = "fdr")),
       collapse = ";")) %>%
         gather(key = "Variable", value = "p between groups")) %>%
-    full_join(purrr::reduce(t$P_wcox_t_out, rbind) %>%
+    full_join(purrr::reduce(t$p_wcox_t_out, rbind) %>%
                 matrix(nrow = length(dep_vars), byrow = FALSE) %>%
                 as_tibble() %>%
                 mutate(Variable = dep_vars) %>%
                 set_names(c(paste("sign", glevel), "Variable"))) %>%
-    full_join(purrr::map_df(t$`p_Wcox/t_out`, ~ paste(formatP(p.adjust(.x[, 1],
+    full_join(purrr::map_df(t$`p_wcox/t_out`, ~ paste(formatP(p.adjust(.x[, 1],
                                                                        method = "fdr"
     )),
     collapse = ";"
