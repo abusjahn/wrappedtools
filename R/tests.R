@@ -912,6 +912,8 @@ pairwise_t_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
 
 #' Comparison for columns of Gaussian or ordinal measures for n groups
 #'
+#' @description Some names were changed in August 2022, to reflect the update of the function to handle ordinal data using non-parametric equivalents.
+#'
 #' @param .data name of dataset (tibble/data.frame) to analyze, defaults to rawdata.
 #' @param dep_vars vector of column names.
 #' @param indep_var name of grouping variable.
@@ -942,7 +944,7 @@ pairwise_t_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
 #'   indep_var = "qsec",
 #'   gaussian = T
 #' )$results %>%
-#'   dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, MultiVarP)
+#'   dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, multivar_P)
 #' @export
 compare_n_numvars <- function(.data = rawdata,
                               dep_vars, indep_var, gaussian,
