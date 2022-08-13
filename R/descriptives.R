@@ -63,7 +63,7 @@ meansd <- function(x, roundDig = 2, drop0 = FALSE, groupvar = NULL,
       out <- paste0(
         out, rangesep, " [",
         apply(matrix(meansd[, 3:4], ncol = 2), 1, paste,
-          collapse = " -> "
+              collapse = " -> "
         ), "]"
       ) # \u22ef
     }
@@ -122,8 +122,8 @@ median_quart <- function(x, nround = NULL, probs = c(.25, .5, .75),
       quart <- matrix(
         unlist(
           by(x, groupvar, quantile,
-            probs = c(probs, 0, 1), na.rm = TRUE,
-            type = qtype
+             probs = c(probs, 0, 1), na.rm = TRUE,
+             type = qtype
           )
         ),
         ncol = length(probs) + 2, byrow = TRUE
@@ -140,11 +140,11 @@ median_quart <- function(x, nround = NULL, probs = c(.25, .5, .75),
     if (is.null(nround)) {
       colcount <- ncol(quart)
       quart[, 1:(colcount - 3)] <- roundR(quart[, 1:(colcount - 3)],
-        level = roundDig, drop0 = drop0, .german = .german
+                                          level = roundDig, drop0 = drop0, .german = .german
       )
       quart[, (colcount - 2):(colcount - 1)] <-
         roundR(as.numeric(quart[, (colcount - 2):(colcount - 1)]),
-          level = roundDig, drop0 = drop0, .german = .german
+               level = roundDig, drop0 = drop0, .german = .german
         )
       if (prettynum) {
         #   quart <- apply(quart,1:2,function(x){
@@ -160,11 +160,11 @@ median_quart <- function(x, nround = NULL, probs = c(.25, .5, .75),
       if (prettynum) {
         quart <- apply(quart, 1:2, function(x) {
           formatC(as.numeric(x),
-            digits = nround,
-            format = "f",
-            big.mark = bigmark,
-            decimal.mark = decimal,
-            preserve.width = "common", drop0trailing = FALSE
+                  digits = nround,
+                  format = "f",
+                  big.mark = bigmark,
+                  decimal.mark = decimal,
+                  preserve.width = "common", drop0trailing = FALSE
           )
         })
       }
@@ -203,7 +203,7 @@ meanse <- function(x, mult = 1, roundDig = 2, drop0 = FALSE) {
   m <- mean(x, na.rm = TRUE)
   s <- sd(x, na.rm = TRUE) / sqrt(length(na.omit(x)))
   ms <- roundR(c(m, s * mult),
-    level = roundDig, drop0 = drop0
+               level = roundDig, drop0 = drop0
   )
   out <- paste(ms[1], ms[2], sep = "\u00B1")
   return(out)
@@ -223,6 +223,22 @@ meanse <- function(x, mult = 1, roundDig = 2, drop0 = FALSE) {
 #' medianse(x = mtcars$wt)
 #' @export
 medianse <- function(x) {
+  mad(x, na.rm = TRUE) / sqrt(length(na.omit(x)))
+}
+
+#' Compute standard error of median (Note to signal deprecation. Please see \code{\link{wrappedtools::medianse}, which is the same but named more consistently).
+#'
+#' \code{se_median} is based on \code{\link{mad}}/square root(n)
+#'
+#' @param x Data for computation.
+#'
+#' @return numeric vector with SE Median.
+#'
+#' @examples
+#' # basic usage of se_median
+#' se_median(x = mtcars$wt)
+#' @export
+se_median <- function(x) {
   mad(x, na.rm = TRUE) / sqrt(length(na.omit(x)))
 }
 
@@ -261,7 +277,7 @@ median_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3) {
 #' \code{cat_desc_stats} computes absolute and relative frequencies for
 #' categorical data with a number of formatting options.
 #'
-#' @param source Data for computation.
+#' @param source Data for computation. Previously "quelle".
 #' @param separator delimiter between results per level, preset as ' '.
 #' @param return_level Should levels be reported?
 #' @param ndigit Digits for rounding of relative frequencies.
@@ -312,8 +328,8 @@ cat_desc_stats <- function(source, separator = " ",
   }
   if (is.null(groupvar)) {
     tableout <- matrix(table(source),
-      nrow = length(levels(source)),
-      byrow = FALSE
+                       nrow = length(levels(source)),
+                       byrow = FALSE
     )
     colnames(tableout) <- "abs"
     pt_temp <- round(
@@ -325,18 +341,18 @@ cat_desc_stats <- function(source, separator = " ",
     }
     if (prettynum) {
       pt_temp <- formatC(pt_temp,
-        digits = ndigit,
-        format = "f",
-        big.mark = bigmark,
-        decimal.mark = decimal,
-        preserve.width = "common", drop0trailing = FALSE
+                         digits = ndigit,
+                         format = "f",
+                         big.mark = bigmark,
+                         decimal.mark = decimal,
+                         preserve.width = "common", drop0trailing = FALSE
       )
       tableout <- formatC(tableout,
-        digits = 0,
-        format = "f",
-        big.mark = bigmark,
-        decimal.mark = decimal,
-        preserve.width = "common"
+                          digits = 0,
+                          format = "f",
+                          big.mark = bigmark,
+                          decimal.mark = decimal,
+                          preserve.width = "common"
       )
     }
     ptableout <- matrix(paste0(
@@ -350,26 +366,26 @@ cat_desc_stats <- function(source, separator = " ",
     colnames(ptableout) <- "rel"
   } else {
     tableout <- matrix(unlist(by(source, groupvar, table)),
-      nrow = length(levels(source)),
-      byrow = FALSE
+                       nrow = length(levels(source)),
+                       byrow = FALSE
     )
     colnames(tableout) <- glue::glue("abs{levels(factor(groupvar))}")
-
+    
     pt_temp <- round(100 * prop.table(tableout, margin = 2), ndigit)
     if (prettynum) {
       pt_temp <- formatC(pt_temp,
-        digits = ndigit,
-        format = "f",
-        big.mark = bigmark,
-        decimal.mark = decimal,
-        preserve.width = "common", drop0trailing = FALSE
+                         digits = ndigit,
+                         format = "f",
+                         big.mark = bigmark,
+                         decimal.mark = decimal,
+                         preserve.width = "common", drop0trailing = FALSE
       )
       tableout <- formatC(tableout,
-        digits = 0,
-        format = "f",
-        big.mark = bigmark,
-        decimal.mark = decimal,
-        preserve.width = "common"
+                          digits = 0,
+                          format = "f",
+                          big.mark = bigmark,
+                          decimal.mark = decimal,
+                          preserve.width = "common"
       )
     }
     ptableout <- matrix(
@@ -382,7 +398,7 @@ cat_desc_stats <- function(source, separator = " ",
     )
     colnames(ptableout) <- glue::glue("rel{levels(factor(groupvar))}")
   }
-  Z_val <- purrr::map2(tableout, ptableout, glue::glue) %>%
+  zvalue <- purrr::map2(tableout, ptableout, glue::glue) %>%
     as.character() %>%
     matrix(
       nrow = length(levels(source)),
@@ -390,23 +406,23 @@ cat_desc_stats <- function(source, separator = " ",
     ) %>%
     as_tibble(.name_repair = "minimal")
   if (is.null(groupvar)) {
-    colnames(Z_val) <- "desc"
+    colnames(zvalue) <- "desc"
   } else {
-    colnames(Z_val) <- glue::glue("desc{levels(factor(groupvar))}")
+    colnames(zvalue) <- glue::glue("desc{levels(factor(groupvar))}")
   }
   if (singleline) {
-    Z_val <- purrr::map(Z_val,
-      .f = function(x) {
-        glue::glue_collapse(x, sep = separator)
-      }
+    zvalue <- purrr::map(zvalue,
+                         .f = function(x) {
+                           glue::glue_collapse(x, sep = separator)
+                         }
     ) %>%
       as_tibble()
   }
-  levdesstats <- list(level = level, freq = Z_val)
+  levdesstats <- list(level = level, freq = zvalue)
   if (return_level == TRUE) {
     return(levdesstats)
   } else {
-    return(Z_val)
+    return(zvalue)
   }
 }
 

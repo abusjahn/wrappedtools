@@ -46,7 +46,7 @@ indicators, and descriptives pasted with significance.
 "raw": nested list with output from all underlying analyses.
 }
 \description{
-Comparison for columns of Gaussian or ordinal measures for n groups
+Some names were changed in August 2022, to reflect the update of the function to handle ordinal data using non-parametric equivalents.
 }
 \examples{
 # Usually,only the result table is relevant:
@@ -61,5 +61,5 @@ compare_n_numvars(
   indep_var = "qsec",
   gaussian = T
 )$results \%>\%
-  dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, MultiVarP)
+  dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, multivar_P)
 }

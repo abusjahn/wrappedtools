@@ -17,7 +17,7 @@ cat_desc_stats(
 )
 }
 \arguments{
-\item{source}{Data for computation.}
+\item{source}{Data for computation. Previously "quelle".}
 
 \item{separator}{delimiter between results per level, preset as ' '.}
 
