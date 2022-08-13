@@ -944,7 +944,7 @@ pairwise_t_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
 #'   indep_var = "qsec",
 #'   gaussian = T
 #' )$results %>%
-#'   dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, multivar_P)
+#'   dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, multivar_p)
 #' @export
 compare_n_numvars <- function(.data = rawdata,
                               dep_vars, indep_var, gaussian,
