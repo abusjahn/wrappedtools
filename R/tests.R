@@ -34,6 +34,7 @@ pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
     indep_var <- factor(indep_var, ordered = F)
   }
   
+  
   ngroups <- length(levels(indep_var))
   pft_data <- data.frame(dep_var, indep_var)
   pft_data <- na.omit(pft_data)
