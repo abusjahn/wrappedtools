@@ -226,7 +226,7 @@ medianse <- function(x) {
   mad(x, na.rm = TRUE) / sqrt(length(na.omit(x)))
 }
 
-#' Compute standard error of median (Note to signal deprecation. Please see \code{\link{medianse}, which is the same but named more consistently).
+#' Compute standard error of median (Note to signal deprecation. Please see \code{\link{wrappedtools::medianse}, which is the same but named more consistently).
 #'
 #' \code{se_median} is based on \code{\link{mad}}/square root(n)
 #'
@@ -277,7 +277,7 @@ median_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3) {
 #' \code{cat_desc_stats} computes absolute and relative frequencies for
 #' categorical data with a number of formatting options.
 #'
-#' @param source Data for computation.
+#' @param source Data for computation. Previously "quelle".
 #' @param separator delimiter between results per level, preset as ' '.
 #' @param return_level Should levels be reported?
 #' @param ndigit Digits for rounding of relative frequencies.
@@ -398,7 +398,7 @@ cat_desc_stats <- function(source, separator = " ",
     )
     colnames(ptableout) <- glue::glue("rel{levels(factor(groupvar))}")
   }
-  Z_val <- purrr::map2(tableout, ptableout, glue::glue) %>%
+  zvalue <- purrr::map2(tableout, ptableout, glue::glue) %>%
     as.character() %>%
     matrix(
       nrow = length(levels(source)),
@@ -406,23 +406,23 @@ cat_desc_stats <- function(source, separator = " ",
     ) %>%
     as_tibble(.name_repair = "minimal")
   if (is.null(groupvar)) {
-    colnames(Z_val) <- "desc"
+    colnames(zvalue) <- "desc"
   } else {
-    colnames(Z_val) <- glue::glue("desc{levels(factor(groupvar))}")
+    colnames(zvalue) <- glue::glue("desc{levels(factor(groupvar))}")
   }
   if (singleline) {
-    Z_val <- purrr::map(Z_val,
+    zvalue <- purrr::map(zvalue,
       .f = function(x) {
         glue::glue_collapse(x, sep = separator)
       }
     ) %>%
       as_tibble()
   }
-  levdesstats <- list(level = level, freq = Z_val)
+  levdesstats <- list(level = level, freq = zvalue)
   if (return_level == TRUE) {
     return(levdesstats)
   } else {
-    return(Z_val)
+    return(zvalue)
   }
 }
 
