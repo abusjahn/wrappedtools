@@ -112,7 +112,7 @@ markSign <- function(SignIn, plabel = c("n.s.", "+", "*", "**", "***")) {
 #'
 #' @examples
 #' formatP(0.012345)
-#' formatP(0.012345, surprisal = TRUE)
+#' formatP(0.012345, add.surprisal = TRUE)
 #' formatP(0.012345, ndigits = 4)
 #' formatP(0.000122345, ndigits = 3, pretext = TRUE)
 #' @export
