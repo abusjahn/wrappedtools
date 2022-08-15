@@ -1,6 +1,6 @@
 #' Print graphical representation of a correlation matrix.
 #'
-#'\code{ggcormat} makes the same correlation matrix as \link{wrappedtools::cortestR} 
+#'\code{ggcormat} makes the same correlation matrix as \link{cortestR} 
 #' and graphically represents it in a plot
 #'
 #' @param cor_mat correlation matrix as produced by cor.

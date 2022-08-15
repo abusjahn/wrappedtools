@@ -52,7 +52,7 @@ size of dots rather than absolute correlation.}
 A ggplot object, allowing further styling.
 }
 \description{
-\code{ggcormat} makes the same correlation matrix as \link{wrappedtools::cortestR}
+\code{ggcormat} makes the same correlation matrix as \link{cortestR}
 and graphically represents it in a plot
 }
 \examples{

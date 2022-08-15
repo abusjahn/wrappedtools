@@ -872,7 +872,7 @@ pairwise_wilcox_test <-
 
 #' Extended pairwise t-test
 #'
-#' \code{pairwise_t_test }calculate pairwise comparisons between group levels
+#' \code{pairwise_t_test}calculate pairwise comparisons between group levels
 #' with corrections for multiple testing based on \link{pairwise.t.test}
 #'
 #' @param dep_var dependent variable, containing the data
@@ -935,17 +935,17 @@ pairwise_t_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
 #' @examples
 #' # Usually,only the result table is relevant:
 #' compare_n_numvars(
-#'   .data = mtcars, dep_vars = c("wt", "mpg", "qsec"),
-#'   indep_var = "cyl",
-#'   gaussian = FALSE
+#'   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
+#'   indep_var = "drat",
+#'   gaussian = TRUE
 #' )$results
 #' # For a report, result columns may be filtered as needed:
 #' compare_n_numvars(
-#'   .data = mtcars, dep_vars = c("wt", "mpg", "qsec"),
-#'   indep_var = "qsec",
-#'   gaussian = T
+#'   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
+#'   indep_var = "cyl",
+#'   gaussian = FALSE
 #' )$results %>%
-#'   dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, multivar_P)
+#'   dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, multivar_p)
 #' @export
 compare_n_numvars <- function(.data = rawdata,
                               dep_vars, indep_var, gaussian,
@@ -997,13 +997,11 @@ compare_n_numvars <- function(.data = rawdata,
           .x,
           as.character(glevel)
         )),
-      klm_out = if (gaussian){
-        lm_out = purrr::map(data, ~ lm(value ~ !!sym(indep_var), data = .x))
-      } else {
-        kruskal_out = purrr::map(data, ~ kruskal.test(value ~ !!sym(indep_var), data = .x))
+      lm_out = if (gaussian) {
+        lm_out = purrr::map(data, ~ stats::lm(value ~ !!sym(indep_var), data = .x))},
+      anova_out= if (gaussian){anova_out = purrr::map(lm_out, anova)} else {
+        kruskal_out = purrr::map(data, ~ stats::kruskal.test(value ~ !!sym(indep_var), data = .x))
       },
-      anova_out= if (gaussian){anova_out = purrr::map(klm_out, anova)} else
-      {anova_out = purrr::map(klm_out, kruskal.test)},
       `p_wcox/t_out` = if (gaussian) {
         ptout = purrr::map(data, ~ pairwise.t.test(.x[["value"]],
                                                    g = .x[[indep_var]],
@@ -1036,7 +1034,7 @@ compare_n_numvars <- function(.data = rawdata,
   if (gaussian) {
     p_results <- "Pr(>F)"
   } else {
-    p_esults <- "p.value"
+    p_results <- "p.value"
   }
   multivar_p <- NULL
   if (gaussian) {
@@ -1062,7 +1060,7 @@ compare_n_numvars <- function(.data = rawdata,
                                             ndigits = round_p,
                                             pretext = pretext,
                                             mark = mark))) %>% #as.vector()%>%
-    full_join(purrr::map_df(t$`p_Wcox/t_out`, ~ paste(formatP(
+    full_join(purrr::map_df(t$`p_wcox/t_out`, ~ paste(formatP(
       p.adjust(.x[lower.tri(.x, TRUE)], method = "fdr")),
       collapse = ";")) %>%
         gather(key = "Variable", value = "p between groups")) %>%

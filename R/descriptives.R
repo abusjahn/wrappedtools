@@ -226,7 +226,7 @@ medianse <- function(x) {
   mad(x, na.rm = TRUE) / sqrt(length(na.omit(x)))
 }
 
-#' Compute standard error of median (Note to signal deprecation. Please see \code{\link{wrappedtools::medianse}, which is the same but named more consistently).
+#' Compute standard error of median (Note to signal deprecation. Please see \link{medianse}, which is the same but named more consistently).
 #'
 #' \code{se_median} is based on \code{\link{mad}}/square root(n)
 #'

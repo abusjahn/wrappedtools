@@ -2,7 +2,7 @@
 % Please edit documentation in R/descriptives.R
 \name{se_median}
 \alias{se_median}
-\title{Compute standard error of median (Note to signal deprecation. Please see \code{\link{wrappedtools::medianse}, which is the same but named more consistently).}
+\title{Compute standard error of median (Note to signal deprecation. Please see \link{medianse}, which is the same but named more consistently).}
 \usage{
 se_median(x)
 }

@@ -51,15 +51,15 @@ Some names were changed in August 2022, to reflect the update of the function to
 \examples{
 # Usually,only the result table is relevant:
 compare_n_numvars(
-  .data = mtcars, dep_vars = c("wt", "mpg", "qsec"),
-  indep_var = "cyl",
-  gaussian = FALSE
+  .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
+  indep_var = "drat",
+  gaussian = TRUE
 )$results
 # For a report, result columns may be filtered as needed:
 compare_n_numvars(
-  .data = mtcars, dep_vars = c("wt", "mpg", "qsec"),
-  indep_var = "qsec",
-  gaussian = T
+  .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
+  indep_var = "cyl",
+  gaussian = FALSE
 )$results \%>\%
-  dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, multivar_P)
+  dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, multivar_p)
 }
