@@ -12,12 +12,17 @@ Description: The main functionalities of 'wrappedtools' are:
     teaching, but may be of use to others as well.
 Version: 0.7.9
 Date: 2021-09-06
-Authors@R:
+Authors@R: c(
     person(given = "Andreas",
            family = "Busjahn",
            role = c("cre", "aut"),
            email = "andreas@busjahn.net",
-           comment = c(ORCID = "0000-0001-9650-6919"))
+           comment = c(ORCID = "0000-0001-9650-6919")),
+    person(given = "Bilal",
+           family = "Asser",
+           role = c("aut"),
+           email = "billyasser@hotmail.co.uk",
+           comment = ""))
 Maintainer: Andreas Busjahn <andreas@busjahn.net>
 License: GPL-3
 Encoding: UTF-8
