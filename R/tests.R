@@ -956,10 +956,10 @@ compare_n_numvars <- function(.data = rawdata,
   value <- Variable <- lm_out <- p_tout <- pANOVA <- NULL
   if(gaussian){
     desc_fun <- wrappedtools::meansd
-    grptest <- lm
+    grptest <- stats::lm
   } else {
     desc_fun <- wrappedtools::median_quart
-    grptest <- kruskal.test
+    grptest <- stats::kruskal.test
   }
   # if (gaussian) {
   if (!is.factor(.data[[indep_var]]) |
