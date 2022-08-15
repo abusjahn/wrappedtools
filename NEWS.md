@@ -1,6 +1,8 @@
 # wrappedtools 0.8.0
 - new function surprisal (Shannon information from p-value)
 - formatP can add surprisal to output
+- ggcormat has now p-labels for .05,.01, and .001 labels
+- roundR can handle input 0 in a more useful way
 
 # wrappedtools 0.7.9
 - formatP returns vector or matrix, depending on input pIn,

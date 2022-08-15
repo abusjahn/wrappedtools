@@ -46,6 +46,9 @@ roundR <- function(roundin, level = 2, smooth = FALSE,
       ) + 1
     )
   )
+  if(is.infinite(roundlevel)) {
+    roundlevel <- level
+  }
   roundout[which(!is.na(roundout))] <-
     round(roundin[which(!is.na(roundin))], roundlevel)
   if (smooth & max(abs(roundout), na.rm = TRUE) != 0) {
