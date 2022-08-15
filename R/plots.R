@@ -26,11 +26,11 @@
 #' )
 #' # focus on coefficients:
 #' ggcormat(cor_mat = coeff_pvalues$corout, maxpoint = 5)
-#' # size take from p-value:
+#' # size taken from p-value:
 #' ggcormat(
 #'   cor_mat = coeff_pvalues$corout,
-#'   p_mat = coeff_pvalues$pout, maxpoint = 5
-#' )
+#'   p_mat = coeff_pvalues$pout, maxpoint = 5)
+#' 
 #' @export
 ggcormat <- function(cor_mat, p_mat = NULL,
                      method = "Correlation", title = "",
@@ -122,7 +122,7 @@ ggcormat <- function(cor_mat, p_mat = NULL,
     geom_hline(yintercept = seq(0.5, corvar_count + 1, by = 1), color = "grey", size = .25) +
     # geom_point(aes(Variable2, Variable1, size=abs(value),color=value))+
     scale_color_gradient2(
-      low = .low, high = .high, mid = "grey",
+      low = .low, high = .high, mid = "lightgrey",
       midpoint = 0, limit = c(-1, 1), space = "Lab",
       name = method
     ) +
@@ -177,8 +177,8 @@ ggcormat <- function(cor_mat, p_mat = NULL,
           .legendtitle
         ),
         limits = c(0, 3),
-        breaks = c(1, 2, 3),
-        labels = c(.1, .01, .001),
+        breaks = c(-log10(.05), 2, 3),
+        labels = c(.05, .01, .001),
         range = rel(c(.2, maxpoint))
       )
   }
