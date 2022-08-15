@@ -29,7 +29,7 @@ A list with method output of pairwise.t.test,
 matrix of p-values, and character vector with significance indicators.
 }
 \description{
-\code{pairwise_t_test }calculate pairwise comparisons between group levels
+\code{pairwise_t_test}calculate pairwise comparisons between group levels
 with corrections for multiple testing based on \link{pairwise.t.test}
 }
 \examples{

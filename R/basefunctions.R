@@ -264,6 +264,8 @@ FindVars <- function(varnames, allnames = NULL,
 #' @param caption header.
 #' @param ... Further arguments passed to [kable].
 #' @return No return value, called for side effects.
+#' @examples 
+#' print_kable(mtcars, caption = "test")
 #' @export
 print_kable <- function(t, nrows = 30, caption = "",
                         ncols = 100, ...) {

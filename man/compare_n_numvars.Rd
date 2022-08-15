@@ -2,12 +2,13 @@
 % Please edit documentation in R/tests.R
 \name{compare_n_numvars}
 \alias{compare_n_numvars}
-\title{Comparison for columns of Gaussian measures for n groups}
+\title{Comparison for columns of Gaussian or ordinal measures for n groups}
 \usage{
 compare_n_numvars(
   .data = rawdata,
   dep_vars,
   indep_var,
+  gaussian,
   round_desc = 2,
   range = FALSE,
   rangesep = " ",
@@ -24,6 +25,8 @@ compare_n_numvars(
 
 \item{indep_var}{name of grouping variable.}
 
+\item{gaussian}{Logical specifying normal or ordinal indep_var (and chooses comparison tests accordingly)}
+
 \item{round_desc}{number of significant digits for rounding of descriptive stats.}
 
 \item{range}{include min/max?}
@@ -38,23 +41,25 @@ compare_n_numvars(
 }
 \value{
 A list with elements "results": tibble with descriptive statistics,
-p-value from ANOVA, p-values for pairwise comparisons, significance indicators,
-and descriptives pasted with significance.
+p-value from ANOVA/Kruskal-Wallis test, p-values for pairwise comparisons, significance
+indicators, and descriptives pasted with significance.
 "raw": nested list with output from all underlying analyses.
 }
 \description{
-Comparison for columns of Gaussian measures for n groups
+Some names were changed in August 2022, to reflect the update of the function to handle ordinal data using non-parametric equivalents.
 }
 \examples{
 # Usually,only the result table is relevant:
 compare_n_numvars(
-  .data = mtcars, dep_vars = c("wt", "mpg", "qsec"),
-  indep_var = "cyl"
+  .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
+  indep_var = "drat",
+  gaussian = TRUE
 )$results
 # For a report, result columns may be filtered as needed:
 compare_n_numvars(
-  .data = mtcars, dep_vars = c("wt", "mpg", "qsec"),
-  indep_var = "cyl"
+  .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
+  indep_var = "cyl",
+  gaussian = FALSE
 )$results \%>\%
-  dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, pANOVA)
+  dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, multivar_p)
 }

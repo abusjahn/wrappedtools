@@ -34,6 +34,7 @@ pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
     indep_var <- factor(indep_var, ordered = F)
   }
   
+  
   ngroups <- length(levels(indep_var))
   pft_data <- data.frame(dep_var, indep_var)
   pft_data <- na.omit(pft_data)
@@ -432,7 +433,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
   if(nlevels(data_l$Group)!=2){
     stop(paste0('More than 2 groups provided for ',indep_var,': ',
                 paste(levels(data_l$Group),collapse='/')))
-    }
+  }
   data_l <- data_l %>% 
     filter(!is.na(Group))
   out <- data_l %>%
@@ -633,7 +634,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
 #' Comparison for columns of factors for more than 2 groups with post-hoc
 #' @param data name of data set (tibble/data.frame) to analyze.
 #' @param dep_vars vector of column names.
-#' @param indep_var name of grouping variable, has to translate to 2 groups.
+#' @param indep_var name of grouping variable.
 #' @param round_p level for rounding p-value.
 #' @param round_desc number of significant digits for rounding of descriptive stats
 #' @param pretext for function [formatP]
@@ -644,8 +645,8 @@ compare2qualvars <- function(data, dep_vars, indep_var,
 #' @param prettynum Apply prettyNum to results?
 #'
 #' @return
-#' A tibble with variable names, descriptive statistics, and p-value,
-#' number of rows is number of dep_vars.
+#' A tibble with variable names, descriptive statistics, and p-value of \link{fisher.test}
+#' and \link{pairwise_fisher_test}, number of rows is number of dep_vars.
 #'
 #' @examples
 #' # Separate lines for each factor level:
@@ -795,7 +796,7 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
 #' @param sep text between statistics and range or other elements.
 #'
 #' @return
-#' A list with matrix of p-values and character vector with significance indicators.
+#' A list with matrix of adjusted p-values and character vector with significance indicators.
 #' @examples
 #' pairwise_wilcox_test(dep_var = mtcars$wt, indep_var = mtcars$cyl)
 #' @export
@@ -871,7 +872,7 @@ pairwise_wilcox_test <-
 
 #' Extended pairwise t-test
 #'
-#' \code{pairwise_t_test }calculate pairwise comparisons between group levels
+#' \code{pairwise_t_test}calculate pairwise comparisons between group levels
 #' with corrections for multiple testing based on \link{pairwise.t.test}
 #'
 #' @param dep_var dependent variable, containing the data
@@ -910,11 +911,14 @@ pairwise_t_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
 }
 
 
-#' Comparison for columns of Gaussian measures for n groups
+#' Comparison for columns of Gaussian or ordinal measures for n groups
+#'
+#' @description Some names were changed in August 2022, to reflect the update of the function to handle ordinal data using non-parametric equivalents.
 #'
 #' @param .data name of dataset (tibble/data.frame) to analyze, defaults to rawdata.
 #' @param dep_vars vector of column names.
 #' @param indep_var name of grouping variable.
+#' @param gaussian Logical specifying normal or ordinal indep_var (and chooses comparison tests accordingly) 
 #' @param round_p level for rounding p-value.
 #' @param round_desc number of significant digits for rounding of descriptive stats.
 #' @param range include min/max?
@@ -924,43 +928,45 @@ pairwise_t_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
 #'
 #' @return
 #' A list with elements "results": tibble with descriptive statistics,
-#' p-value from ANOVA, p-values for pairwise comparisons, significance indicators,
-#' and descriptives pasted with significance.
+#' p-value from ANOVA/Kruskal-Wallis test, p-values for pairwise comparisons, significance 
+#' indicators, and descriptives pasted with significance.
 #' "raw": nested list with output from all underlying analyses.
 #'
 #' @examples
 #' # Usually,only the result table is relevant:
 #' compare_n_numvars(
-#'   .data = mtcars, dep_vars = c("wt", "mpg", "qsec"),
-#'   indep_var = "cyl"
+#'   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
+#'   indep_var = "drat",
+#'   gaussian = TRUE
 #' )$results
 #' # For a report, result columns may be filtered as needed:
 #' compare_n_numvars(
-#'   .data = mtcars, dep_vars = c("wt", "mpg", "qsec"),
-#'   indep_var = "cyl"
+#'   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
+#'   indep_var = "cyl",
+#'   gaussian = FALSE
 #' )$results %>%
-#'   dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, pANOVA)
+#'   dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, multivar_p)
 #' @export
 compare_n_numvars <- function(.data = rawdata,
-                              dep_vars, indep_var, # gaussian,
+                              dep_vars, indep_var, gaussian,
                               round_desc = 2, range = FALSE,
                               rangesep = " ",
                               pretext = FALSE, mark = FALSE, round_p = 3,
                               add_n = FALSE) {
-  value <- Variable <- lmout <- p_tout <- pANOVA <- NULL
-  # if(gaussian){
-  #   desc <- wrappedtools::meansd
-  #   # grptest <- lm
-  # } else {
-  #   desc <- wrappedtools::median_quart
-  #   # grptest <- kruskal.test
-  # }
+  value <- Variable <- lm_out <- p_tout <- pANOVA <- NULL
+  if(gaussian){
+    desc_fun <- wrappedtools::meansd
+    grptest <- lm
+  } else {
+    desc_fun <- wrappedtools::median_quart
+    grptest <- kruskal.test
+  }
+  # if (gaussian) {
   if (!is.factor(.data[[indep_var]]) |
       is.ordered(.data[[indep_var]])) {
     .data[[indep_var]] <- factor(.data[[indep_var]],
                                  ordered = FALSE
-    )
-  }
+    )}
   glevel <- forcats::fct_inorder(levels(.data[[indep_var]]))
   .data <- dplyr::select(
     .data, all_of(dep_vars),
@@ -973,40 +979,71 @@ compare_n_numvars <- function(.data = rawdata,
     ) %>%
     nest(data = c(indep_var, value)) %>%
     mutate(
-      Variable = forcats::fct_inorder(Variable),
-      desc = purrr::map_chr(data, ~ meansd(.$value,
-                                           roundDig = round_desc,
-                                           range = range,
-                                           rangesep = rangesep,
-                                           add_n = add_n
+      Variable = forcats::fct_inorder(as.factor(Variable)),
+      desc_tab = purrr::map_chr(data, ~ desc_fun(.$value,
+                                                 roundDig = round_desc,
+                                                 range = range,
+                                                 rangesep = rangesep,
+                                                 add_n = add_n
       )),
-      desc_grp = purrr::map(data, ~ meansd(.$value,
-                                           groupvar = .[indep_var],
-                                           roundDig = round_desc,
-                                           range = range,
-                                           rangesep = rangesep,
-                                           add_n = add_n
+      desc_grp = purrr::map(data, ~ desc_fun(.$value,
+                                             groupvar = .[indep_var],
+                                             roundDig = round_desc,
+                                             range = range,
+                                             rangesep = rangesep,
+                                             add_n = add_n
       )) %>%
         purrr::map(~ set_names(
           .x,
           as.character(glevel)
         )),
-      lmout = purrr::map(data, ~ lm(value ~ !!sym(indep_var), data = .x)),
-      aout = purrr::map(lmout, anova),
-      ptout = purrr::map(data, ~ pairwise.t.test(.x[["value"]],
-                                                 g = .x[[indep_var]],
-                                                 pool.sd = TRUE,
-                                                 p.adjust.method = "none"
-      )$p.value),
-      p_tout = purrr::map(data, ~ pairwise_t_test(
-        .x[["value"]],
-        .x[[indep_var]]
-      )$sign_colwise),
-      p_tout = purrr::map(p_tout, ~ c(.x, ""))
+      lm_out = if (gaussian) {
+        lm_out = purrr::map(data, ~ stats::lm(value ~ !!sym(indep_var), data = .x))},
+      anova_out= if (gaussian){anova_out = purrr::map(lm_out, anova)} else {
+        kruskal_out = purrr::map(data, ~ stats::kruskal.test(value ~ !!sym(indep_var), data = .x))
+      },
+      `p_wcox/t_out` = if (gaussian) {
+        ptout = purrr::map(data, ~ pairwise.t.test(.x[["value"]],
+                                                   g = .x[[indep_var]],
+                                                   pool.sd = TRUE,
+                                                   p.adjust.method = "none"
+        )$p.value)} else {
+          pwout= purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
+                                                         g = as.numeric(.x[[indep_var]]),
+                                                         # alternative = c("two.sided", "less", "greater"),
+                                                         p.adjust.method= "none")$p.value)
+        },
+      p_wcox_t_out = if (gaussian) {
+        p_tout = purrr::map(data, ~ pairwise_t_test(
+          .x[["value"]],
+          .x[[indep_var]]
+        )$sign_colwise)} else {
+          p_wout = purrr::map(data, ~ pairwise_wilcox_test(
+            .x[["value"]],
+            #as.numeric(
+            .x[[indep_var]],
+            distr = "as"
+            #)
+          )$sign_colwise)},
+      p_wcox_t_out = purrr::map(p_wcox_t_out, ~ c(.x, ""))
     ) %>%
     purrr::map(~ set_names(.x, dep_vars))
   
-  results <- tibble(Variable = forcats::fct_inorder(dep_vars), all = t$desc) %>%
+  
+  p_results <- NULL
+  if (gaussian) {
+    p_results <- "Pr(>F)"
+  } else {
+    p_results <- "p.value"
+  }
+  multivar_p <- NULL
+  if (gaussian) {
+    multivar_p <- "pANOVA"
+  } else {
+    multivar_p <- "pKW"
+  }
+  results <- NULL
+  results <- tibble(Variable = forcats::fct_inorder(dep_vars), all = t$desc_tab) %>%
     full_join(purrr::reduce(t$desc_grp, rbind) %>%
                 matrix(nrow = length(dep_vars), byrow = FALSE) %>%
                 as_tibble(.name_repair = "unique") %>%
@@ -1016,29 +1053,24 @@ compare_n_numvars <- function(.data = rawdata,
                   "Variable",
                   paste(indep_var, glevel)
                 ))) %>%
-    full_join(purrr::map_df(t$aout, "Pr(>F)") %>% slice(1) %>%
-                gather(key = "Variable", value = "pANOVA") %>%
-                mutate(
-                  Variable = forcats::fct_inorder(Variable),
-                  pANOVA = formatP(pANOVA,
-                                   ndigits = round_p,
-                                   pretext = pretext,
-                                   mark = mark
-                  ) %>% as.vector()
-                )) %>%
-    full_join(purrr::map_df(t$ptout, ~ paste(formatP(
-      p.adjust(.x[lower.tri(.x, TRUE)], method = "fdr")
-    ),
-    collapse = ";"
-    )) %>%
-      gather(key = "Variable", value = "p between groups")) %>%
-    full_join(purrr::reduce(t$p_tout, rbind) %>%
+    full_join(purrr::map_df(t$anova_out, p_results) %>% slice(1) %>%
+                gather(key = "Variable", value = multivar_p)%>%
+                mutate(Variable = forcats::fct_inorder(Variable)) %>%
+                mutate(multivar_p = formatP(multivar_p,
+                                            ndigits = round_p,
+                                            pretext = pretext,
+                                            mark = mark))) %>% #as.vector()%>%
+    full_join(purrr::map_df(t$`p_wcox/t_out`, ~ paste(formatP(
+      p.adjust(.x[lower.tri(.x, TRUE)], method = "fdr")),
+      collapse = ";")) %>%
+        gather(key = "Variable", value = "p between groups")) %>%
+    full_join(purrr::reduce(t$p_wcox_t_out, rbind) %>%
                 matrix(nrow = length(dep_vars), byrow = FALSE) %>%
                 as_tibble() %>%
                 mutate(Variable = dep_vars) %>%
                 set_names(c(paste("sign", glevel), "Variable"))) %>%
-    full_join(purrr::map_df(t$ptout, ~ paste(formatP(p.adjust(.x[, 1],
-                                                              method = "fdr"
+    full_join(purrr::map_df(t$`p_wcox/t_out`, ~ paste(formatP(p.adjust(.x[, 1],
+                                                                       method = "fdr"
     )),
     collapse = ";"
     )) %>%
@@ -1054,9 +1086,7 @@ compare_n_numvars <- function(.data = rawdata,
   ) %>%
     as_tibble(.name_repair = "unique")
   # todo: p vs. ref symbol
-  
-  return(list(results = results, raw = t))
+  return(
+    list(results = results,
+         raw = t))
 }
-# cnn <- compare_n_numvars(.data = diamonds,
-#                          dep_vars = c('carat','x','y','z'),
-#                          indep_var = 'cut')
