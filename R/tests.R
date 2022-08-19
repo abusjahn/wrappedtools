@@ -1011,7 +1011,9 @@ compare_n_numvars <- function(.data = rawdata,
           pwout= purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
                                                          g = as.numeric(.x[[indep_var]]),
                                                          # alternative = c("two.sided", "less", "greater"),
-                                                         p.adjust.method= "none")$p.value)
+                                                         p.adjust.method= "none", 
+                                                         exact = FALSE # this argument gets rid of warnings in testing
+                                                         )$p.value)
         },
       p_wcox_t_out = if (gaussian) {
         p_tout = purrr::map(data, ~ pairwise_t_test(
@@ -1020,10 +1022,8 @@ compare_n_numvars <- function(.data = rawdata,
         )$sign_colwise)} else {
           p_wout = purrr::map(data, ~ pairwise_wilcox_test(
             .x[["value"]],
-            #as.numeric(
             .x[[indep_var]],
             distr = "as"
-            #)
           )$sign_colwise)},
       p_wcox_t_out = purrr::map(p_wcox_t_out, ~ c(.x, ""))
     ) %>%
@@ -1066,7 +1066,7 @@ compare_n_numvars <- function(.data = rawdata,
         gather(key = "Variable", value = "p between groups")) %>%
     full_join(purrr::reduce(t$p_wcox_t_out, rbind) %>%
                 matrix(nrow = length(dep_vars), byrow = FALSE) %>%
-                as_tibble() %>%
+                as_tibble(.name_repair = "unique") %>%
                 mutate(Variable = dep_vars) %>%
                 set_names(c(paste("sign", glevel), "Variable"))) %>%
     full_join(purrr::map_df(t$`p_wcox/t_out`, ~ paste(formatP(p.adjust(.x[, 1],
