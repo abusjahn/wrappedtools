@@ -998,34 +998,42 @@ compare_n_numvars <- function(.data = rawdata,
           as.character(glevel)
         )),
       lm_out = if (gaussian) {
-        lm_out = purrr::map(data, ~ stats::lm(value ~ !!sym(indep_var), data = .x))},
-      anova_out= if (gaussian){anova_out = purrr::map(lm_out, anova)} else {
-        kruskal_out = purrr::map(data, ~ stats::kruskal.test(value ~ !!sym(indep_var), data = .x))
+        purrr::map(data, ~ stats::lm(value ~ !!sym(indep_var), data = .x))},
+      anova_out= if (gaussian){purrr::map(lm_out, anova)} else {
+        purrr::map(data, ~ stats::kruskal.test(value ~ !!sym(indep_var), data = .x))
       },
       `p_wcox/t_out` = if (gaussian) {
-        ptout = purrr::map(data, ~ pairwise.t.test(.x[["value"]],
-                                                   g = .x[[indep_var]],
-                                                   pool.sd = TRUE,
-                                                   p.adjust.method = "none"
+        purrr::map(data, ~ pairwise.t.test(.x[["value"]],
+                                           g = .x[[indep_var]],
+                                           pool.sd = TRUE,
+                                           p.adjust.method = "none"
         )$p.value)} else {
+<<<<<<< HEAD
           pwout= purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
                                                          g = as.numeric(.x[[indep_var]]),
                                                          # alternative = c("two.sided", "less", "greater"),
                                                          p.adjust.method= "none", 
                                                          exact = FALSE # this argument gets rid of warnings in testing
                                                          )$p.value)
+=======
+          purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
+                                                  g = as.numeric(.x[[indep_var]]),
+                                                  # alternative = c("two.sided", "less", "greater"),
+                                                  p.adjust.method= "none")$p.value)
+>>>>>>> ac7736b577db19e86526db41c80d33815d2cacc5
         },
       p_wcox_t_out = if (gaussian) {
-        p_tout = purrr::map(data, ~ pairwise_t_test(
+        purrr::map(data, ~ pairwise_t_test(
           .x[["value"]],
           .x[[indep_var]]
         )$sign_colwise)} else {
-          p_wout = purrr::map(data, ~ pairwise_wilcox_test(
+          purrr::map(data, ~ pairwise_wilcox_test(
             .x[["value"]],
             .x[[indep_var]],
             distr = "as"
           )$sign_colwise)},
-      p_wcox_t_out = purrr::map(p_wcox_t_out, ~ c(.x, ""))
+      p_wcox_t_out = purrr::map(p_wcox_t_out, ~ c(.x,
+                                                  "")) #add empty string for last column
     ) %>%
     purrr::map(~ set_names(.x, dep_vars))
   
@@ -1090,3 +1098,4 @@ compare_n_numvars <- function(.data = rawdata,
     list(results = results,
          raw = t))
 }
+utils::globalVariables('p_wcox_t_out')

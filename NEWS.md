@@ -5,10 +5,18 @@
 - roundR can handle input 0 in a more useful way
 - new functions medianse duplicating se_median (deprecated) for naming consistency
 - some parameter names were anglicised (old one still exist for compatibility)
+<<<<<<< HEAD
 - function compare_n_numvars now allows non-parametric analysis and has been ironed out to produce no warnings
 - function roundR handles rounding 0 now properly
 - help has been extended, new examples have been added 
 - function print_kable is now deprecated, as package flextable offers way more power
+=======
+- function compare_n_numvars now allows non-parametric analysis
+- function roundR handles rounding 0 now properly
+- help has been extended, new examples have been added 
+- function print_kable is now deprecated, as package flextable offers way more power
+
+>>>>>>> ac7736b577db19e86526db41c80d33815d2cacc5
 
 # wrappedtools 0.7.9
 - formatP returns vector or matrix, depending on input pIn,

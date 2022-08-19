@@ -185,7 +185,7 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 #'
 #' \code{FindVars} looks up colnames (by default for data-frame rawdata)
 #' based on parts of names, using regular expressions. Be warned that
-#' special characters as e.g. `[` `(` need to be escaped or replaced by .
+#' special characters as e.g. `[` `(` need to be escaped or replaced by `.`
 #' Exlusion rules may be specified as well.
 #'
 #' @param varnames Vector of pattern to look for.
@@ -257,6 +257,7 @@ FindVars <- function(varnames, allnames = NULL,
 #'
 #' \code{print_kable} formats and prints tibbles/df's in markdown with splitting
 #' into sub-tables with repeated caption and header.
+#' As package flextable is a more powerful alternative, this function is now deprecated.
 #'
 #' @param t table to print.
 #' @param nrows number of rows (30) before splitting.
@@ -265,11 +266,13 @@ FindVars <- function(varnames, allnames = NULL,
 #' @param ... Further arguments passed to [kable].
 #' @return No return value, called for side effects.
 #' @examples 
+#' \dontrun{
 #' print_kable(mtcars, caption = "test")
+#' }
 #' @export
 print_kable <- function(t, nrows = 30, caption = "",
                         ncols = 100, ...) {
-  # require(knitr)
+  .Deprecated('flextable') # require(knitr)
   for (block_i in 1:ceiling(nrow(t) / nrows)) {
     for (col_i in 1:ceiling((ncol(t) - 1) / ncols)) {
       if (block_i + col_i > 2) {
