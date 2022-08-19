@@ -42,16 +42,51 @@ test_that("compare_n_numvars() creates the same lengths of lists when creating t
                 names(tibble_itself)[[3]],
                 names(tibble_itself)[[4]])
   
-  test_in <- compare_n_numvars(.data = tibble_itself,
+  ord_test_in <- compare_n_numvars(.data = tibble_itself,
                                dep_vars = dep_vars,
                                indep_var = indep_var,
                                gaussian = F)
   
-  expect_equal(length(test_in$raw$Variable), length(test_in$raw$data))
-  expect_equal(length(test_in$raw$data), length(test_in$raw$desc_tab))
-  expect_equal(length(test_in$raw$desc_tab), length(test_in$raw$desc_grp))
-  expect_equal(length(test_in$raw$desc_grp), length(test_in$raw$anova_out))
-  expect_equal(length(test_in$raw$anova_out), length(test_in$raw$`p_wcox/t_out`))
-  expect_equal(length(test_in$raw$desc_grp), length(test_in$raw$p_wcox_t_out))
+  expect_equal(length(ord_test_in$raw$Variable), length(ord_test_in$raw$data))
+  expect_equal(length(ord_test_in$raw$data), length(ord_test_in$raw$desc_tab))
+  expect_equal(length(ord_test_in$raw$desc_tab), length(ord_test_in$raw$desc_grp))
+  expect_equal(length(ord_test_in$raw$desc_grp), length(ord_test_in$raw$anova_out))
+  expect_equal(length(ord_test_in$raw$anova_out), length(ord_test_in$raw$`p_wcox/t_out`))
+  expect_equal(length(ord_test_in$raw$desc_grp), length(ord_test_in$raw$p_wcox_t_out))
+  
+  # I will now test Gaussian variables by shifting the column reads down one index
+  
+  RandomTestDatasetGau <- rlist::list.sample(.data=
+                                               list(
+                                                 tibble(mtcars$mpg,
+                                                        mtcars$wt,
+                                                        mtcars$hp,
+                                                        mtcars$disp,
+                                                        .name_repair = 'unique'),
+                                                 tibble(iris),
+                                                 tibble(ggplot2::diamonds$x, 
+                                                        ggplot2::diamonds$y, 
+                                                        ggplot2::diamonds$z, 
+                                                        ggplot2::diamonds$cut,
+                                                        .name_repair = 'unique')),
+                                             size=1)
+  
+  tibble_itself <- RandomTestDatasetGau[[1]]
+  indep_var <- as.character(names(tibble_itself)[[4]])
+  dep_vars <- c(names(tibble_itself)[[1]],
+                names(tibble_itself)[[2]],
+                names(tibble_itself)[[3]])
+  
+  gau_test_in <- compare_n_numvars(.data = tibble_itself,
+                                   dep_vars = dep_vars,
+                                   indep_var = indep_var,
+                                   gaussian = T)
+  
+  expect_equal(length(gau_test_in$raw$Variable), length(gau_test_in$raw$data))
+  expect_equal(length(gau_test_in$raw$data), length(gau_test_in$raw$desc_tab))
+  expect_equal(length(gau_test_in$raw$desc_tab), length(gau_test_in$raw$desc_grp))
+  expect_equal(length(gau_test_in$raw$desc_grp), length(gau_test_in$raw$anova_out))
+  expect_equal(length(gau_test_in$raw$anova_out), length(gau_test_in$raw$`p_wcox/t_out`))
+  expect_equal(length(gau_test_in$raw$desc_grp), length(gau_test_in$raw$p_wcox_t_out))
   
 })

@@ -2,7 +2,7 @@
 % Please edit documentation in R/descriptives.R
 \name{se_median}
 \alias{se_median}
-\title{Compute standard error of median (Note to signal deprecation. Please see \link{medianse}, which is the same but named more consistently).}
+\title{Compute standard error of median}
 \usage{
 se_median(x)
 }
@@ -14,8 +14,11 @@ numeric vector with SE Median.
 }
 \description{
 \code{se_median} is based on \code{\link{mad}}/square root(n)
+(Deprecated, please see \link{medianse}, which is the same but named more consistently)
 }
 \examples{
 # basic usage of se_median
+\dontrun{
 se_median(x = mtcars$wt)
+}
 }

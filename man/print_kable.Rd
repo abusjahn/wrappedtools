@@ -23,7 +23,10 @@ No return value, called for side effects.
 \description{
 \code{print_kable} formats and prints tibbles/df's in markdown with splitting
 into sub-tables with repeated caption and header.
+As package flextable is a more powerful alternative, this function is now deprecated.
 }
 \examples{
+\dontrun{
 print_kable(mtcars, caption = "test")
+}
 }
