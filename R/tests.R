@@ -1091,3 +1091,4 @@ compare_n_numvars <- function(.data = rawdata,
     list(results = results,
          raw = t))
 }
+utils::globalVariables('p_wcox_t_out')
