@@ -1008,19 +1008,16 @@ compare_n_numvars <- function(.data = rawdata,
                                            pool.sd = TRUE,
                                            p.adjust.method = "none"
         )$p.value)} else {
-<<<<<<< HEAD
           pwout= purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
                                                          g = as.numeric(.x[[indep_var]]),
                                                          # alternative = c("two.sided", "less", "greater"),
                                                          p.adjust.method= "none", 
                                                          exact = FALSE # this argument gets rid of warnings in testing
                                                          )$p.value)
-=======
           purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
                                                   g = as.numeric(.x[[indep_var]]),
                                                   # alternative = c("two.sided", "less", "greater"),
                                                   p.adjust.method= "none")$p.value)
->>>>>>> ac7736b577db19e86526db41c80d33815d2cacc5
         },
       p_wcox_t_out = if (gaussian) {
         purrr::map(data, ~ pairwise_t_test(
