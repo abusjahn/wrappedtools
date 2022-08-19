@@ -226,9 +226,10 @@ medianse <- function(x) {
   mad(x, na.rm = TRUE) / sqrt(length(na.omit(x)))
 }
 
-#' Compute standard error of median (Note to signal deprecation. Please see \link{medianse}, which is the same but named more consistently).
+#' Compute standard error of median 
 #'
 #' \code{se_median} is based on \code{\link{mad}}/square root(n)
+#' (Deprecated, please see \link{medianse}, which is the same but named more consistently)
 #'
 #' @param x Data for computation.
 #'
@@ -236,9 +237,12 @@ medianse <- function(x) {
 #'
 #' @examples
 #' # basic usage of se_median
+#' \dontrun{
 #' se_median(x = mtcars$wt)
+#' }
 #' @export
 se_median <- function(x) {
+  .Deprecated('medianse')
   mad(x, na.rm = TRUE) / sqrt(length(na.omit(x)))
 }
 
@@ -287,6 +291,7 @@ median_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3) {
 #' @param prettynum logical, apply prettyNum to results?
 #' @param .german logical, should "." and "," be used as bigmark and decimal?
 #' Sets prettynum to TRUE.
+#' @param quelle deprecated, retained for compatibility, use 'source' instead.
 #'
 #' @return
 #' Structure depends on parameter return_level:
@@ -303,14 +308,18 @@ median_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3) {
 #' cat_desc_stats(mtcars$gear, groupvar = mtcars$am)
 #' cat_desc_stats(mtcars$gear, groupvar = mtcars$am, singleline = TRUE)
 #' @export
-cat_desc_stats <- function(source, separator = " ",
+cat_desc_stats <- function(source=NULL, separator = " ",
                            return_level = TRUE,
                            ndigit = 0,
                            groupvar = NULL,
                            singleline = FALSE,
                            percent = TRUE,
                            prettynum = FALSE,
-                           .german = FALSE) {
+                           .german = FALSE,
+                           quelle=NULL) {
+  if(!is.null(quelle)) {
+    source <- quelle
+  }
   percent <- ifelse(percent, "%", "")
   bigmark <- ifelse(.german, ".", ",")
   decimal <- ifelse(.german, ",", ".")

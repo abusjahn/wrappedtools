@@ -32,7 +32,7 @@ A list with index, names, backticked names, and symbols
 \description{
 \code{FindVars} looks up colnames (by default for data-frame rawdata)
 based on parts of names, using regular expressions. Be warned that
-special characters as e.g. \code{[} \code{(} need to be escaped or replaced by .
+special characters as e.g. \code{[} \code{(} need to be escaped or replaced by \code{.}
 Exlusion rules may be specified as well.
 }
 \examples{

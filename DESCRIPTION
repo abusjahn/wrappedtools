@@ -10,7 +10,7 @@ Description: The main functionalities of 'wrappedtools' are:
     descriptive statistics and p-values; creating specialized plots for 
     correlation matrices. Functions were mainly written for my own daily work or 
     teaching, but may be of use to others as well.
-Version: 0.7.9
+Version: 0.8.0
 Date: 2021-09-06
 Authors@R:
     person(given = "Andreas",
