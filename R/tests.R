@@ -1014,10 +1014,6 @@ compare_n_numvars <- function(.data = rawdata,
                                                          p.adjust.method= "none", 
                                                          exact = FALSE # this argument gets rid of warnings in testing
                                                          )$p.value)
-          purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
-                                                  g = as.numeric(.x[[indep_var]]),
-                                                  # alternative = c("two.sided", "less", "greater"),
-                                                  p.adjust.method= "none")$p.value)
         },
       p_wcox_t_out = if (gaussian) {
         purrr::map(data, ~ pairwise_t_test(
