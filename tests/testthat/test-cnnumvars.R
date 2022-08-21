@@ -13,7 +13,7 @@
 
 
 
-test_that("compare_n_numvars() creates the same lengths of lists when creating the raw table", {
+test_that("compare_n_numvars() creates the same lengths of lists when creating the raw table (user specifies gaussian=FALSE)", {
   # This gets you a random test dataset out of the list in the line below
   # Random dataset out of 3: all dataset[[1 to 4]] columns are numerical dep_vars, 
   # dataset[[5]] is an ordinal indep_var
@@ -54,20 +54,29 @@ test_that("compare_n_numvars() creates the same lengths of lists when creating t
   expect_equal(length(ord_test_in$raw$anova_out), length(ord_test_in$raw$`p_wcox/t_out`))
   expect_equal(length(ord_test_in$raw$desc_grp), length(ord_test_in$raw$p_wcox_t_out))
   
+})
   # I will now test Gaussian variables by shifting the column reads down one index
-  
-  RandomTestDatasetGau <- rlist::list.sample(.data=
+
+test_that("compare_n_numvars() creates the same lengths of lists when creating the raw table (user specifies gaussian=TRUE)", {
+  # This gets you a random test dataset out of the list in the line below
+  # Random dataset out of 3: all dataset[[1 to 3]] columns are numerical dep_vars, 
+  # dataset[[4]] is a gaussian indep_var
+  # 
+    RandomTestDatasetGau <- rlist::list.sample(.data=
                                                list(
                                                  tibble(mtcars$mpg,
                                                         mtcars$wt,
                                                         mtcars$hp,
                                                         mtcars$disp,
                                                         .name_repair = 'unique'),
-                                                 tibble(iris),
+                                                 tibble(iris$Sepal.Length,
+                                                        iris$Sepal.Width,
+                                                        iris$Petal.Length,
+                                                        iris$Petal.Width),
                                                  tibble(ggplot2::diamonds$x, 
                                                         ggplot2::diamonds$y, 
                                                         ggplot2::diamonds$z, 
-                                                        ggplot2::diamonds$cut,
+                                                        ggplot2::diamonds$carat,
                                                         .name_repair = 'unique')),
                                              size=1)
   
