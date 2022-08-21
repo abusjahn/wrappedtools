@@ -9,7 +9,7 @@
 - function roundR handles rounding 0 now properly
 - help has been extended, new examples have been added 
 - function print_kable is now deprecated, as package flextable offers way more power
-- new tests have been and will be added and revised
+- new function tests have been and will be added and revised (wrappedtools/tests/testthat/*.R)
 
 # wrappedtools 0.7.9
 - formatP returns vector or matrix, depending on input pIn,
