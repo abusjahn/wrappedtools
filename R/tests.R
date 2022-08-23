@@ -431,7 +431,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
     # na.omit() %>%
     as_tibble()
   if(nlevels(data_l$Group)!=2){
-    stop(paste0('More than 2 groups provided for ',indep_var,': ',
+    stop(paste0('Other than 2 groups provided for ',indep_var,': ',
                 paste(levels(data_l$Group),collapse='/')))
   }
   data_l <- data_l %>% 
