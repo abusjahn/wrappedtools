@@ -10,3 +10,4 @@ test_that("meansd() with defaults and options set", {
                       range = TRUE, add_n = TRUE, .german = TRUE), 
                expected[[2]])
 })
+

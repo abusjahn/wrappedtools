@@ -21,7 +21,6 @@
 #' # Only comparison against reference gear=3
 #' pairwise_fisher_test(dep_var = mtcars$cyl, indep_var = mtcars$gear, ref = TRUE)
 #' @export
-#' @importFrom rlist list.sample
 pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
                                  symbols = letters[-1], # c('b','c','d','e','f','g'),
                                  ref = FALSE) {
