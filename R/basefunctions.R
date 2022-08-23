@@ -186,7 +186,7 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 #' \code{FindVars} looks up colnames (by default for data-frame rawdata)
 #' based on parts of names, using regular expressions. Be warned that
 #' special characters as e.g. `[` `(` need to be escaped or replaced by `.`
-#' Exlusion rules may be specified as well.
+#' Exclusion rules may be specified as well.
 #'
 #' @param varnames Vector of pattern to look for.
 #' @param allnames Vector of values to detect pattern in; by default, colnames(rawdata).
