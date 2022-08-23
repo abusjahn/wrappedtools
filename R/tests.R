@@ -1009,7 +1009,7 @@ compare_n_numvars <- function(.data = rawdata,
                                            pool.sd = TRUE,
                                            p.adjust.method = "none"
         )$p.value)} else {
-          pwout= purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
+          purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
                                                          g = as.numeric(.x[[indep_var]]),
                                                          # alternative = c("two.sided", "less", "greater"),
                                                          p.adjust.method= "none", 
