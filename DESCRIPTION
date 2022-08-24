@@ -26,9 +26,24 @@ Authors@R: c(
 Maintainer: Andreas Busjahn <andreas@busjahn.net>
 License: GPL-3
 Encoding: UTF-8
-Imports: stats, boot, knitr, coin, utils, 
-            dplyr, forcats, purrr, glue, rlang, stringr, magrittr, ggplot2, 
-            tibble, tidyr, kableExtra
+Imports: 
+    stats,
+    boot,
+    knitr,
+    coin,
+    utils,
+    dplyr,
+    forcats,
+    purrr,
+    glue,
+    rlang,
+    stringr,
+    magrittr,
+    ggplot2,
+    tibble,
+    tidyr,
+    kableExtra,
+    lifecycle
 Depends: 
     R (>= 3.5),
     tidyverse
