@@ -32,7 +32,7 @@ A list with elements "methods" (character), "p.value" (matrix),
 "plevel" (numeric), and "sign_colwise" (vector of length number of levels - 1)
 }
 \description{
-\code{pairwise_fisher-test} calculates pairwise comparisons between
+\code{pairwise_fisher_test} calculates pairwise comparisons between
 group levels with corrections for multiple testing.
 }
 \examples{
