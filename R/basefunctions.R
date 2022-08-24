@@ -186,7 +186,7 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 #' \code{FindVars} looks up colnames (by default for data-frame rawdata)
 #' based on parts of names, using regular expressions. Be warned that
 #' special characters as e.g. `[` `(` need to be escaped or replaced by `.`
-#' Exlusion rules may be specified as well.
+#' Exclusion rules may be specified as well.
 #'
 #' @param varnames Vector of pattern to look for.
 #' @param allnames Vector of values to detect pattern in; by default, colnames(rawdata).
@@ -255,9 +255,12 @@ FindVars <- function(varnames, allnames = NULL,
 
 #' Enhanced kable with definable number of rows/columns for splitting
 #'
+#' `r lifecycle::badge('superseded')`
+#' 
+#' package flextable is a more powerful alternative
+#' 
 #' \code{print_kable} formats and prints tibbles/df's in markdown with splitting
 #' into sub-tables with repeated caption and header.
-#' As package flextable is a more powerful alternative, this function is now deprecated.
 #'
 #' @param t table to print.
 #' @param nrows number of rows (30) before splitting.
@@ -272,7 +275,9 @@ FindVars <- function(varnames, allnames = NULL,
 #' @export
 print_kable <- function(t, nrows = 30, caption = "",
                         ncols = 100, ...) {
-  .Deprecated('flextable') # require(knitr)
+  lifecycle::deprecate_warn(when = '0.8.0',
+                            what = 'print_kable()',
+                            with = 'flextable::flextable()') # require(knitr)
   for (block_i in 1:ceiling(nrow(t) / nrows)) {
     for (col_i in 1:ceiling((ncol(t) - 1) / ncols)) {
       if (block_i + col_i > 2) {
