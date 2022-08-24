@@ -1,6 +1,6 @@
 #' Pairwise Fisher's exact tests
 #'
-#' \code{pairwise_fisher-test} calculates pairwise comparisons between
+#' \code{pairwise_fisher_test} calculates pairwise comparisons between
 #' group levels with corrections for multiple testing.
 #'
 #' @param dep_var dependent variable, containing the data.
