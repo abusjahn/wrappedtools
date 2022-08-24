@@ -431,7 +431,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
     # na.omit() %>%
     as_tibble()
   if(nlevels(data_l$Group)!=2){
-    stop(paste0('More than 2 groups provided for ',indep_var,': ',
+    stop(paste0('Other than 2 groups provided for ',indep_var,': ',
                 paste(levels(data_l$Group),collapse='/')))
   }
   data_l <- data_l %>% 
@@ -1008,12 +1008,11 @@ compare_n_numvars <- function(.data = rawdata,
                                            pool.sd = TRUE,
                                            p.adjust.method = "none"
         )$p.value)} else {
-          purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
-                                                         g = as.numeric(.x[[indep_var]]),
-                                                         # alternative = c("two.sided", "less", "greater"),
-                                                         p.adjust.method= "none", 
-                                                         exact = FALSE # this argument gets rid of warnings in testing
-                                                         )$p.value)
+          purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]],
+                                                  g = as.numeric(.x[[indep_var]]),
+                                                  p.adjust.method= "none",
+                                                  exact = FALSE)$p.value)
+
         },
       p_wcox_t_out = if (gaussian) {
         purrr::map(data, ~ pairwise_t_test(
