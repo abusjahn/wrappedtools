@@ -21,7 +21,6 @@
 #' # Only comparison against reference gear=3
 #' pairwise_fisher_test(dep_var = mtcars$cyl, indep_var = mtcars$gear, ref = TRUE)
 #' @export
-#' @importFrom rlist list.sample
 pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
                                  symbols = letters[-1], # c('b','c','d','e','f','g'),
                                  ref = FALSE) {
@@ -1009,7 +1008,7 @@ compare_n_numvars <- function(.data = rawdata,
                                            pool.sd = TRUE,
                                            p.adjust.method = "none"
         )$p.value)} else {
-          pwout= purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
+          purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
                                                          g = as.numeric(.x[[indep_var]]),
                                                          # alternative = c("two.sided", "less", "greater"),
                                                          p.adjust.method= "none", 
