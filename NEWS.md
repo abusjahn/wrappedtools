@@ -11,7 +11,6 @@
 - function print_kable is now deprecated, as package flextable offers way more power
 - function tests have been added 
 
-
 # wrappedtools 0.7.9
 - formatP returns vector or matrix, depending on input pIn,
 this makes piping easier

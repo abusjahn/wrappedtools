@@ -1,6 +1,6 @@
 #' Pairwise Fisher's exact tests
 #'
-#' \code{pairwise_fisher-test} calculates pairwise comparisons between
+#' \code{pairwise_fisher_test} calculates pairwise comparisons between
 #' group levels with corrections for multiple testing.
 #'
 #' @param dep_var dependent variable, containing the data.
@@ -1008,11 +1008,11 @@ compare_n_numvars <- function(.data = rawdata,
                                            pool.sd = TRUE,
                                            p.adjust.method = "none"
         )$p.value)} else {
-          purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
+          purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]],
                                                   g = as.numeric(.x[[indep_var]]),
                                                   p.adjust.method= "none",
                                                   exact = FALSE)$p.value)
-        },
+                                                  },
       p_wcox_t_out = if (gaussian) {
         purrr::map(data, ~ pairwise_t_test(
           .x[["value"]],
