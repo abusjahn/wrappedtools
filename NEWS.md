@@ -2,7 +2,6 @@
 - new function surprisal (Shannon information from p-value)
 - formatP can add surprisal to output
 - ggcormat has now p-labels for .05,.01, and .001 labels
-
 - roundR can handle input 0 in a more useful way
 - new function medianse duplicating se_median (deprecated) for naming consistency
 - some parameter names were anglicised (old one still exist for compatibility)

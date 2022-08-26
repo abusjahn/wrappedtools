@@ -1012,8 +1012,7 @@ compare_n_numvars <- function(.data = rawdata,
                                                   g = as.numeric(.x[[indep_var]]),
                                                   p.adjust.method= "none",
                                                   exact = FALSE)$p.value)
-
-        },
+                                                  },
       p_wcox_t_out = if (gaussian) {
         purrr::map(data, ~ pairwise_t_test(
           .x[["value"]],

@@ -14,3 +14,4 @@ test_that("formatP() with defaults and options set", {
   expect_equal(formatP(0.012345, ndigits = 4), expected[[3]])
  # expect_equal(formatP(0.012345, ndigits = 3, pretext = TRUE), expected[[4]]) # this fails
 })
+
