@@ -14,3 +14,4 @@ test_that("median_cl_boot() with defaults and options", {
                round(expected[[2]],2),
                tolerance = 1)
 })
+
