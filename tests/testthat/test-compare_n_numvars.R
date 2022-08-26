@@ -1,4 +1,4 @@
-# # User wants to compare at least 3 dependent variables
+# # User wants to compare at least 3 dependent variables 
 # # against an independent variable that is:
 # 
 # # - Gaussian (indep_var=drive ratio)
