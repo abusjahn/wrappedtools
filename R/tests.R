@@ -1009,8 +1009,7 @@ compare_n_numvars <- function(.data = rawdata,
                                            p.adjust.method = "none"
         )$p.value)} else {
           purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
-
-                                                  g = as.numeric(.x[[indep_var]]),
+                                                  g = .x[[indep_var]],
                                                   p.adjust.method= "none",
                                                   exact = FALSE)$p.value)
         },
