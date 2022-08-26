@@ -11,3 +11,4 @@ test_that("cat_desc_stats() with defaults and options set", {
   expect_equal(cat_desc_stats(mtcars$gear, groupvar = mtcars$am), expected[[3]])
   expect_equal(cat_desc_stats(mtcars$gear, groupvar = mtcars$am, singleline = TRUE), expected[[4]])
 })
+

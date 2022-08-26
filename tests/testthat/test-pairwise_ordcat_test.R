@@ -12,3 +12,4 @@ test_that("pairwise_ordcat_test() with defaults and options set", {
   expect_equal(pairwise_ordcat_test(dep_var = mtcars2$cyl, indep_var = mtcars2$gear, ref = TRUE), 
                expected[[2]])
 })
+

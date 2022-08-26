@@ -8,3 +8,4 @@ test_that("t_var_test() with defaults and options set", {
   expect_equal(mtcars %>% t_var_test(wt ~ am), 
                expected[[2]])
 })
+

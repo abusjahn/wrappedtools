@@ -6,3 +6,4 @@ test_that("var_coeff() with defaults and options set", {
   expect_equal(var_coeff(mtcars$wt), expected[[1]])
   
 })
+

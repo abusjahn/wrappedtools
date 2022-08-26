@@ -6,3 +6,4 @@ test_that("SEM_() with defaults and options set", {
   expect_equal(SEM(mtcars$wt), expected[[1]])
   
 })
+

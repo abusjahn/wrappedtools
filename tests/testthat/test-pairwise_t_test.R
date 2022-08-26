@@ -10,3 +10,4 @@ test_that("pairwise_t_test() with defaults and options set", {
   expect_equal(pairwise_t_test(dep_var = mtcars$wt, indep_var = mtcars$cyl), 
                expected[[2]])
 })
+

@@ -8,3 +8,4 @@ test_that("meanse() with defaults and options set", {
   expect_equal(meanse(x = mtcars$mpg, roundDig = 5), 
                expected[[2]])
 })
+

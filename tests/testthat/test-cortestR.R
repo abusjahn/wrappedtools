@@ -9,3 +9,4 @@ test_that("cortestR() with defaults and options set", {
   expect_equal(cortestR(mtcars[, c("wt", "mpg", "qsec")], split = TRUE, sign_symbol = FALSE), 
                expected[[2]])
 })
+
