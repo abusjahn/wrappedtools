@@ -569,7 +569,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
                     fisher.test(
                       x = x, y = y,
                       simulate.p.value = TRUE,
-                      B = 10^4
+                      B = 10^5
                     )$p.value,
                     silent = TRUE
                   ),
@@ -1009,7 +1009,7 @@ compare_n_numvars <- function(.data = rawdata,
                                            p.adjust.method = "none"
         )$p.value)} else {
           purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]],
-                                                  g = as.numeric(.x[[indep_var]]),
+                                                  g = .x[[indep_var]],
                                                   p.adjust.method= "none",
                                                   exact = FALSE)$p.value)
                                                   },
@@ -1026,7 +1026,7 @@ compare_n_numvars <- function(.data = rawdata,
       p_wcox_t_out = purrr::map(p_wcox_t_out, ~ c(.x,
                                                   "")) #add empty string for last column
     ) %>%
-    purrr::map(~ set_names(.x, dep_vars))
+    purrr::map(~ set_names(.x, all_of(dep_vars)))
   
   
   p_results <- NULL

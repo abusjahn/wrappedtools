@@ -25,19 +25,25 @@ test_that("compare_n_numvars() with defaults and options set", {
     .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
     indep_var = "drat",
     gaussian = TRUE
-  ), expected[[1]])
+  )$raw, expected[[1]]$raw)
   expect_equal(compare_n_numvars(
     .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
     indep_var = "cyl",
-    gaussian = FALSE), 
-  expected[[2]])
+    gaussian = FALSE)$results, 
+  expected[[2]]$results)
+  # expect_equal(compare_n_numvars(
+  #   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
+  #   indep_var = "cyl",
+  #   gaussian = FALSE)$raw, 
+  #   expected[[2]]$raw,
+  #   ignore_attr=TRUE)
   # Ideas for testing for errors:
 
   # -Supply ordinal categories as a dep_var
   expect_error(compare_n_numvars(
     .data = diamonds, dep_vars = c("cut", "y", "z"),
     indep_var = "x",
-    gaussian = TRUE
+    gaussian = FALSE
   ))
 #  # -Should get one when: not enough groups.
 #  #  this call failed at "expect_error()"

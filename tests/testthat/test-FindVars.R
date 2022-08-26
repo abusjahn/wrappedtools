@@ -13,6 +13,6 @@ test_that("FindVars() with defaults and options set", {
   # successful run of the function
   
   #  rawdata <-mtcars
-#  expect_equal(FindVars(varnames = c("^c", "g")), expected[[3]])
+ expect_error(FindVars(varnames = c("^c", "g")))
 })
 
