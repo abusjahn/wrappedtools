@@ -25,7 +25,6 @@ test_that("compare_n_numvars() with defaults and options set", {
     .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
     indep_var = "drat",
     gaussian = TRUE
-
   )$raw, expected[[1]]$raw)
   expect_equal(compare_n_numvars(
     .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
