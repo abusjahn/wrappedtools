@@ -12,7 +12,6 @@
 test_that("compare2qualvars() with defaults and options set, plus tests for errors", {
   expected <- readRDS('compare2qualvars_out.rda')
   
-
   expect_equal(compare2qualvars(
     data = mtcars, dep_vars = c("gear", "cyl", "carb"), indep_var = "am",
     spacer = " "
