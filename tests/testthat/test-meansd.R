@@ -1,3 +1,4 @@
+
 # out1 <- meansd(x = mtcars$mpg)
 # out2 <- meansd(x = mtcars$mpg, roundDig = 5, groupvar = mtcars$cyl, 
 #                range = TRUE, add_n = TRUE, .german = TRUE)
@@ -9,3 +10,4 @@ test_that("meansd() with defaults and options set", {
                       range = TRUE, add_n = TRUE, .german = TRUE), 
                expected[[2]])
 })
+
