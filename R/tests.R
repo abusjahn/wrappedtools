@@ -209,7 +209,7 @@ ksnormal <- function(x) {
 #' @return A list with coefficient, CIs, and pasted coef(\[CIs\]).
 #'
 #' @param model Output from \link{glm}.
-#' @param min,max Lower and upper limits for CIs, usefull for extremely wide CIs.
+#' @param min,max Lower and upper limits for CIs, useful for extremely wide CIs.
 #' @param cisep Separator between CI values.
 #' @param ndigit rounding level.
 #'

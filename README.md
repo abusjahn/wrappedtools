@@ -10,8 +10,8 @@
 The goal of ‘wrappedtools’ is to make my (and possibly your) life a bit
 easier by a set of convenience functions for many common tasks like e.g.
 computation of mean and SD and pasting them with ±. Instead of  
-paste(round(mean(x),some\_level), round(sd(x),some\_level), sep=‘±’)  
-a simple meansd(x, roundDig = some\_level) is enough.
+paste(round(mean(x),some_level), round(sd(x),some_level), sep=‘±’)  
+a simple meansd(x, roundDig = some_level) is enough.
 
 ## Installation
 
@@ -44,7 +44,7 @@ compare2numvars(data = mtcars, dep_vars = c('wt','mpg', "disp"),
                 indep_var = 'am',
                 gaussian = FALSE,
                 round_desc = 3)
-#> # A tibble: 3 x 5
+#> # A tibble: 3 × 5
 #> # Groups:   Variable [3]
 #>   Variable desc_all         `am 0`           `am 1`           p    
 #>   <fct>    <chr>            <chr>            <chr>            <chr>
@@ -61,14 +61,14 @@ ksnormal simply wraps around the ks.test function:
 somedata <- rnorm(100)
 ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
 #> 
-#>  One-sample Kolmogorov-Smirnov test
+#>  Asymptotic one-sample Kolmogorov-Smirnov test
 #> 
 #> data:  somedata
-#> D = 0.03584, p-value = 0.9995
+#> D = 0.062488, p-value = 0.8297
 #> alternative hypothesis: two-sided
 
 ksnormal(somedata)
-#> [1] 0.9995284
+#> [1] 0.8297214
 ```
 
 Saving variable selections: Variables may fall into different groups:
@@ -77,7 +77,7 @@ factorial. There may be several grouping variables like treatment,
 gender… To refer to such variables, it is convenient to have their index
 and name stored. The name may be needed as character or , symbol,
 complex variable names like “size \[cm\]” may need to be surrounded by
-backtics in some function calls but must not have those in others.  
+backticks in some function calls but must not have those in others.  
 Function FindVars finds columns in tibbles or dataframes, based on name
 pattern. This is comparable to the selection helpers in ‘tidyselect’,
 but does not select the content of matching variables, but names,
@@ -95,14 +95,6 @@ gaussvars
 #> 
 #> $bticked
 #> [1] "`mpg`" "`wt`" 
-#> 
-#> $symbols
-#> $symbols[[1]]
-#> mpg
-#> 
-#> $symbols[[2]]
-#> wt
-#> 
 #> 
 #> $count
 #> [1] 2

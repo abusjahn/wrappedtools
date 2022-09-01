@@ -6,11 +6,12 @@
 \usage{
 FindVars(
   varnames,
-  allnames = NULL,
+  allnames = colnames(rawdata),
   exact = FALSE,
   exclude = NA,
   casesensitive = TRUE,
-  fixed = FALSE
+  fixed = FALSE,
+  return_symbols = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ FindVars(
 \item{casesensitive}{Logical if case is respected in matching (default FALSE: a<>A)}
 
 \item{fixed}{Logical, match as is, argument is passed to \code{\link[=grep]{grep()}}.}
+
+\item{return_symbols}{Should names be reported as symbols additionally? (Default FALSE)}
 }
 \value{
 A list with index, names, backticked names, and symbols

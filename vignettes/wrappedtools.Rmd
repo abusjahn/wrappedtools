@@ -82,7 +82,7 @@ factorial. There may be several grouping variables like treatment,
 gender... To refer to such variables, it is convenient to have their
 index and name stored. The name may be needed as character or , symbol,
 complex variable names like "size [cm]" may need to be surrounded by
-backtics in some function calls but must not have those in others.\
+backticks in some function calls but must not have those in others.\
 Function FindVars finds columns in tibbles or dataframes, based on name
 pattern. This is comparable to the selection helpers in 'tidyselect',
 but does not select the content of matching variables, but names,
