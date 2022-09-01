@@ -194,6 +194,8 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 #' @param exclude Vector of pattern to exclude from found names.
 #' @param casesensitive Logical if case is respected in matching (default FALSE: a<>A)
 #' @param fixed Logical, match as is, argument is passed to [grep()]. 
+#' @param return_symbols Should names be reported as symbols additionally? (Default FALSE)
+#' 
 #' @export
 #' @return A list with index, names, backticked names, and symbols
 #' @examples
@@ -201,12 +203,12 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 #' FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars), exclude = "r")
 #' rawdata <- mtcars
 #' FindVars(varnames = c("^c", "g"))
-FindVars <- function(varnames, allnames = NULL,
+FindVars <- function(varnames, allnames = colnames(rawdata),
                      exact = FALSE, exclude = NA, casesensitive = TRUE,
-                     fixed = FALSE) {
-  if (is.null(allnames)) {
-    allnames <- colnames(get("rawdata"))
-  }
+                     fixed = FALSE, return_symbols=FALSE) {
+  # if (is.null(allnames)) {
+  #   allnames <- colnames(get("rawdata"))
+  # }
   if (fixed) {
     exact <- FALSE
   }
@@ -244,13 +246,21 @@ FindVars <- function(varnames, allnames = NULL,
     }
     vars <- unique(vars)
   }
-  return(list(
+  if(return_symbols) {
+    return_list <- list(
     index = vars,
     names = allnames[vars],
     bticked = bt(allnames[vars]),
     symbols = rlang::syms(allnames[vars]),
-    count = length(vars)
-  ))
+    count = length(vars))
+  } else {
+    return_list <- list(
+      index = vars,
+      names = allnames[vars],
+      bticked = bt(allnames[vars]),
+      count = length(vars))
+  }
+  return(return_list)
 }
 
 #' Enhanced kable with definable number of rows/columns for splitting

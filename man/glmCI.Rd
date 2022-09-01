@@ -9,7 +9,7 @@ glmCI(model, min = .01, max = 100, cisep = '\U000022ef', ndigit=2)
 \arguments{
 \item{model}{Output from \link{glm}.}
 
-\item{min, max}{Lower and upper limits for CIs, usefull for extremely wide CIs.}
+\item{min, max}{Lower and upper limits for CIs, useful for extremely wide CIs.}
 
 \item{cisep}{Separator between CI values.}
 

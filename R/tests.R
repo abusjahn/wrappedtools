@@ -1,6 +1,6 @@
 #' Pairwise Fisher's exact tests
 #'
-#' \code{pairwise_fisher-test} calculates pairwise comparisons between
+#' \code{pairwise_fisher_test} calculates pairwise comparisons between
 #' group levels with corrections for multiple testing.
 #'
 #' @param dep_var dependent variable, containing the data.
@@ -209,7 +209,7 @@ ksnormal <- function(x) {
 #' @return A list with coefficient, CIs, and pasted coef(\[CIs\]).
 #'
 #' @param model Output from \link{glm}.
-#' @param min,max Lower and upper limits for CIs, usefull for extremely wide CIs.
+#' @param min,max Lower and upper limits for CIs, useful for extremely wide CIs.
 #' @param cisep Separator between CI values.
 #' @param ndigit rounding level.
 #'
@@ -569,7 +569,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
                     fisher.test(
                       x = x, y = y,
                       simulate.p.value = TRUE,
-                      B = 10^4
+                      B = 10^5
                     )$p.value,
                     silent = TRUE
                   ),
@@ -1008,11 +1008,11 @@ compare_n_numvars <- function(.data = rawdata,
                                            pool.sd = TRUE,
                                            p.adjust.method = "none"
         )$p.value)} else {
-          purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]], 
-                                                  g = as.numeric(.x[[indep_var]]),
+          purrr::map(data, ~ pairwise.wilcox.test(.x[["value"]],
+                                                  g = .x[[indep_var]],
                                                   p.adjust.method= "none",
                                                   exact = FALSE)$p.value)
-        },
+                                                  },
       p_wcox_t_out = if (gaussian) {
         purrr::map(data, ~ pairwise_t_test(
           .x[["value"]],
@@ -1026,7 +1026,7 @@ compare_n_numvars <- function(.data = rawdata,
       p_wcox_t_out = purrr::map(p_wcox_t_out, ~ c(.x,
                                                   "")) #add empty string for last column
     ) %>%
-    purrr::map(~ set_names(.x, dep_vars))
+    purrr::map(~ set_names(.x, all_of(dep_vars)))
   
   
   p_results <- NULL
