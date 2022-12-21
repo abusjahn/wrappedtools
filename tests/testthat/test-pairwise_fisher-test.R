@@ -7,8 +7,12 @@
 
 test_that("pairwise_fisher_test() with defaults and options set", {
   expected <- readRDS('pairwise_fisher_out.rda')
-  expect_equal(pairwise_fisher_test(dep_var = mtcars$cyl, indep_var = mtcars$gear), expected[[1]])
-  expect_equal(pairwise_fisher_test(dep_var = mtcars$cyl, indep_var = mtcars$gear, ref = TRUE), 
-               expected[[2]])
+  expect_equal(pairwise_fisher_test(dep_var = mtcars$cyl, 
+                                    indep_var = mtcars$gear), 
+               expected[[1]],tolerance=1e-3)
+  expect_equal(pairwise_fisher_test(dep_var = mtcars$cyl, 
+                                    indep_var = mtcars$gear, 
+                                    ref = TRUE), 
+               expected[[2]],tolerance=1e-1)
 })
 

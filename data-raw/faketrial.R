@@ -3,7 +3,8 @@ library(tidyverse)
 n <- 300
 set.seed(1958)
 fake_meds <- shinipsum::lorem_words
-fake_meds <- fake_meds[which(nchar(fake_meds)>10)] %>% unique() %>% 
+fake_meds <- fake_meds[which(nchar(fake_meds)>10)] |> unique() |>  
+  str_to_title() |> 
   paste('Med',.,'FakePharm')
 faketrial <- tibble(
   Sex=sample(c('female','male'),n,TRUE) %>% factor(),
@@ -23,7 +24,11 @@ faketrial <- tibble(
     (Treatment=='OP')*
     # (Agegroup %in% c('young','middle'))*
     (Agegroup!='old')*20+
-    (Agegroup=='old')*20)
+    (Agegroup=='old')*20,
+  Responder=factor(sysRR>=120,
+                   levels=c(FALSE,TRUE),
+                   labels=c('no','yes')))
+
 for(med_i in fake_meds){
   faketrial <- mutate(faketrial,
                     !!sym(med_i):=sample(c('y','n'),n,TRUE,

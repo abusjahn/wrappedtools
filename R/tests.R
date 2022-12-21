@@ -51,7 +51,10 @@ pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
       ), ]
       if (min(dim(table(tempdata))) > 1) {
         p_unadj[secondgroup - 1, firstgroup] <-
-          fisher.test(tempdata$dep_var, tempdata$indep_var)$p.value
+          try(
+            fisher.test(tempdata$dep_var, tempdata$indep_var,
+                        simulate.p.value = T,B = 10^5)$p.value,
+            silent = T)
       } else {
         p_unadj[secondgroup - 1, firstgroup] <- 1
       }
@@ -720,15 +723,19 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
   p <-
     purrr::map2(data[dep_vars], data[indep_var],
                 .f = function(x, y) {
-                  formatP(try(
-                    fisher.test(
-                      x = x, y = y, simulate.p.value = TRUE,
-                      B = 10^4
-                    )$p.value,
-                    silent = TRUE
-                  ),
-                  mark = mark, pretext = pretext
-                  )
+                  try(
+                    formatP(
+                      try(
+                        fisher.test(
+                          x = x, y = y, simulate.p.value = TRUE,
+                          B = 10^4
+                        )$p.value,
+                        silent = TRUE
+                      ),
+                      mark = mark, pretext = pretext),
+                    silent=T) |> 
+                    tidyr::replace_na('')
+                  
                 }
     )
   
@@ -741,7 +748,8 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
     testdata <- data %>%
       dplyr::select(all_of(c(indep_var, dep_vars[var_i]))) %>%
       na.omit()
-    pairwise_p <- pairwise_fisher_test(testdata[[2]], testdata[[1]])$sign_colwise %>%
+    pairwise_p <- 
+      pairwise_fisher_test(testdata[[2]], testdata[[1]])$sign_colwise %>%
       str_replace("^ $", spacer)
     if (!singleline) {
       out_tmp <- add_row(out_template,
@@ -1012,7 +1020,7 @@ compare_n_numvars <- function(.data = rawdata,
                                                   g = .x[[indep_var]],
                                                   p.adjust.method= "none",
                                                   exact = FALSE)$p.value)
-                                                  },
+        },
       p_wcox_t_out = if (gaussian) {
         purrr::map(data, ~ pairwise_t_test(
           .x[["value"]],
