@@ -5,7 +5,7 @@ set.seed(1958)
 fake_meds <- shinipsum::lorem_words
 fake_meds <- fake_meds[which(nchar(fake_meds)>10)] |> unique() |>  
   str_to_title() |> 
-  paste('Med',.,'FakePharm')
+  paste(a='Med',b=_,c='FakePharm')
 faketrial <- tibble(
   Sex=sample(c('female','male'),n,TRUE) %>% factor(),
   Agegroup=factor(
