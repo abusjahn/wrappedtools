@@ -505,6 +505,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
 #' @param spacer Text element to indent levels and fill empty cells,
 #' defaults to "&nbsp;".
 #' @param linebreak place holder for newline.
+#' @param p_subgroups test subgroups by recoding other levels into other, default is not to do this.
 #'
 #' @return
 #' A tibble with variable names, descriptive statistics, and p-value,
@@ -519,17 +520,28 @@ compare2numvars <- function(data, dep_vars, indep_var,
 #'   data = mtcars, dep_vars = c("gear", "cyl", "carb"), indep_var = "am",
 #'   spacer = " ", singleline = TRUE
 #' )
+#' compare2qualvars(
+#'   data = mtcars, dep_vars = c("gear", "cyl", "carb"), indep_var = "am",
+#'   spacer = " ", p_subgroups = TRUE
+#' )
 #' @export
 compare2qualvars <- function(data, dep_vars, indep_var,
                              round_p = 3, round_desc = 2,
                              pretext = FALSE, mark = FALSE,
                              singleline = FALSE,
                              # newline=TRUE,
-                             spacer = "&nbsp;",
-                             linebreak = "\n") {
+                             spacer = " ",
+                             linebreak = "\n",
+                             p_subgroups = FALSE) {
   indentor <- paste0(rep(spacer, 5), collapse = "")
   if (!(is.factor(data %>% pull(indep_var)))) {
     data %<>% mutate(!!indep_var := factor(!!sym(indep_var)))
+  }
+  for(var_i in dep_vars){
+    if (!(is.factor(data %>% pull(var_i)))) {
+      data %<>% mutate(!!var_i := factor(!!sym(var_i)))
+    }
+    
   }
   freq <-
     purrr::map(data[dep_vars],
@@ -583,13 +595,42 @@ compare2qualvars <- function(data, dep_vars, indep_var,
     ) %>% 
     purrr::map(~case_when(str_detect(.,'.\\d+') ~ .,TRUE~''))
   
+  if(p_subgroups){
+    for(var_i in dep_vars){
+      freqBYgroup[[var_i]]$p <- NA_character_
+      subgroups=data |> pull(var_i) |> levels()
+      for(sg_i in seq_along(subgroups)){
+        testdata <- 
+          data |> 
+          select(all_of(c(indep_var,var_i))) |> 
+          mutate(testvar=forcats::fct_collapse(!!sym(var_i),
+                                      check=subgroups[sg_i],
+                                      other_level = 'other')) |> 
+          select(indep_var,'testvar') |> table()
+        p_sg <- fisher.test(testdata,
+                            simulate.p.value = TRUE,
+                            B = 10^5)$p.value |> 
+          formatP(mark = mark, pretext = pretext)
+        if(singleline){
+          freqBYgroup[[var_i]]$p <- 
+            paste(na.omit(freqBYgroup[[var_i]]$p),p_sg) |> 
+            str_squish()} else {
+        freqBYgroup[[var_i]]$p[sg_i] <- p_sg
+            }
+      }
+    }
+  }  
+  
   out <- tibble(
     Variable = character(), desc_all = character(),
     g1 = character(), g2 = character(), p = character()
   )
+  if(p_subgroups){
+    out$pSubgroup <- NA_character_
+  }
   for (var_i in seq_along(dep_vars)) {
     if (!singleline) {
-      out <- add_row(out,
+      out_tmp <- add_row(out[0,],
                      Variable = c(
                        dep_vars[var_i],
                        glue::glue(
@@ -604,8 +645,12 @@ compare2qualvars <- function(data, dep_vars, indep_var,
                        rep(spacer, nrow(freqBYgroup[[var_i]]))
                      )
       )
+      if(p_subgroups){
+        out_tmp$pSubgroup <- c(spacer,freqBYgroup[[var_i]]$p)
+      }     
+      out <- rbind(out,out_tmp)
     } else {
-      out <- add_row(out,
+      out_tmp <- add_row(out[0,],
                      Variable = paste(
                        dep_vars[var_i],
                        # rep(spacer,
@@ -617,6 +662,10 @@ compare2qualvars <- function(data, dep_vars, indep_var,
                      g2 = freqBYgroup[[var_i]][[2]],
                      p = p[[var_i]][[1]]
       )
+      if(p_subgroups){
+        out_tmp$pSubgroup <- freqBYgroup[[var_i]]$p
+      }     
+      out <- rbind(out,out_tmp)
     }
   }
   colnames(out) %<>% str_replace_all(

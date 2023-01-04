@@ -13,8 +13,9 @@ compare2qualvars(
   pretext = FALSE,
   mark = FALSE,
   singleline = FALSE,
-  spacer = "&nbsp;",
-  linebreak = "\\n"
+  spacer = " ",
+  linebreak = "\\n",
+  p_subgroups = FALSE
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ compare2qualvars(
 defaults to " ".}
 
 \item{linebreak}{place holder for newline.}
+
+\item{p_subgroups}{test subgroups by recoding other levels into other, default is not to do this.}
 }
 \value{
 A tibble with variable names, descriptive statistics, and p-value,
@@ -55,5 +58,9 @@ compare2qualvars(
 compare2qualvars(
   data = mtcars, dep_vars = c("gear", "cyl", "carb"), indep_var = "am",
   spacer = " ", singleline = TRUE
+)
+compare2qualvars(
+  data = mtcars, dep_vars = c("gear", "cyl", "carb"), indep_var = "am",
+  spacer = " ", p_subgroups = TRUE
 )
 }
