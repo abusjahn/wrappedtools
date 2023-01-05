@@ -606,7 +606,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
           mutate(testvar=forcats::fct_collapse(!!sym(var_i),
                                       check=subgroups[sg_i],
                                       other_level = 'other')) |> 
-          select(indep_var,'testvar') |> table()
+          select(all_of(indep_var),'testvar') |> table()
         p_sg <- fisher.test(testdata,
                             simulate.p.value = TRUE,
                             B = 10^5)$p.value |> 
@@ -1034,7 +1034,7 @@ compare_n_numvars <- function(.data = rawdata,
       cols = all_of(dep_vars),
       values_to = "value", names_to = "Variable"
     ) %>%
-    nest(data = c(indep_var, value)) %>%
+    nest(data = c(all_of(indep_var), value)) %>%
     mutate(
       Variable = forcats::fct_inorder(as.factor(Variable)),
       desc_tab = purrr::map_chr(data, ~ desc_fun(.$value,
@@ -1083,7 +1083,7 @@ compare_n_numvars <- function(.data = rawdata,
       p_wcox_t_out = purrr::map(p_wcox_t_out, ~ c(.x,
                                                   "")) #add empty string for last column
     ) %>%
-    purrr::map(~ set_names(.x, all_of(dep_vars)))
+    purrr::map(~ set_names(.x, dep_vars))
   
   
   p_results <- NULL
