@@ -1,4 +1,4 @@
-# I'm not sure it's possible to do the same "saveRDS %>% readRDS" kind of methodology with ggplot2 objects
+# I'm not sure it's possible to do the same "saveRDS - readRDS" kind of methodology with ggplot2 objects
 # because I'm not too clear on compressing to or decompressing from binary files
 
 

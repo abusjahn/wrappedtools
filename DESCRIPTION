@@ -38,7 +38,6 @@ Imports:
     glue,
     rlang,
     stringr,
-    magrittr,
     ggplot2,
     tibble,
     tidyr,

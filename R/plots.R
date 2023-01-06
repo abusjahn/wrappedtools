@@ -48,11 +48,11 @@ ggcormat <- function(cor_mat, p_mat = NULL,
   if (lower_only) {
     cor_mat[upper.tri(cor_mat)] <- NA
   }
-  melted_cor_mat <- cor_mat %>%
-    as_tibble() %>%
-    mutate(Variable1 = colnames(.)) %>%
-    gather(key = Variable2, value = value, -Variable1) %>%
-    na.omit() %>%
+  melted_cor_mat <- cor_mat |>
+    as_tibble() |>
+    mutate(Variable1 = colnames(cor_mat)) |>
+    gather(key = Variable2, value = value, -Variable1) |>
+    na.omit() |>
     mutate(
       Variable1 = factor(Variable1, levels = var_order),
       Variable2 = factor(Variable2, levels = var_order),
@@ -61,21 +61,23 @@ ggcormat <- function(cor_mat, p_mat = NULL,
     )
   corvar_count <- nrow(cor_mat)
   if (!is.null(p_mat)) {
-    melted_p_mat <- p_mat %>%
-      as_tibble() %>%
-      mutate(Variable1 = colnames(.)) %>%
-      gather(key = Variable2, value = size, -Variable1) %>%
-      mutate(
-        Variable1 = factor(Variable1, levels = var_order),
-        Variable2 = factor(Variable2, levels = var_order),
-        size = -log10(formatP(as.numeric(size),
-          textout = FALSE
-        ))
-      ) %>%
-      na.omit()
+    melted_p_mat <- 
+      suppressWarnings(
+        p_mat |>
+          as_tibble() |>
+          mutate(Variable1 = colnames(p_mat)) |>
+          gather(key = Variable2, value = size, -Variable1) |>
+          mutate(
+            Variable1 = factor(Variable1, levels = var_order),
+            Variable2 = factor(Variable2, levels = var_order),
+            size = -log10(formatP(as.numeric(size),
+                                  textout = FALSE
+            ))
+          ) |>
+          na.omit())
     melted_p_mat$size[which(melted_p_mat$size > 3)] <- 3
     melted_cor_mat <- full_join(melted_cor_mat[1:3], melted_p_mat,
-      by = c("Variable1", "Variable2")
+                                by = c("Variable1", "Variable2")
     )
   }
   if (lower_only) {
@@ -109,17 +111,19 @@ ggcormat <- function(cor_mat, p_mat = NULL,
   if (is.null(breaklabels)) {
     breaklabels <- levels(melted_cor_mat$Variable1)
   }
-
+  
   ggheatmap <- ggplot(
     melted_cor_mat,
     aes(Variable2, Variable1)
   ) +
     # geom_tile(color = "white")+
     geom_point(aes(Variable2, Variable1,
-      size = size, color = value
+                   size = size, color = value
     )) +
-    geom_vline(xintercept = seq(0.5, corvar_count + 1, by = 1), color = "grey", size = .25) +
-    geom_hline(yintercept = seq(0.5, corvar_count + 1, by = 1), color = "grey", size = .25) +
+    geom_vline(xintercept = seq(0.5, corvar_count + 1, by = 1), 
+               color = "grey", linewidth = .25) +
+    geom_hline(yintercept = seq(0.5, corvar_count + 1, by = 1), 
+               color = "grey", linewidth = .25) +
     # geom_point(aes(Variable2, Variable1, size=abs(value),color=value))+
     scale_color_gradient2(
       low = .low, high = .high, mid = "lightgrey",

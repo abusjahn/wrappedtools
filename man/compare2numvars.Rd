@@ -65,7 +65,7 @@ compare2numvars(
   gaussian = FALSE
 )
 # If dependent variable has more than 2 levels, consider fct_lump:
-mtcars \%>\% mutate(gear=factor(gear) \%>\% fct_lump_n(n=1)) \%>\% 
+mtcars |> mutate(gear=factor(gear) |> fct_lump_n(n=1)) |> 
 compare2numvars(dep_vars="wt",indep_var="gear",gaussian=TRUE)
 
 }

@@ -134,8 +134,8 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
     formatp <- apply(
       X = pIn, MARGIN = c(1, 2), max,
       10**(-ndigits), na.rm = FALSE
-    ) %>%
-      apply(MARGIN = c(1, 2), round, ndigits) %>%
+    ) |>
+      apply(MARGIN = c(1, 2), round, ndigits) |>
       apply(
         MARGIN = c(1, 2),
         formatC, format = "f",
@@ -341,27 +341,27 @@ pdf_kable <- function(.input, width1 = 6,
                       linesep = "",
                       escape = escape, caption = caption,
                       align = c("l", rep("c", ncols - 1))
-  ) %>%
+  ) |>
     kableExtra::kable_styling(
       position = tposition,
       latex_options = c(
         "striped",
         "hold_position"
       )
-    ) %>%
+    ) |>
     kableExtra::column_spec(-1, # border_left = TRUE,
                             width = paste0((twidth - width1) / (ncols - 1), "cm"),
-    ) %>%
-    kableExtra::column_spec(1, bold = TRUE, width = paste0(width1, "cm")) %>%
+    ) |>
+    kableExtra::column_spec(1, bold = TRUE, width = paste0(width1, "cm")) |>
     kableExtra::row_spec(0, bold = TRUE)
   if (!is.null(innercaption)) {
     caption1 <- c(caption = ncols)
     names(caption1) <- caption
-    out <- out %>%
+    out <- out |>
       kableExtra::add_header_above(caption1, bold = TRUE)
   }
   if (!is.null(foot)) {
-    out <- out %>%
+    out <- out |>
       kableExtra::footnote(general = foot)
   }
   return(out)
@@ -425,7 +425,7 @@ tab.search <- function(searchdata = rawdata, pattern,
   if (!is.character(pattern)) {
     pattern <- as.character(pattern)
   }
-  positions <- purrr::map(searchdata, str_which, pattern = pattern) %>% purrr::compact()
+  positions <- purrr::map(searchdata, str_which, pattern = pattern) |> purrr::compact()
   if (!find.all) {
     positions <- purrr::map(positions, nth, n = 1)
   }
@@ -447,5 +447,5 @@ tab.search <- function(searchdata = rawdata, pattern,
 #' @return a character vector of s-values
 #' @export
 surprisal <- function(p, precision = 1){
-round(-log2(as.numeric(p)),precision) %>% as.character()
+round(-log2(as.numeric(p)),precision) |> as.character()
 }

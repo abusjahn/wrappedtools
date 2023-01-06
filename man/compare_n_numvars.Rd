@@ -60,6 +60,6 @@ compare_n_numvars(
   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
   indep_var = "cyl",
   gaussian = FALSE
-)$results \%>\%
+)$results |>
   dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, multivar_p)
 }

@@ -2,6 +2,9 @@
 - pairwise_fisher_test is now using MonteCarlo with 10^5 replications
 - faketrial dataset has new column Responder, useful in logistic regression
 - compare2qualvars has a new option to test subgroups by recoding other levels into other, default is not to do this
+- compare2numvars returns ungrouped result tibble
+- magrittr pipe has been replaced by native pipe
+- compound assignment (aka 2-way pipe %<>%) has been removed and is no longer exported
 
 # wrappedtools 0.8.0
 - new function surprisal (Shannon information from p-value)

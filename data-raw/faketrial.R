@@ -7,7 +7,7 @@ fake_meds <- fake_meds[which(nchar(fake_meds)>10)] |> unique() |>
   str_to_title() |> 
   paste(a='Med',b=_,c='FakePharm')
 faketrial <- tibble(
-  Sex=sample(c('female','male'),n,TRUE) %>% factor(),
+  Sex=sample(c('female','male'),n,TRUE) |> factor(),
   Agegroup=factor(
     rep(c('young','middle','old'),each=n/3),
     levels=c('young','middle','old')),

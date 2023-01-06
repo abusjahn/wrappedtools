@@ -33,9 +33,9 @@ meansd <- function(x, roundDig = 2, drop0 = FALSE, groupvar = NULL,
         ),
         length(na.omit(x))
       )
-      meansd[1:2] %<>%
+      meansd[1:2] <- meansd[1:2]  |> 
         roundR(level = roundDig, drop0 = drop0, .german = .german)
-      meansd[3:4] %<>%
+      meansd[3:4] <- meansd[3:4] |> 
         roundR(level = roundDig, drop0 = drop0, .german = .german)
     } else {
       meansd <- matrix(c(
@@ -45,15 +45,15 @@ meansd <- function(x, roundDig = 2, drop0 = FALSE, groupvar = NULL,
         by(x, groupvar, max, na.rm = TRUE)
       ),
       ncol = 4, byrow = FALSE
-      ) %>%
-        na_if(Inf) %>%
+      ) |>
+        na_if(Inf) |>
         na_if(-Inf)
-      meansd[, 1:2] %<>%
+      meansd[, 1:2] <- meansd[, 1:2] |> 
         roundR(level = roundDig, drop0 = drop0, .german = .german)
-      meansd[, 3:4] %<>%
-        # as.numeric() %>%
+      meansd[, 3:4] <- meansd[, 3:4] |> 
+        # as.numeric() |>
         roundR(level = roundDig, drop0 = drop0, .german = .german)
-      meansd %<>%
+      meansd <- meansd |> 
         cbind(by(x, groupvar, function(x) {
           length(na.omit(x))
         }))
@@ -331,7 +331,7 @@ cat_desc_stats <- function(source=NULL, separator = " ",
     # } else {
     source <- factor(source)
   }
-  level <- levels(source) %>% enframe(name = NULL)
+  level <- levels(source) |> enframe(name = NULL)
   if (singleline) {
     level <- paste(levels(source), sep = "", collapse = separator)
   }
@@ -407,12 +407,12 @@ cat_desc_stats <- function(source=NULL, separator = " ",
     )
     colnames(ptableout) <- glue::glue("rel{levels(factor(groupvar))}")
   }
-  zvalue <- purrr::map2(tableout, ptableout, glue::glue) %>%
-    as.character() %>%
+  zvalue <- purrr::map2(tableout, ptableout, glue::glue) |>
+    as.character() |>
     matrix(
       nrow = length(levels(source)),
       byrow = FALSE
-    ) %>%
+    ) |>
     as_tibble(.name_repair = "minimal")
   if (is.null(groupvar)) {
     colnames(zvalue) <- "desc"
@@ -424,7 +424,7 @@ cat_desc_stats <- function(source=NULL, separator = " ",
                          .f = function(x) {
                            glue::glue_collapse(x, sep = separator)
                          }
-    ) %>%
+    ) |>
       as_tibble()
   }
   levdesstats <- list(level = level, freq = zvalue)
