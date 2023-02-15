@@ -111,7 +111,7 @@ pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 #'
 #' @examples
 #' # All pairwise comparisons
-#' mtcars2 <- mutate(mtcars, cyl = factor(cyl, ordered = TRUE))
+#' mtcars2 <- dplyr::mutate(mtcars, cyl = factor(cyl, ordered = TRUE))
 #' pairwise_ordcat_test(dep_var = mtcars2$cyl, indep_var = mtcars2$gear)
 #' # Only comparison against reference gear=3
 #' pairwise_ordcat_test(dep_var = mtcars2$cyl, indep_var = mtcars2$gear, ref = TRUE)
@@ -403,7 +403,7 @@ t_var_test <- function(data, formula, cutoff = .05) {
 #'   gaussian = FALSE
 #' )
 #' # If dependent variable has more than 2 levels, consider fct_lump:
-#' mtcars |> mutate(gear=factor(gear) |> fct_lump_n(n=1)) |> 
+#' mtcars |> dplyr::mutate(gear=factor(gear) |> forcats::fct_lump_n(n=1)) |> 
 #' compare2numvars(dep_vars="wt",indep_var="gear",gaussian=TRUE)
 #' 
 #' @export
@@ -430,7 +430,8 @@ compare2numvars <- function(data, dep_vars, indep_var,
       all_of(dep_vars)
     ) |>
     mutate(Group = factor(Group) |> fct_drop()) |>
-    gather(key = Variable, value = Value, -Group) |>
+    pivot_longer(-Group,names_to = 'Variable',values_to = 'Value') |> 
+    # gather(key = Variable, value = Value, -Group) |>
     mutate(Variable = forcats::fct_inorder(Variable)) |>
     # na.omit() |>
     as_tibble()
@@ -1112,7 +1113,9 @@ compare_n_numvars <- function(.data = rawdata,
                   paste(indep_var, glevel)
                 ))) |>
     full_join(purrr::map_df(t$anova_out, p_results) |> slice(1) |>
-                gather(key = "Variable", value = multivar_p)|>
+                pivot_longer(everything(),names_to = 'Variable', 
+                             values_to = 'multivar_p') |> 
+                # gather(key = "Variable", value = multivar_p)|>
                 mutate(Variable = forcats::fct_inorder(Variable)) |>
                 mutate(multivar_p = formatP(multivar_p,
                                             ndigits = round_p,
@@ -1121,7 +1124,9 @@ compare_n_numvars <- function(.data = rawdata,
     full_join(purrr::map_df(t$`p_wcox/t_out`, ~ paste(formatP(
       p.adjust(.x[lower.tri(.x, TRUE)], method = "fdr")),
       collapse = ";")) |>
-        gather(key = "Variable", value = "p between groups")) |>
+        pivot_longer(everything(),names_to = 'Variable', 
+                     values_to = 'p between groups')) |> 
+        # gather(key = "Variable", value = "p between groups")) |>
     full_join(purrr::reduce(t$p_wcox_t_out, rbind) |>
                 matrix(nrow = length(dep_vars), byrow = FALSE) |>
                 as_tibble(.name_repair = "unique") |>
@@ -1132,7 +1137,9 @@ compare_n_numvars <- function(.data = rawdata,
     )),
     collapse = ";"
     )) |>
-      gather(key = "Variable", value = "p vs.ref"))
+      pivot_longer(everything(),names_to = 'Variable', 
+                   values_to = 'p vs.ref'))  
+      # gather(key = "Variable", value = "p vs.ref"))
   results <- cbind(
     results,
     purrr::map2_df(

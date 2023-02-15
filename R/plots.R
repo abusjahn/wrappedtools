@@ -51,7 +51,8 @@ ggcormat <- function(cor_mat, p_mat = NULL,
   melted_cor_mat <- cor_mat |>
     as_tibble() |>
     mutate(Variable1 = colnames(cor_mat)) |>
-    gather(key = Variable2, value = value, -Variable1) |>
+    pivot_longer(-Variable1,names_to = 'Variable2') |> 
+    # gather(key = Variable2, value = value, -Variable1) |>
     na.omit() |>
     mutate(
       Variable1 = factor(Variable1, levels = var_order),
@@ -66,7 +67,8 @@ ggcormat <- function(cor_mat, p_mat = NULL,
         p_mat |>
           as_tibble() |>
           mutate(Variable1 = colnames(p_mat)) |>
-          gather(key = Variable2, value = size, -Variable1) |>
+          pivot_longer(-Variable1,names_to = 'Variable2', values_to = 'size') |>
+          # gather(key = Variable2, value = size, -Variable1) |>
           mutate(
             Variable1 = factor(Variable1, levels = var_order),
             Variable2 = factor(Variable2, levels = var_order),
@@ -212,3 +214,4 @@ ggcormat <- function(cor_mat, p_mat = NULL,
   }
   return(ggheatmap)
 }
+

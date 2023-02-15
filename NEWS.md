@@ -1,3 +1,7 @@
+# wrappedtools 0.8.2
+- import of tidyverse is dropped (as suggested by Hadley)
+- gather/spread are replace by pivot_longer/pivot_wider
+
 # wrappedtools 0.8.1
 - pairwise_fisher_test is now using MonteCarlo with 10^5 replications
 - faketrial dataset has new column Responder, useful in logistic regression

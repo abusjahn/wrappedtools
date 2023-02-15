@@ -54,11 +54,13 @@ numeric vector
 
 }}
 \examples{
-ggplot(mtcars, aes(wt, mpg)) +
-  geom_point() +
-  scale_y_log10(breaks = logrange_5)
-ggplot(mtcars, aes(wt, mpg)) +
-  geom_point() +
-  scale_y_log10(breaks = logrange_123456789)
+ggplot2::ggplot(mtcars) + 
+ggplot2::aes(wt, mpg) +
+  ggplot2::geom_point() +
+  ggplot2::scale_y_log10(breaks = logrange_5)
+ggplot2::ggplot(mtcars) +
+  ggplot2::aes(wt, mpg) +
+  ggplot2::geom_point() +
+  ggplot2::scale_y_log10(breaks = logrange_123456789)
 }
 \keyword{datasets}
