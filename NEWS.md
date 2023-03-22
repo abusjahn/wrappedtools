@@ -1,3 +1,7 @@
+# wrappedtools 0.9.1
+- functions from abandoned package Biotech reimplemented
+- edgecase of unique values in compare2qualvars fixed
+
 # wrappedtools 0.8.2
 - import of tidyverse is dropped (as suggested by Hadley)
 - gather/spread are replace by pivot_longer/pivot_wider

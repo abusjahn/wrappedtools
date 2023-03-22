@@ -610,10 +610,14 @@ compare2qualvars <- function(data, dep_vars, indep_var,
                                       check=subgroups[sg_i],
                                       other_level = 'other')) |> 
           select(all_of(indep_var),'testvar') |> table()
-        p_sg <- fisher.test(testdata,
+        if(ncol(testdata)>1) {
+          p_sg <- fisher.test(testdata,
                             simulate.p.value = TRUE,
                             B = 10^5)$p.value |> 
           formatP(mark = mark, pretext = pretext)
+        } else{
+          p_sg <- ''
+        }
         if(singleline){
           freqBYgroup[[var_i]]$p <- 
             paste(na.omit(freqBYgroup[[var_i]]$p),p_sg) |> 
