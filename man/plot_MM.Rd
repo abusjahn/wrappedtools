@@ -5,23 +5,29 @@
 \title{Michaelis-Menten enzyme kinetics model and plot}
 \usage{
 plot_MM(
+  data,
   substrate,
   velocity,
+  group = NULL,
   title = "Michaelis-Menten",
   xlab = "substrate",
   ylab = "velocity"
 )
 }
 \arguments{
-\item{substrate}{substrate concentration}
+\item{data}{data structure with columns for model data}
 
-\item{velocity}{reaction velocity}
+\item{substrate}{colname for substrate concentration}
+
+\item{velocity}{colname for reaction velocity}
 
 \item{title}{title of the plot}
 
 \item{xlab}{label for x-axis}
 
 \item{ylab}{label for y-axis}
+
+\item{subgroup}{colname for optional grouping factor}
 }
 \value{
 a list with elements "MMfit" and "MMplot"
@@ -30,8 +36,15 @@ a list with elements "MMfit" and "MMplot"
 \code{plot_MM} creates a Michaelis-Menten type Enzyme kinetics plot and returns model as well
 }
 \examples{
-subst <- c(2.00, 1.00, 0.50, 0.25)
-velo <- c(0.2253, 0.1795, 0.1380, 0.1000)
-plot_MM(substrate = subst,velocity = velo)
+MMdata <- data.frame(subst = rep(c(2.00, 1.00, 0.50, 0.25),2),
+                 velo = c(0.2253, 0.1795, 0.1380, 0.1000,
+                          0.4731333, 0.4089333, 0.3473000, 0.2546667),
+                 condition = rep(c('C1','C2'),each=4))
+                 
+plot_MM(data=MMdata |> filter(condition=='C1'),
+        substrate = 'subst',velocity = 'velo')
+
+plot_MM(data=MMdata,substrate = 'subst',
+        velocity = 'velo',group='condition')
 
 }
