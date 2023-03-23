@@ -42,7 +42,9 @@ Imports:
     tibble,
     tidyr,
     kableExtra,
-    lifecycle
+    lifecycle,
+    broom,
+    rlist
 Depends: 
     R (>= 4.2)
 Roxygen: list(markdown = TRUE)

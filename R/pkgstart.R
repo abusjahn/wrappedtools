@@ -34,6 +34,11 @@ NULL
 #' @importFrom utils data
 NULL
 
+#' @importFrom broom tidy
+NULL
+
+#' @importFrom rlist list.append
+NULL 
 
 #' @importFrom forcats fct_lump_n fct_drop
 NULL

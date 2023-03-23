@@ -5,20 +5,23 @@
 #' @param data data structure with columns for model data
 #' @param substrate colname for substrate concentration
 #' @param velocity colname for reaction velocity
-#' @param subgroup colname for optional grouping factor
+#' @param group colname for optional grouping factor
 #' @param xlab label for x-axis
 #' @param ylab label for y-axis
 #' @param title title of the plot
 #'
 #' @examples 
+#' MMdata <- data.frame(subst = c(2.00, 1.00, 0.50, 0.25),
+#'                  velo = c(0.2253, 0.1795, 0.1380, 0.1000))
+#'                  
+#' plot_MM(data=MMdata,
+#'         substrate = 'subst',velocity = 'velo')
+#' 
 #' MMdata <- data.frame(subst = rep(c(2.00, 1.00, 0.50, 0.25),2),
 #'                  velo = c(0.2253, 0.1795, 0.1380, 0.1000,
 #'                           0.4731333, 0.4089333, 0.3473000, 0.2546667),
 #'                  condition = rep(c('C1','C2'),each=4))
 #'                  
-#' plot_MM(data=MMdata |> filter(condition=='C1'),
-#'         substrate = 'subst',velocity = 'velo')
-#' 
 #' plot_MM(data=MMdata,substrate = 'subst',
 #'         velocity = 'velo',group='condition')
 #' 
@@ -116,20 +119,23 @@ plot_MM <- function(
 #' @param data data structure with columns for model data
 #' @param substrate colname for substrate concentration
 #' @param velocity colname for reaction velocity
-#' @param subgroup colname for optional grouping factor
+#' @param group colname for optional grouping factor
 #' @param title title of the plot
 #' @param xlab label of the abscissa
 #' @param ylab label of the ordinate
 #'
 #' @examples 
+#' MMdata <- data.frame(subst = c(2.00, 1.00, 0.50, 0.25),
+#'                  velo = c(0.2253, 0.1795, 0.1380, 0.1000))
+#'                  
+#' plot_LB(data=MMdata,
+#'         substrate = 'subst',velocity = 'velo')
+#' 
 #' MMdata <- data.frame(subst = rep(c(2.00, 1.00, 0.50, 0.25),2),
 #'                  velo = c(0.2253, 0.1795, 0.1380, 0.1000,
 #'                           0.4731333, 0.4089333, 0.3473000, 0.2546667),
 #'                  condition = rep(c('C1','C2'),each=4))
 #'                  
-#' plot_LB(data=MMdata |> filter(condition=='C1'),
-#'         substrate = 'subst',velocity = 'velo')
-#' 
 #' plot_LB(data=MMdata,substrate = 'subst',
 #'         velocity = 'velo',group='condition')
 #' 
@@ -151,7 +157,7 @@ plot_LB <- function(data,
       filter(!!sym(group)==groups[group_i])
     # vdata <- groupdata[[velocity]]
     # sdata <- groupdata[[substrate]]
-    fitformula=paste0('I(1/',velocity,') ~ I(1/',substrate,')') |> 
+    fitformula=paste0('I(1/',bt(velocity),') ~ I(1/',bt(substrate),')') |> 
       as.formula()
     fit <- stats::lm(fitformula, data=groupdata)
   LBplot <- ggplot(data = groupdata,
