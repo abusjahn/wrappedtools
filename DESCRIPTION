@@ -11,7 +11,7 @@ Description: The main functionalities of 'wrappedtools' are:
     correlation matrices. Functions were mainly written for my own daily work or 
     teaching, but may be of use to others as well.
 Version: 0.9.1
-Date: 2023-03-21
+Date: 2023-03-28
 Authors@R: c(
     person(given = "Andreas",
            family = "Busjahn",

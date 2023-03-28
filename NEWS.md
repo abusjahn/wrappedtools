@@ -1,6 +1,7 @@
 # wrappedtools 0.9.1
 - functions from abandoned package Biotech reimplemented
 - edgecase of unique values in compare2qualvars fixed
+- tests adjusted to R 4.3.0
 
 # wrappedtools 0.8.2
 - import of tidyverse is dropped (as suggested by Hadley)

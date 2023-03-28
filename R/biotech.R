@@ -46,7 +46,7 @@ plot_MM <- function(
     # Fitten des SSmicmen-Modell
     groupdata <- 
       data |> 
-      filter(!!sym(group)==groups[group_i])
+      filter(!!rlang::sym(group)==groups[group_i])
     vdata <- groupdata[[velocity]]
     sdata <- groupdata[[substrate]]
     fit <- stats::nls(vdata ~ SSmicmen(sdata, Vm, K)) 
@@ -59,8 +59,8 @@ plot_MM <- function(
       predict(fit,
               newdata = list(sdata=linedata$x))
     refdata <- broom::tidy(fit) |> 
-      select(term,estimate) |> 
-    pivot_wider(names_from = term,values_from = estimate) |> 
+      select('term','estimate') |> 
+    pivot_wider(names_from = 'term',values_from = 'estimate') |> 
       mutate(xv=max(sdata, na.rm = T),
              yk= min(vdata, na.rm = T))
     # plotten des Fits
@@ -69,29 +69,28 @@ plot_MM <- function(
                      mapping = aes(x = .data[[substrate]],#sdata, 
                                    y = .data[[velocity]]))+
       geom_point()+
-      # stat_function(fun = function(sub){ (stats::coef(fit)[[1]] * sub) / ( stats::coef(fit)[[2]] + sub)}, color = "blue")+ # einzeichnen des Fitting
-      geom_line(data=linedata,aes(x=x, y=y),
+      geom_line(data=linedata,aes(x=.data[['x']], y=.data[['y']]),
                 color='blue')+
       geom_hline(data = refdata,
-                 aes(yintercept = Vm), linetype=3)+ # Vmax from coefficents 
+                 aes(yintercept = .data[['Vm']]), linetype=3)+ # Vmax from coefficents 
       geom_text(data = refdata,
-                aes(xv,Vm,
+                aes(.data[['xv']],.data[['Vm']],
                 label = paste(
                   'Vmax =',
-                  roundR(Vm))),
-                vjust = 1.4, hjust =  1)+ # Vmax aus coefficents eintragen
+                  roundR(.data[['Vm']]))),
+                vjust = 1.4, hjust =  1)+ # Vmax from coefficents 
       geom_hline(data = refdata,
-                 aes(yintercept =Vm/2),linetype=3)+ # Vmax/2 from coefficents
+                 aes(yintercept =.data[['Vm']]/2),linetype=3)+ # Vmax/2 from coefficents
       geom_text(data = refdata,
-                aes(xv,Vm/2),
+                aes(.data[['xv']],.data[['Vm']]/2),
                 label = "Vmax/2", vjust = -0.8, hjust = 1)+ 
       geom_vline(data = refdata,
-                 aes(xintercept=K), linetype=2)+ # Km from coefficents
+                 aes(xintercept=.data[['K']]), linetype=2)+ # Km from coefficents
       geom_text(data = refdata,
-                aes(K,yk,
+                aes(.data[['K']],.data[['yk']],
                 label = paste(
                   'K =',
-                  roundR(K))), 
+                  roundR(.data[['K']]))), 
                 vjust = .5, hjust = -0.1)+ 
       scale_x_continuous(n.breaks = 10)+
       xlab(xlab)+

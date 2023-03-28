@@ -5,7 +5,7 @@
 
 test_that("glmCI() with defaults and options set", {
   expected <- readRDS('glmCI_out.rda')
-  expect_equal(glm(am ~ mpg, family = binomial, data = mtcars), expected[[1]])
+  expect_equal(glmCI(glm(am ~ mpg, family = binomial, data = mtcars)), expected[[2]])
 
 })
 
