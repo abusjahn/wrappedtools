@@ -506,7 +506,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
 #' @param mark for function [formatP].
 #' @param singleline Put all group levels in  a single line?
 #' @param spacer Text element to indent levels and fill empty cells,
-#' defaults to "&nbsp;".
+#' defaults to " ".
 #' @param linebreak place holder for newline.
 #' @param p_subgroups test subgroups by recoding other levels into other, default is not to do this.
 #'

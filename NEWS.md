@@ -1,3 +1,6 @@
+# wrappedtools 0.9.2
+- new function cat_desc_table to create summary tables
+
 # wrappedtools 0.9.1
 - functions from abandoned package Biotech reimplemented
 - edgecase of unique values in compare2qualvars fixed

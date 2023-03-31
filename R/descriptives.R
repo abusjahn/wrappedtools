@@ -435,32 +435,110 @@ cat_desc_stats <- function(source=NULL, separator = " ",
   }
 }
 
-#' Compute coefficient of variance.
-#'
-#' \code{var_coeff computes relative variability as standard deviation/mean *100}
-#'
-#' @param x Data for computation.
-#'
-#' @return numeric vector with coefficient of variance.
-#'
-#' @examples
-#' var_coeff(x = mtcars$wt)
-#' @export
-var_coeff <- function(x) {
-  return(sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE) * 100)
-}
 
-#' Standard Error of Mean.
+#' Compute absolute and relative frequencies for a table.
 #'
-#' \code{SEM} computes standard error of mean.
+#' \code{cat_desc_table} computes absolute and relative frequencies for
+#' categorical data with a number of formatting options.
 #'
-#' @param x Data for computation.
+#' @param data name of data set (tibble/data.frame) to analyze.
+#' @param desc_vars vector of column names for dependent variables.
+#' @param round_desc number of significant digits for rounding of descriptive stats.
+#' @param singleline Put all group levels in  a single line?
+#' @param spacer Text element to indent levels and fill empty cells,
+#' defaults to " ".
+#' @param indentor Optional text to indent factor levels
 #'
-#' @return numeric vector with SEM.
-#'
+#' @return
+#' A tibble with variable names and descriptive statistics.
 #' @examples
-#' SEM(x = mtcars$wt)
+#' cat_desc_table(
+#'   data = mtcars, desc_vars = c("gear", "cyl", "carb"))
+#'
+#' cat_desc_table(
+#'   data = mtcars, desc_vars = c("gear", "cyl", "carb"), singleline = TRUE)
+#' 
 #' @export
-SEM <- function(x) {
-  return(sd(x, na.rm = TRUE) / sqrt(length(na.omit(x))))
-}
+#' 
+cat_desc_table <- function(data, desc_vars, 
+                           round_desc = 2,
+                           singleline = FALSE,
+                           spacer = " ", indentor='') {
+  freq <-
+    purrr::map(data[desc_vars],
+               .f = function(x) {
+                 cat_desc_stats(
+                   x,
+                   return_level = FALSE, singleline = singleline,
+                   ndigit = round_desc
+                 )
+               }
+    ) |>
+    purrr::map(as_tibble)
+  
+  
+  levels <-
+    purrr::map(data[desc_vars],
+               .f = function(x) {
+                 cat_desc_stats(x,
+                                singleline = singleline
+                 )$level
+               }
+    ) |>
+    purrr::map(as_tibble)
+  out <- tibble(
+    Variable = character(), desc_all = character())
+    for (var_i in seq_along(desc_vars)) {
+      if (!singleline) {
+        out_tmp <- add_row(out[0,],
+                           Variable = c(
+                             desc_vars[var_i],
+                             glue::glue(
+                               "{indentor}{levels[[var_i]][[1]]}"
+                             )
+                           ),
+                           desc_all = c(spacer, freq[[var_i]][[1]])
+        )
+        out <- rbind(out,out_tmp)
+      } else {
+        out_tmp <- add_row(out[0,],
+                           Variable = paste(
+                             desc_vars[var_i],
+                             levels[[var_i]][[1]]
+                           ),
+                           desc_all = freq[[var_i]][[1]]
+        )
+        out <- rbind(out,out_tmp)
+      }
+    }
+    return(out)
+}    
+    #' Compute coefficient of variance.
+    #'
+    #' \code{var_coeff computes relative variability as standard deviation/mean *100}
+    #'
+    #' @param x Data for computation.
+    #'
+    #' @return numeric vector with coefficient of variance.
+    #'
+    #' @examples
+    #' var_coeff(x = mtcars$wt)
+    #' @export
+    var_coeff <- function(x) {
+      return(sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE) * 100)
+    }
+    
+    #' Standard Error of Mean.
+    #'
+    #' \code{SEM} computes standard error of mean.
+    #'
+    #' @param x Data for computation.
+    #'
+    #' @return numeric vector with SEM.
+    #'
+    #' @examples
+    #' SEM(x = mtcars$wt)
+    #' @export
+    SEM <- function(x) {
+      return(sd(x, na.rm = TRUE) / sqrt(length(na.omit(x))))
+    }

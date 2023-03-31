@@ -36,7 +36,7 @@ compare2qualvars(
 \item{singleline}{Put all group levels in  a single line?}
 
 \item{spacer}{Text element to indent levels and fill empty cells,
-defaults to " ".}
+defaults to " ".}
 
 \item{linebreak}{place holder for newline.}
 
