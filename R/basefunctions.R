@@ -263,9 +263,13 @@ FindVars <- function(varnames, allnames = colnames(rawdata),
   return(return_list)
 }
 
+testclass <- function(x,testclass){
+  return(as.logical(class(x)==testclass))
+}
+
 #' Find numeric index and names of columns based on type and patterns
 #'
-#' \code{ColSeeker} looks up colnames (by default for data-frame rawdata)
+#' \code{ColSeeker} looks up colnames (by default for tibble rawdata)
 #' based on type and parts of names, using regular expressions. 
 #' Be warned that special characters as e.g. `[` `(` need to be escaped or replaced by `.`
 #' Exclusion rules may be specified as well.
@@ -317,15 +321,13 @@ ColSeeker <- function(data=rawdata,
   vars <- unique(vars)
   
   if(!is.null(varclass)){
-    allnames_typed <- data |> 
-      dplyr::select(where(~class(.)==varclass)) |> 
-      colnames()
-    vars <- vars[which(allnames[vars] %in% allnames_typed)]
+    vars_typed <- which((sapply(data,class) |> unlist()) %in% varclass)
+    vars <- vars[which(vars %in% vars_typed)]
   }
   return_list <- list(
     index = vars,
     names = allnames[vars],
-    bticked = bt(allnames[index]),
+    bticked = bt(allnames[vars]),
     count = length(vars))
   
   return(return_list)
