@@ -278,20 +278,26 @@ testclass <- function(x,testclass){
 #' @param namepattern Vector of pattern to look for.
 #' @param varclass Only columns of defined type are returned
 #' @param exclude Vector of pattern to exclude from found names.
+#' @param excludeclass Exclude columns of specified class
 #' @param casesensitive Logical if case is respected in matching (default FALSE: a<>A)
+#' @param returnclass Logical if classes should be included in output
 #' 
 #' @export
-#' @return A list with index, names, and backticked names
+#' @return A list with index, names, and backticked names, optionally the classes as well
 #' @examples
 #' ColSeeker(data = mtcars, pattern = c("^c", "g"))
 #' ColSeeker(data = mtcars, pattern = c("^c", "g"), exclude = "r")
 #' rawdata <- mtcars
 #' ColSeeker(pattern = c("^c", "g"), varclass("numeric))
 ColSeeker <- function(data=rawdata,
-                      namepattern='.',
-                      varclass=NULL, 
+                      namepattern = '.',
+                      varclass = NULL, 
                       exclude = NULL, 
-                      casesensitive = TRUE) {
+                      excludeclass = NULL,
+                      casesensitive = TRUE,
+                      returnclass = FALSE) {
+  allclasses <- sapply(sapply(data,class),paste,collapse = '+')
+  # allclasses <- allclasses[which(allclasses!='ordered')]
   allnames_tmp <- allnames <- colnames(data)
   if (!casesensitive) {
     namepattern <- tolower(namepattern)
@@ -321,17 +327,30 @@ ColSeeker <- function(data=rawdata,
   vars <- unique(vars)
   
   if(!is.null(varclass)){
-    vars_typed <- which((sapply(data,class) |> unlist()) %in% varclass)
+    vars_typed <- which(grepl(excludeclass,allclasses))
     vars <- vars[which(vars %in% vars_typed)]
   }
-  return_list <- list(
-    index = vars,
-    names = allnames[vars],
-    bticked = bt(allnames[vars]),
-    count = length(vars))
-  
+  if(!is.null(excludeclass)){
+    vars_typed <- which(!grepl(excludeclass,allclasses))
+    vars <- vars[which(vars %in% vars_typed)]
+  }
+  if(returnclass){
+    return_list <- list(
+      index = vars,
+      names = allnames[vars],
+      bticked = bt(allnames[vars]),
+      count = length(vars),
+      varclass = allclasses[vars])
+  } else {
+    return_list <- list(
+      index = vars,
+      names = allnames[vars],
+      bticked = bt(allnames[vars]),
+      count = length(vars))
+  }
   return(return_list)
 }
+
 
 
 #' Enhanced kable with definable number of rows/columns for splitting
