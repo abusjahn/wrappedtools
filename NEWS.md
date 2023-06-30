@@ -1,6 +1,6 @@
 # wrappedtools 0.9.2
 - new function cat_desc_table to create summary tables
-- new function ColSeeker, meant to replace FindVars by adding option to select by type
+- new function ColSeeker, superceeds FindVars by adding option to select by type
 
 # wrappedtools 0.9.1
 - functions from abandoned package Biotech reimplemented

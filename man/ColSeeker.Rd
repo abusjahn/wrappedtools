@@ -9,7 +9,9 @@ ColSeeker(
   namepattern = ".",
   varclass = NULL,
   exclude = NULL,
-  casesensitive = TRUE
+  excludeclass = NULL,
+  casesensitive = TRUE,
+  returnclass = FALSE
 )
 }
 \arguments{
@@ -21,14 +23,24 @@ ColSeeker(
 
 \item{exclude}{Vector of pattern to exclude from found names.}
 
+\item{excludeclass}{Exclude columns of specified class}
+
 \item{casesensitive}{Logical if case is respected in matching (default FALSE: a<>A)}
+
+\item{returnclass}{Logical if classes should be included in output}
 }
 \value{
-A list with index, names, and backticked names
+A list with index, names, and backticked names, optionally the classes as well
 }
 \description{
-\code{ColSeeker} looks up colnames (by default for data-frame rawdata)
+\code{ColSeeker} looks up colnames (by default for tibble rawdata)
 based on type and parts of names, using regular expressions.
 Be warned that special characters as e.g. \code{[} \code{(} need to be escaped or replaced by \code{.}
 Exclusion rules may be specified as well.
+}
+\examples{
+ColSeeker(data = mtcars, pattern = c("^c", "g"))
+ColSeeker(data = mtcars, pattern = c("^c", "g"), exclude = "r")
+rawdata <- mtcars
+ColSeeker(pattern = c("^c", "g"), varclass("numeric"))
 }

@@ -183,10 +183,14 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 
 #' Find numeric index and names of columns based on patterns
 #'
+#' `r lifecycle::badge('superseded')`
+#' 
+#'
 #' \code{FindVars} looks up colnames (by default for data-frame rawdata)
 #' based on parts of names, using regular expressions. Be warned that
 #' special characters as e.g. `[` `(` need to be escaped or replaced by `.`
 #' Exclusion rules may be specified as well.
+#' New function [ColSeeker()] extends this by adding class-checks.
 #'
 #' @param varnames Vector of pattern to look for.
 #' @param allnames Vector of values to detect pattern in; by default, colnames(rawdata).
@@ -263,9 +267,6 @@ FindVars <- function(varnames, allnames = colnames(rawdata),
   return(return_list)
 }
 
-testclass <- function(x,testclass){
-  return(as.logical(class(x)==testclass))
-}
 
 #' Find numeric index and names of columns based on type and patterns
 #'
@@ -288,7 +289,7 @@ testclass <- function(x,testclass){
 #' ColSeeker(data = mtcars, pattern = c("^c", "g"))
 #' ColSeeker(data = mtcars, pattern = c("^c", "g"), exclude = "r")
 #' rawdata <- mtcars
-#' ColSeeker(pattern = c("^c", "g"), varclass("numeric))
+#' ColSeeker(pattern = c("^c", "g"), varclass("numeric"))
 ColSeeker <- function(data=rawdata,
                       namepattern = '.',
                       varclass = NULL, 
