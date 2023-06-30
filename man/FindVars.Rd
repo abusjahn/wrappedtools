@@ -17,7 +17,7 @@ FindVars(
 \arguments{
 \item{varnames}{Vector of pattern to look for.}
 
-\item{allnames}{Vector of values to detect pattern in; by default, colnames(rawdata).}
+\item{allnames}{Vector of values to detect pattern in; by default: colnames(rawdata).}
 
 \item{exact}{Partial matching or exact only (adding ^ and $)?}
 

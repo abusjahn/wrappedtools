@@ -286,10 +286,10 @@ FindVars <- function(varnames, allnames = colnames(rawdata),
 #' @export
 #' @return A list with index, names, and backticked names, optionally the classes as well
 #' @examples
-#' ColSeeker(data = mtcars, pattern = c("^c", "g"))
-#' ColSeeker(data = mtcars, pattern = c("^c", "g"), exclude = "r")
+#' ColSeeker(data = mtcars, namepattern = c("^c", "g"))
+#' ColSeeker(data = mtcars, namepattern = c("^c", "g"), exclude = "r")
 #' rawdata <- mtcars
-#' ColSeeker(pattern = c("^c", "g"), varclass("numeric"))
+#' ColSeeker(namepattern = c("^c", "g"), varclass="numeric")
 ColSeeker <- function(data=rawdata,
                       namepattern = '.',
                       varclass = NULL, 
@@ -328,7 +328,7 @@ ColSeeker <- function(data=rawdata,
   vars <- unique(vars)
   
   if(!is.null(varclass)){
-    vars_typed <- which(grepl(excludeclass,allclasses))
+    vars_typed <- which(grepl(pattern = varclass,allclasses))
     vars <- vars[which(vars %in% vars_typed)]
   }
   if(!is.null(excludeclass)){

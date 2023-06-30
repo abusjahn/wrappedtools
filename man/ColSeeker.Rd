@@ -39,8 +39,8 @@ Be warned that special characters as e.g. \code{[} \code{(} need to be escaped o
 Exclusion rules may be specified as well.
 }
 \examples{
-ColSeeker(data = mtcars, pattern = c("^c", "g"))
-ColSeeker(data = mtcars, pattern = c("^c", "g"), exclude = "r")
+ColSeeker(data = mtcars, namepattern = c("^c", "g"))
+ColSeeker(data = mtcars, namepattern = c("^c", "g"), exclude = "r")
 rawdata <- mtcars
-ColSeeker(pattern = c("^c", "g"), varclass("numeric"))
+ColSeeker(namepattern = c("^c", "g"), varclass="numeric")
 }
