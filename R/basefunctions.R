@@ -193,7 +193,7 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 #' New function [ColSeeker()] extends this by adding class-checks.
 #'
 #' @param varnames Vector of pattern to look for.
-#' @param allnames Vector of values to detect pattern in; by default, colnames(rawdata).
+#' @param allnames Vector of values to detect pattern in; by default: colnames(rawdata).
 #' @param exact Partial matching or exact only (adding ^ and $)?
 #' @param exclude Vector of pattern to exclude from found names.
 #' @param casesensitive Logical if case is respected in matching (default FALSE: a<>A)

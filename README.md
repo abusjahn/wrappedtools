@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# wrappedtools <a><img src='wrappedtools_hex.png' align="right" height="139" /></a>
+# wrappedtools <img src='wrappedtools_hex.png' align="right" height="139" />
 
 <!-- ![](wrappedtools_hex.png "wrappedtools hex"){width=20%} -->
 <!-- badges: start -->
@@ -45,7 +45,6 @@ compare2numvars(data = mtcars, dep_vars = c('wt','mpg', "disp"),
                 gaussian = FALSE,
                 round_desc = 3)
 #> # A tibble: 3 × 5
-#> # Groups:   Variable [3]
 #>   Variable desc_all         `am 0`           `am 1`           p    
 #>   <fct>    <chr>            <chr>            <chr>            <chr>
 #> 1 wt       3.32 (2.53/3.66) 3.52 (3.44/3.84) 2.32 (1.90/2.81) 0.001
@@ -64,11 +63,11 @@ ks.test(x = somedata, 'pnorm', mean=mean(somedata), sd=sd(somedata))
 #>  Asymptotic one-sample Kolmogorov-Smirnov test
 #> 
 #> data:  somedata
-#> D = 0.062488, p-value = 0.8297
+#> D = 0.06526, p-value = 0.788
 #> alternative hypothesis: two-sided
 
 ksnormal(somedata)
-#> [1] 0.8297214
+#> [1] 0.7879673
 ```
 
 Saving variable selections: Variables may fall into different groups:

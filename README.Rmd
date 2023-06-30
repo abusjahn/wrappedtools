@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# wrappedtools <a><img src='wrappedtools_hex.png' align="right" height="139" /></a>
+# wrappedtools <img src='wrappedtools_hex.png' align="right" height="139" />
 <!-- ![](wrappedtools_hex.png "wrappedtools hex"){width=20%} -->
 
 <!-- badges: start -->
