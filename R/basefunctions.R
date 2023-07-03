@@ -303,7 +303,9 @@ ColSeeker <- function(data=rawdata,
   if (!casesensitive) {
     namepattern <- tolower(namepattern)
     allnames_tmp <- tolower(allnames)
-    exclude <- tolower(exclude)
+    if(!is.null(exclude)) {
+      exclude <- tolower(exclude)
+    }
   }
   vars <- numeric()
   evars <- numeric()
