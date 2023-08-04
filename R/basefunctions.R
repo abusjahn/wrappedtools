@@ -277,9 +277,9 @@ FindVars <- function(varnames, allnames = colnames(rawdata),
 #'
 #' @param data tibble or data.frame, where columns are to be found; by default rawdata 
 #' @param namepattern Vector of pattern to look for.
-#' @param varclass Vector, only columns of defined type(s) are returned
+#' @param varclass Vector, only columns of defined class(es) are returned
 #' @param exclude Vector of pattern to exclude from found names.
-#' @param excludeclass Exclude columns of specified class
+#' @param excludeclass Vector, exclude columns of specified class(es)
 #' @param casesensitive Logical if case is respected in matching (default FALSE: a<>A)
 #' @param returnclass Logical if classes should be included in output
 #' 
@@ -332,218 +332,223 @@ ColSeeker <- function(data=rawdata,
   if(!is.null(varclass)){
     vars_typed <- NULL
     for(type_i in seq_along(varclass)){
-    vars_typed <- c(vars_typed,
-                    which(grepl(pattern = varclass[type_i], allclasses)))
-                    }
+      vars_typed <- c(vars_typed,
+                      which(grepl(pattern = varclass[type_i], allclasses)))
+    }
     
     vars <- vars[which(vars %in% vars_typed)]
   }
   if(!is.null(excludeclass)){
-    vars_typed <- which(!grepl(excludeclass,allclasses))
-    vars <- vars[which(vars %in% vars_typed)]
+    vars_typed <- NULL
+    for(type_i in seq_along(excludeclass)){
+      vars_typed <- c(vars_typed,
+                      which(grepl(excludeclass[type_i],allclasses)))
+    }
+      vars <- vars[-which(vars %in% vars_typed)]
+    }
+    if(returnclass){
+      return_list <- list(
+        index = vars,
+        names = allnames[vars],
+        bticked = bt(allnames[vars]),
+        count = length(vars),
+        varclass = allclasses[vars])
+    } else {
+      return_list <- list(
+        index = vars,
+        names = allnames[vars],
+        bticked = bt(allnames[vars]),
+        count = length(vars))
+    }
+    return(return_list)
   }
-  if(returnclass){
-    return_list <- list(
-      index = vars,
-      names = allnames[vars],
-      bticked = bt(allnames[vars]),
-      count = length(vars),
-      varclass = allclasses[vars])
-  } else {
-    return_list <- list(
-      index = vars,
-      names = allnames[vars],
-      bticked = bt(allnames[vars]),
-      count = length(vars))
-  }
-  return(return_list)
-}
-
-
-
-#' Enhanced kable with definable number of rows/columns for splitting
-#'
-#' `r lifecycle::badge('superseded')`
-#' 
-#' package flextable is a more powerful alternative
-#' 
-#' \code{print_kable} formats and prints tibbles/df's in markdown with splitting
-#' into sub-tables with repeated caption and header.
-#'
-#' @param t table to print.
-#' @param nrows number of rows (30) before splitting.
-#' @param ncols number of columns (100) before splitting.
-#' @param caption header.
-#' @param ... Further arguments passed to [kable].
-#' @return No return value, called for side effects.
-#' @examples 
-#' \dontrun{
-#' print_kable(mtcars, caption = "test")
-#' }
-#' @export
-print_kable <- function(t, nrows = 30, caption = "",
-                        ncols = 100, ...) {
-  lifecycle::deprecate_warn(when = '0.8.0',
-                            what = 'print_kable()',
-                            with = 'flextable::flextable()') # require(knitr)
-  for (block_i in 1:ceiling(nrow(t) / nrows)) {
-    for (col_i in 1:ceiling((ncol(t) - 1) / ncols)) {
-      if (block_i + col_i > 2) {
-        cat("\\newpage\n\n")
-      }
-      print(
-        knitr::kable(
-          t[
-            (1 + (block_i - 1) * nrows):
-              min(nrow(t), block_i * nrows),
-            c(1, (2 + (col_i - 1) * ncols):min((1 + col_i * ncols), ncol(t)))
-          ],
-          row.names = FALSE,
-          caption = paste0(
-            ifelse(block_i + col_i > 2, "continued: ", ""),
-            caption,
-            "  \n  \n   "
+  
+  
+  
+  #' Enhanced kable with definable number of rows/columns for splitting
+  #'
+  #' `r lifecycle::badge('superseded')`
+  #' 
+  #' package flextable is a more powerful alternative
+  #' 
+  #' \code{print_kable} formats and prints tibbles/df's in markdown with splitting
+  #' into sub-tables with repeated caption and header.
+  #'
+  #' @param t table to print.
+  #' @param nrows number of rows (30) before splitting.
+  #' @param ncols number of columns (100) before splitting.
+  #' @param caption header.
+  #' @param ... Further arguments passed to [kable].
+  #' @return No return value, called for side effects.
+  #' @examples 
+  #' \dontrun{
+  #' print_kable(mtcars, caption = "test")
+  #' }
+  #' @export
+  print_kable <- function(t, nrows = 30, caption = "",
+                          ncols = 100, ...) {
+    lifecycle::deprecate_warn(when = '0.8.0',
+                              what = 'print_kable()',
+                              with = 'flextable::flextable()') # require(knitr)
+    for (block_i in 1:ceiling(nrow(t) / nrows)) {
+      for (col_i in 1:ceiling((ncol(t) - 1) / ncols)) {
+        if (block_i + col_i > 2) {
+          cat("\\newpage\n\n")
+        }
+        print(
+          knitr::kable(
+            t[
+              (1 + (block_i - 1) * nrows):
+                min(nrow(t), block_i * nrows),
+              c(1, (2 + (col_i - 1) * ncols):min((1 + col_i * ncols), ncol(t)))
+            ],
+            row.names = FALSE,
+            caption = paste0(
+              ifelse(block_i + col_i > 2, "continued: ", ""),
+              caption,
+              "  \n  \n   "
+            )
           )
         )
-      )
-      cat("  \n   \n")
+        cat("  \n   \n")
+      }
     }
   }
-}
-
-#' Enhanced kable with latex
-#'
-#' \code{pdf_kable} formats tibbles/df's for markdown
-#'
-#' @param .input table to print
-#' @param twidth Default 14
-#' @param width1 Width of 1st column, default 6.
-#' @param tposition Default left
-#' @param innercaption subheader
-#' @param caption header
-#' @param foot footnote
-#' @param escape see kable
-#'
-#'@return A character vector of the table source code. 
-#' @export
-pdf_kable <- function(.input, width1 = 6,
-                      twidth = 14,
-                      tposition = "left",
-                      innercaption = NULL,
-                      caption = "",
-                      foot = NULL,
-                      escape = TRUE) {
-  ncols <- ncol(.input)
-  out <- knitr::kable(.input,
-                      format = "latex", booktabs = TRUE,
-                      linesep = "",
-                      escape = escape, caption = caption,
-                      align = c("l", rep("c", ncols - 1))
-  ) |>
-    kableExtra::kable_styling(
-      position = tposition,
-      latex_options = c(
-        "striped",
-        "hold_position"
-      )
+  
+  #' Enhanced kable with latex
+  #'
+  #' \code{pdf_kable} formats tibbles/df's for markdown
+  #'
+  #' @param .input table to print
+  #' @param twidth Default 14
+  #' @param width1 Width of 1st column, default 6.
+  #' @param tposition Default left
+  #' @param innercaption subheader
+  #' @param caption header
+  #' @param foot footnote
+  #' @param escape see kable
+  #'
+  #'@return A character vector of the table source code. 
+  #' @export
+  pdf_kable <- function(.input, width1 = 6,
+                        twidth = 14,
+                        tposition = "left",
+                        innercaption = NULL,
+                        caption = "",
+                        foot = NULL,
+                        escape = TRUE) {
+    ncols <- ncol(.input)
+    out <- knitr::kable(.input,
+                        format = "latex", booktabs = TRUE,
+                        linesep = "",
+                        escape = escape, caption = caption,
+                        align = c("l", rep("c", ncols - 1))
     ) |>
-    kableExtra::column_spec(-1, # border_left = TRUE,
-                            width = paste0((twidth - width1) / (ncols - 1), "cm"),
-    ) |>
-    kableExtra::column_spec(1, bold = TRUE, width = paste0(width1, "cm")) |>
-    kableExtra::row_spec(0, bold = TRUE)
-  if (!is.null(innercaption)) {
-    caption1 <- c(caption = ncols)
-    names(caption1) <- caption
-    out <- out |>
-      kableExtra::add_header_above(caption1, bold = TRUE)
+      kableExtra::kable_styling(
+        position = tposition,
+        latex_options = c(
+          "striped",
+          "hold_position"
+        )
+      ) |>
+      kableExtra::column_spec(-1, # border_left = TRUE,
+                              width = paste0((twidth - width1) / (ncols - 1), "cm"),
+      ) |>
+      kableExtra::column_spec(1, bold = TRUE, width = paste0(width1, "cm")) |>
+      kableExtra::row_spec(0, bold = TRUE)
+    if (!is.null(innercaption)) {
+      caption1 <- c(caption = ncols)
+      names(caption1) <- caption
+      out <- out |>
+        kableExtra::add_header_above(caption1, bold = TRUE)
+    }
+    if (!is.null(foot)) {
+      out <- out |>
+        kableExtra::footnote(general = foot)
+    }
+    return(out)
   }
-  if (!is.null(foot)) {
-    out <- out |>
-      kableExtra::footnote(general = foot)
+  
+  
+  #' Shortcut for colnames()
+  #'
+  #' \code{cn} lists column names, by default for variable rawdata.
+  #'
+  #' @param data Data structure to read column names from.
+  #' 
+  #' @return Character vector with column names.
+  #' 
+  #' @examples 
+  #' cn(mtcars)
+  #' @export
+  cn <- function(data = rawdata) {
+    colnames(data)
   }
-  return(out)
-}
-
-
-#' Shortcut for colnames()
-#'
-#' \code{cn} lists column names, by default for variable rawdata.
-#'
-#' @param data Data structure to read column names from.
-#' 
-#' @return Character vector with column names.
-#' 
-#' @examples 
-#' cn(mtcars)
-#' @export
-cn <- function(data = rawdata) {
-  colnames(data)
-}
-
-#' Add backticks to names or remove them
-#'
-#' \code{bt} adds leading and trailing backticks to make illegal variable names
-#' usable. Optionally removes them.
-#'
-#' @param x Names to add backtick to.
-#' @param remove Option to remove existing backticks, default=FALSE.
-#' 
-#' @return Character vector with backticks added.
-#' 
-#' @examples
-#' bt('name 1')
-#' 
-#' @export
-bt <- function(x, remove = FALSE) {
-  if (remove) {
-    return(gsub("`", "", x))
-  } else {
-    return(paste0("`", x, "`"))
+  
+  #' Add backticks to names or remove them
+  #'
+  #' \code{bt} adds leading and trailing backticks to make illegal variable names
+  #' usable. Optionally removes them.
+  #'
+  #' @param x Names to add backtick to.
+  #' @param remove Option to remove existing backticks, default=FALSE.
+  #' 
+  #' @return Character vector with backticks added.
+  #' 
+  #' @examples
+  #' bt('name 1')
+  #' 
+  #' @export
+  bt <- function(x, remove = FALSE) {
+    if (remove) {
+      return(gsub("`", "", x))
+    } else {
+      return(paste0("`", x, "`"))
+    }
   }
-}
-
-
-#' Search within data.frame or tibble
-#'
-#' \code{tab.search} searches for pattern within a data-frame or tibble,
-#' returning column(s) and row(s)
-#'
-#' @param searchdata table to search in, predefined as rawdata
-#' @param pattern regex, for exact matches add ^findme$
-#' @param find.all return all row indices or only 1st per column,default=TRUE
-#' @param names.only return only vector of colnames rather than list with names
-#' and rows, default=FALSE
-#'
-#' @return A list with numeric vectors for each column giving row numbers
-#' of matched elements
-#' @export
-tab.search <- function(searchdata = rawdata, pattern,
-                       find.all = T, names.only = FALSE) {
-  if (!is.character(pattern)) {
-    pattern <- as.character(pattern)
+  
+  
+  #' Search within data.frame or tibble
+  #'
+  #' \code{tab.search} searches for pattern within a data-frame or tibble,
+  #' returning column(s) and row(s)
+  #'
+  #' @param searchdata table to search in, predefined as rawdata
+  #' @param pattern regex, for exact matches add ^findme$
+  #' @param find.all return all row indices or only 1st per column,default=TRUE
+  #' @param names.only return only vector of colnames rather than list with names
+  #' and rows, default=FALSE
+  #'
+  #' @return A list with numeric vectors for each column giving row numbers
+  #' of matched elements
+  #' @export
+  tab.search <- function(searchdata = rawdata, pattern,
+                         find.all = T, names.only = FALSE) {
+    if (!is.character(pattern)) {
+      pattern <- as.character(pattern)
+    }
+    positions <- purrr::map(searchdata, str_which, pattern = pattern) |> purrr::compact()
+    if (!find.all) {
+      positions <- purrr::map(positions, nth, n = 1)
+    }
+    if (names.only) {
+      positions <- names(positions)
+    }
+    return(positions)
   }
-  positions <- purrr::map(searchdata, str_which, pattern = pattern) |> purrr::compact()
-  if (!find.all) {
-    positions <- purrr::map(positions, nth, n = 1)
+  
+  #' Compute surprisal aka Shannon information from p-values
+  #' 
+  #' \code{surprisal} takes p-values and returns s, a value representing the
+  #' number of consecutive heads on a fair coin, that would be as surprising 
+  #' as the p-value
+  #' 
+  #' @param p a vector of p-values
+  #' @param precision rounding level with default 1
+  #'
+  #' @return a character vector of s-values
+  #' @export
+  surprisal <- function(p, precision = 1){
+    round(-log2(as.numeric(p)),precision) |> as.character()
   }
-  if (names.only) {
-    positions <- names(positions)
-  }
-  return(positions)
-}
-
-#' Compute surprisal aka Shannon information from p-values
-#' 
-#' \code{surprisal} takes p-values and returns s, a value representing the
-#' number of consecutive heads on a fair coin, that would be as surprising 
-#' as the p-value
-#' 
-#' @param p a vector of p-values
-#' @param precision rounding level with default 1
-#'
-#' @return a character vector of s-values
-#' @export
-surprisal <- function(p, precision = 1){
-  round(-log2(as.numeric(p)),precision) |> as.character()
-}
+  
