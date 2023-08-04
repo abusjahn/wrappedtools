@@ -19,7 +19,7 @@ ColSeeker(
 
 \item{namepattern}{Vector of pattern to look for.}
 
-\item{varclass}{Only columns of defined type are returned}
+\item{varclass}{Vector, only columns of defined type(s) are returned}
 
 \item{exclude}{Vector of pattern to exclude from found names.}
 

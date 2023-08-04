@@ -277,7 +277,7 @@ FindVars <- function(varnames, allnames = colnames(rawdata),
 #'
 #' @param data tibble or data.frame, where columns are to be found; by default rawdata 
 #' @param namepattern Vector of pattern to look for.
-#' @param varclass Only columns of defined type are returned
+#' @param varclass Vector, only columns of defined type(s) are returned
 #' @param exclude Vector of pattern to exclude from found names.
 #' @param excludeclass Exclude columns of specified class
 #' @param casesensitive Logical if case is respected in matching (default FALSE: a<>A)
@@ -330,7 +330,12 @@ ColSeeker <- function(data=rawdata,
   vars <- unique(vars)
   
   if(!is.null(varclass)){
-    vars_typed <- which(grepl(pattern = varclass,allclasses))
+    vars_typed <- NULL
+    for(type_i in seq_along(varclass)){
+    vars_typed <- c(vars_typed,
+                    which(grepl(pattern = varclass[type_i], allclasses)))
+                    }
+    
     vars <- vars[which(vars %in% vars_typed)]
   }
   if(!is.null(excludeclass)){
