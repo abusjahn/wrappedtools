@@ -540,6 +540,12 @@ compare2qualvars <- function(data, dep_vars, indep_var,
   if (!(is.factor(data |> pull(indep_var)))) {
     data <- data |> mutate(!!indep_var := factor(!!sym(indep_var)))
   }
+  if(data |> pull(indep_var) |> nlevels() !=2){
+    stop(paste("Independent variable",indep_var,
+               "has",data |> pull(indep_var) |> nlevels(),
+               "levels but must have exactly 2.",
+               "Look into function compare_n_numvars."))
+  }
   for(var_i in dep_vars){
     if (!(is.factor(data |> pull(var_i)))) {
       data <- data |> mutate(!!var_i := factor(!!sym(var_i)))

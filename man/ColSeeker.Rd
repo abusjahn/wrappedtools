@@ -19,11 +19,11 @@ ColSeeker(
 
 \item{namepattern}{Vector of pattern to look for.}
 
-\item{varclass}{Vector, only columns of defined type(s) are returned}
+\item{varclass}{Vector, only columns of defined class(es) are returned}
 
 \item{exclude}{Vector of pattern to exclude from found names.}
 
-\item{excludeclass}{Exclude columns of specified class}
+\item{excludeclass}{Vector, exclude columns of specified class(es)}
 
 \item{casesensitive}{Logical if case is respected in matching (default FALSE: a<>A)}
 
