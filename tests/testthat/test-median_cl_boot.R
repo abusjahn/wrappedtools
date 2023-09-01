@@ -15,23 +15,3 @@ test_that("median_cl_boot() with defaults and options", {
                tolerance = 1)
 })
 
-# Maybe another compression error? Got this output from the code commented out above
-# ══ Testing test-median_cl_boot.R ═══════════════════════════════════════════════
-# 
-# [ FAIL 0 | WARN 0 | SKIP 0 | PASS 0 ]
-# [ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]
-# [ FAIL 2 | WARN 0 | SKIP 0 | PASS 0 ]
-# 
-# ── Failure (test-median_cl_boot.R:7:3): median_cl_boot() with defaults and options ──
-# median_cl_boot(mtcars$wt) not equal to expected[[1]].
-# Component "CIlow": Mean relative difference: 0.00214412
-# Component "CIhigh": Mean relative difference: 0.008522727
-# 
-# ── Failure (test-median_cl_boot.R:8:3): median_cl_boot() with defaults and options ──
-# median_cl_boot(x = mtcars$wt, conf = 0.99) not equal to expected[[2]].
-# Component "CIlow": Mean relative difference: 0.01751405
-# 
-# 
-# [ FAIL 2 | WARN 0 | SKIP 0 | PASS 0 ]
-
-
