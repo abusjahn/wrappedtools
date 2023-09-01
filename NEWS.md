@@ -1,5 +1,5 @@
 # wrappedtools 0.9.3
-- bugfix in ColSeeker
+- compare2numvars checks dep. variables for 2 levels
 - ColSeeker allows vector of classes
 
 # wrappedtools 0.9.2
