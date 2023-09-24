@@ -1,10 +1,12 @@
 # wrappedtools 0.9.3
-- compare2numvars checks dep. variables for 2 levels
+- compare2numvars checks indep. variables for 2 levels
 - ColSeeker allows vector of classes
+- default spacer changed from `&nbsp;` to ' '
+- test for compare_n_numvars corrected
 
 # wrappedtools 0.9.2
 - new function cat_desc_table to create summary tables
-- new function ColSeeker, superceeds FindVars by adding option to select by type
+- new function ColSeeker, supersedes FindVars by adding option to select by type
 
 # wrappedtools 0.9.1
 - functions from abandoned package Biotech reimplemented

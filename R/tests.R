@@ -705,7 +705,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
 #' @param pretext for function [formatP]
 #' @param mark for function [formatP]
 #' @param singleline Put all group levels in  a single line?
-#' @param spacer Text element to indent levels, defaults to "&nbsp;".
+#' @param spacer Text element to indent levels, defaults to " ".
 #' @param linebreak place holder for newline.
 #' @param prettynum Apply prettyNum to results?
 #'
@@ -735,7 +735,7 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
                                pretext = FALSE, mark = FALSE,
                                singleline = FALSE,
                                # newline=TRUE,
-                               spacer = "&nbsp;",
+                               spacer = " ",
                                linebreak = "\n",
                                prettynum = FALSE) {
   indentor <- paste0(rep(spacer, 5), collapse = "")

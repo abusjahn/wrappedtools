@@ -13,7 +13,7 @@ compare_n_qualvars(
   pretext = FALSE,
   mark = FALSE,
   singleline = FALSE,
-  spacer = "&nbsp;",
+  spacer = " ",
   linebreak = "\\n",
   prettynum = FALSE
 )
@@ -35,7 +35,7 @@ compare_n_qualvars(
 
 \item{singleline}{Put all group levels in  a single line?}
 
-\item{spacer}{Text element to indent levels, defaults to " ".}
+\item{spacer}{Text element to indent levels, defaults to " ".}
 
 \item{linebreak}{place holder for newline.}
 

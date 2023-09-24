@@ -4,9 +4,10 @@
 # # - Gaussian (indep_var=drive ratio)
 # out1 <- compare_n_numvars(
 #   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
-#   indep_var = "drat",
+#   indep_var = "cyl",
 #   gaussian = TRUE
 # )
+# saveRDS(out1, file = 'tests/testthat/n_numvars_out1.RDA')
 # 
 # # - Ordinal (indep_var= 4, 6 or 8 cylinders)
 # out2 <- compare_n_numvars(
@@ -15,22 +16,23 @@
 #   gaussian = FALSE
 # )
 # 
-# saveRDS(list(out1=out1, out2=out2),file = 'tests/testthat/n_numvars_out.rda')
+# saveRDS(out2, file = 'tests/testthat/n_numvars_out2.RDA')
 
 # tests only work in build menu?
 test_that("compare_n_numvars() with defaults and options set", { 
   # using @abusjahn's template written for meansd
-  expected <- readRDS('n_numvars_out.rda')
+  expected <- readRDS('n_numvars_out1.rda')
   expect_equal(compare_n_numvars(
     .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
-    indep_var = "drat",
+    indep_var = "cyl",
     gaussian = TRUE
-  )$raw, expected[[1]]$raw)
+  )$raw, expected$raw)
+  expected <- readRDS('n_numvars_out2.rda')
   expect_equal(compare_n_numvars(
     .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
     indep_var = "cyl",
     gaussian = FALSE)$results, 
-  expected[[2]]$results)
+  expected$results)
   # expect_equal(compare_n_numvars(
   #   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
   #   indep_var = "cyl",
