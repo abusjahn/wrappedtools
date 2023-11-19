@@ -180,7 +180,8 @@ pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 #' Kolmogorov-Smirnov-Test against Normal distribution
 #'
 #' \code{ksnormal} is a convenience function around \link{ks.test}, testing against
-#' Normal distribution
+#' Normal distribution.
+#' If less than 2 values are provided, NA is returned.
 #'
 #' @param x Vector of data to test.
 #'
@@ -196,10 +197,14 @@ pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 #' ksnormal(x = mtcars$wt)
 #' @export
 ksnormal <- function(x) {
+  if(length(x)>1){
   suppressWarnings(
-    ksout <- ks.test(x, "pnorm", mean(x, na.rm = TRUE), sd(x, na.rm = TRUE),
+    assign("ksout",ks.test(x, "pnorm", mean(x, na.rm = TRUE), sd(x, na.rm = TRUE),
                      exact = FALSE
-    )$p.value)
+    )$p.value))
+  }else{
+    ksout <- NA
+  }
   return(ksout)
 }
 
