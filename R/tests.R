@@ -197,7 +197,7 @@ pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 #' ksnormal(x = mtcars$wt)
 #' @export
 ksnormal <- function(x) {
-  if(length(x)>1){
+  if(length(na.omit(x))>1){
   suppressWarnings(
     assign("ksout",ks.test(x, "pnorm", mean(x, na.rm = TRUE), sd(x, na.rm = TRUE),
                      exact = FALSE

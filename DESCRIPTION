@@ -51,4 +51,4 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 LazyData: true
 VignetteBuilder: knitr
-Suggests: rmarkdown, testthat
+Suggests: rmarkdown, testthat, ggrepel

@@ -42,3 +42,6 @@ NULL
 
 #' @importFrom forcats fct_lump_n fct_drop
 NULL
+
+#' @importFrom grDevices boxplot.stats
+NULL

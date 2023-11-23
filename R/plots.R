@@ -1,3 +1,4 @@
+utils::globalVariables(".")
 #' Print graphical representation of a correlation matrix.
 #'
 #'\code{ggcormat} makes the same correlation matrix as \link{cortestR} 
@@ -215,3 +216,42 @@ ggcormat <- function(cor_mat, p_mat = NULL,
   return(ggheatmap)
 }
 
+#' Add labels to outliers in boxplot/beeswarm.
+#'
+#'\code{label_outliers} adds a text_repel  layer to an existing ggplot object. It is intended to be used with boxplots or beeswarm plots.
+#' It requires the \code{ggrepel} package.
+#'
+#' @param plotbase ggplot object to add labels to.
+#' @param xvar x variable for grouping.
+#' @param yvar y variable with possible outliers.
+#' @param labelvar variable to use as label.
+#' @param coef coefficient for boxplot.stats, defaults to 1.5.
+#' @param nudge_x nudge in x direction, defaults to 0.
+#' @param nudge_y nudge in y direction, defaults to 0.
+#' @param color color of labels, defaults to darkred.
+#' @param size size of labels, defaults to 3.
+#' @param hjust horizontal justification of labels, defaults to 0.
+#'
+#' @return A ggplot object, allowing further styling.
+#'
+# ' @examples
+
+label_outliers <- function(plotbase, xvar, yvar, labelvar,
+                           coef=1.5, nudge_x=0, nudge_y=0,
+                           color="darkred", size=3, hjust=0) {
+  if(!requireNamespace("ggrepel", quietly = TRUE)) {
+    stop("ggrepel package is required")
+  }
+  plotbase + 
+    ggrepel::geom_text_repel(data=. %>% 
+                               group_by({{xvar}}) %>%  
+                               filter({{yvar}} %in% 
+                                        boxplot.stats({{yvar}}, 
+                                                      coef=coef)$out),
+                             aes(label={{labelvar}}, y={{yvar}}),
+                             nudge_x=nudge_x, 
+                             nudge_y=nudge_y, 
+                             color=color, 
+                             size=size, 
+                             hjust=hjust) 
+}

@@ -1,5 +1,6 @@
 #wrappedtools 0.9.4
 - ksnormal can handle input of 0 data points
+- new function label_outliers
 
 # wrappedtools 0.9.3
 - compare2numvars checks indep. variables for 2 levels

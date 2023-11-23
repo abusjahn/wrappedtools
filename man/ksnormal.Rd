@@ -14,7 +14,8 @@ p.value from \link{ks.test}.
 }
 \description{
 \code{ksnormal} is a convenience function around \link{ks.test}, testing against
-Normal distribution
+Normal distribution.
+If less than 2 values are provided, NA is returned.
 }
 \examples{
 # original ks.test:
