@@ -218,6 +218,9 @@ ggcormat <- function(cor_mat, p_mat = NULL,
 
 #' Add labels to outliers in boxplot/beeswarm.
 #'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#' 
 #'\code{label_outliers} adds a text_repel  layer to an existing ggplot object. It is intended to be used with boxplots or beeswarm plots.
 #' It requires the \code{ggrepel} package.
 #'
@@ -235,7 +238,7 @@ ggcormat <- function(cor_mat, p_mat = NULL,
 #' @return A ggplot object, allowing further styling.
 #'
 # ' @examples
-
+#' @export
 label_outliers <- function(plotbase, xvar, yvar, labelvar,
                            coef=1.5, nudge_x=0, nudge_y=0,
                            color="darkred", size=3, hjust=0) {
@@ -244,11 +247,11 @@ label_outliers <- function(plotbase, xvar, yvar, labelvar,
   }
   plotbase + 
     ggrepel::geom_text_repel(data=. %>% 
-                               group_by({{xvar}}) %>%  
-                               filter({{yvar}} %in% 
-                                        boxplot.stats({{yvar}}, 
+                               group_by(!!sym(xvar)) %>%  
+                               filter(!!sym(yvar) %in% 
+                                        boxplot.stats(!!sym(yvar), 
                                                       coef=coef)$out),
-                             aes(label={{labelvar}}, y={{yvar}}),
+                             aes(label=!!sym(labelvar), y=!!sym(yvar)),
                              nudge_x=nudge_x, 
                              nudge_y=nudge_y, 
                              color=color, 

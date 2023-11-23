@@ -2,7 +2,7 @@
 % Please edit documentation in R/basefunctions.R
 \name{print_kable}
 \alias{print_kable}
-\title{Enhanced kable with definable number of rows/columns for splitting}
+\title{Enhanced \link{kable} with definable number of rows and/or columns for splitting}
 \usage{
 print_kable(t, nrows = 30, caption = "", ncols = 100, ...)
 }
@@ -22,8 +22,7 @@ No return value, called for side effects.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
-}
-\details{
+
 package flextable is a more powerful alternative
 
 \code{print_kable} formats and prints tibbles/df's in markdown with splitting

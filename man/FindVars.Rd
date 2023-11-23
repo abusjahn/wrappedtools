@@ -34,8 +34,9 @@ A list with index, names, backticked names, and symbols
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
-}
-\details{
+
+Function \link{ColSeeker} extends this by adding class-checks.
+
 \code{FindVars} looks up colnames (by default for data-frame rawdata)
 based on parts of names, using regular expressions. Be warned that
 special characters as e.g. \code{[} \code{(} need to be escaped or replaced by \code{.}
