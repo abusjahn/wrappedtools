@@ -225,8 +225,8 @@ ggcormat <- function(cor_mat, p_mat = NULL,
 #' It requires the \code{ggrepel} package.
 #'
 #' @param plotbase ggplot object to add labels to.
-#' @param xvar x variable for grouping.
-#' @param yvar y variable with possible outliers.
+# ' @param xvar x variable for grouping.
+# ' @param yvar y variable with possible outliers.
 #' @param labelvar variable to use as label.
 #' @param coef coefficient for boxplot.stats, defaults to 1.5.
 #' @param nudge_x nudge in x direction, defaults to 0.
@@ -239,12 +239,18 @@ ggcormat <- function(cor_mat, p_mat = NULL,
 #'
 # ' @examples
 #' @export
-label_outliers <- function(plotbase, xvar, yvar, labelvar,
+label_outliers <- function(plotbase, xvar, #yvar, labelvar,
                            coef=1.5, nudge_x=0, nudge_y=0,
                            color="darkred", size=3, hjust=0) {
   if(!requireNamespace("ggrepel", quietly = TRUE)) {
     stop("ggrepel package is required")
   }
+  xvar <- plotbase$layers[[1]]$computed_mapping[1] |> 
+    as.character() |>
+    str_remove("~")
+  yvar <- plotbase$layers[[1]]$computed_mapping[2] |> 
+    as.character() |> 
+    str_replace('^.+\\"(.+)\\".*',"\\1")
   plotbase + 
     ggrepel::geom_text_repel(data=. %>% 
                                group_by(!!sym(xvar)) %>%  
