@@ -6,7 +6,7 @@
 \usage{
 label_outliers(
   plotbase,
-  xvar,
+  labelvar,
   coef = 1.5,
   nudge_x = 0,
   nudge_y = 0,
@@ -17,6 +17,8 @@ label_outliers(
 }
 \arguments{
 \item{plotbase}{ggplot object to add labels to.}
+
+\item{labelvar}{variable to use as label.}
 
 \item{coef}{coefficient for boxplot.stats, defaults to 1.5.}
 
@@ -29,8 +31,6 @@ label_outliers(
 \item{size}{size of labels, defaults to 3.}
 
 \item{hjust}{horizontal justification of labels, defaults to 0.}
-
-\item{labelvar}{variable to use as label.}
 }
 \value{
 A ggplot object, allowing further styling.

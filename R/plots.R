@@ -238,8 +238,9 @@ ggcormat <- function(cor_mat, p_mat = NULL,
 #' @return A ggplot object, allowing further styling.
 #'
 # ' @examples
+# todo: group by facet variables
 #' @export
-label_outliers <- function(plotbase, xvar, #yvar, labelvar,
+label_outliers <- function(plotbase, labelvar, #xvar, #yvar,
                            coef=1.5, nudge_x=0, nudge_y=0,
                            color="darkred", size=3, hjust=0) {
   if(!requireNamespace("ggrepel", quietly = TRUE)) {
@@ -253,6 +254,7 @@ label_outliers <- function(plotbase, xvar, #yvar, labelvar,
     str_replace('^.+\\"(.+)\\".*',"\\1")
   plotbase + 
     ggrepel::geom_text_repel(data=. %>% 
+                               # todo: group by facet variables
                                group_by(!!sym(xvar)) %>%  
                                filter(!!sym(yvar) %in% 
                                         boxplot.stats(!!sym(yvar), 
