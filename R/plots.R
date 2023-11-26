@@ -221,7 +221,7 @@ ggcormat <- function(cor_mat, p_mat = NULL,
 #' @description
 #' `r lifecycle::badge('experimental')`
 #' 
-#'\code{label_outliers} adds a text_repel  layer to an existing ggplot object. It is intended to be used with boxplots or beeswarm plots.
+#'\code{label_outliers} adds a text_repel  layer to an existing ggplot object. It is intended to be used with boxplots or beeswarm plots. Faceting will result in separate computations for outliers.
 #' It requires the \code{ggrepel} package.
 #'
 #' @param plotbase ggplot object to add labels to.
@@ -234,6 +234,7 @@ ggcormat <- function(cor_mat, p_mat = NULL,
 #' @param color color of labels, defaults to darkred.
 #' @param size size of labels, defaults to 3.
 #' @param hjust horizontal justification of labels, defaults to 0.
+#' @param face font face of labels, defaults to bold.
 #'
 #' @return A ggplot object, allowing further styling.
 #'
@@ -242,27 +243,68 @@ ggcormat <- function(cor_mat, p_mat = NULL,
 #' @export
 label_outliers <- function(plotbase, labelvar, #xvar, #yvar,
                            coef=1.5, nudge_x=0, nudge_y=0,
-                           color="darkred", size=3, hjust=0) {
+                           color="darkred", size=3, hjust=0,
+                           face="bold") {
   if(!requireNamespace("ggrepel", quietly = TRUE)) {
     stop("ggrepel package is required")
   }
-  xvar <- plotbase$layers[[1]]$computed_mapping[1] |> 
-    as.character() |>
-    str_remove("~")
-  yvar <- plotbase$layers[[1]]$computed_mapping[2] |> 
-    as.character() |> 
-    str_replace('^.+\\"(.+)\\".*',"\\1")
+  plotlist <- ggplot_build(plotbase)
+  xvar <- plotbase$mapping[["x"]] |> as_label()
+    # plotlist[["plot"]][["layers"]][[1]][["computed_mapping"]][1] |> 
+    # as.character() |>
+    # str_remove("~")
+  yvar <- plotbase$mapping[["y"]] |> as_label()
+    #plotbase$layers[[1]]$computed_mapping[2] |> 
+    # plotlist[["plot"]][["layers"]][[1]][["computed_mapping"]][2] |> 
+    # as.character() |> 
+    # str_replace_all(
+    #   c('^.+\\"(.+)\\".*'="\\1",
+    #     "~"=""))
+  # groupvars <- xvar
+  # if(!is.null(plotlist$layout$facet$params$row)){
+    facet_rows <- names(plotlist$layout$facet$params$row)
+    # groupvars <- c(groupvars,facet_rows)
+  # }
+  # if(!is.null(plotlist$layout$facet$params$col)){
+    facet_cols <- names(plotlist$layout$facet$params$col)
+  facet_wraps <- names(plotlist$layout$facet$params$facets)
+  groupvars <- c(xvar,facet_rows,facet_cols,facet_wraps)
+  outpositions <- 
+    plotbase$data |> 
+    group_by(across(all_of(groupvars))) |> 
+    reframe(across(all_of(yvar),
+                   ~detect_outliers(.x, coef=coef))) |> 
+    left_join(plotbase$data)
   plotbase + 
-    ggrepel::geom_text_repel(data=. %>% 
-                               # todo: group by facet variables
-                               group_by(!!sym(xvar)) %>%  
-                               filter(!!sym(yvar) %in% 
-                                        boxplot.stats(!!sym(yvar), 
-                                                      coef=coef)$out),
-                             aes(label=!!sym(labelvar), y=!!sym(yvar)),
-                             nudge_x=nudge_x, 
+    ggrepel::geom_text_repel(data=outpositions,
+                             aes(label=!!sym(labelvar)),
+                             nudge_x=nudge_x,
                              nudge_y=nudge_y, 
                              color=color, 
                              size=size, 
-                             hjust=hjust) 
+                             hjust=hjust,
+                             face=face) 
+}
+
+
+#' Find outliers based on IQR
+#'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#' 
+#'\code{detect_outliers} computes IQR and finds outliers. It gives the same results as \code{geom_boxplot} and thus differs slightly from \code{boxplot.stats}.
+#'
+#' @param x numeric vector.
+#' @param coef coefficient for boxplot.stats, defaults to 1.5. 
+#'
+#' @return A numeric vector with outliers.
+#' 
+#' @export
+detect_outliers <- function(x, coef=1.5) {
+  qnt <- quantile(x, probs=c(.25, .75), na.rm = TRUE)
+  iqr <- diff(qnt)
+  upper <- qnt[2] + coef * iqr
+  lower <- qnt[1] - coef * iqr
+  out <- x[x > upper | x < lower]
+  return(out)
 }

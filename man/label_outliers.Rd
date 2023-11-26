@@ -12,7 +12,8 @@ label_outliers(
   nudge_y = 0,
   color = "darkred",
   size = 3,
-  hjust = 0
+  hjust = 0,
+  face = "bold"
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ label_outliers(
 \item{size}{size of labels, defaults to 3.}
 
 \item{hjust}{horizontal justification of labels, defaults to 0.}
+
+\item{face}{font face of labels, defaults to bold.}
 }
 \value{
 A ggplot object, allowing further styling.
@@ -38,6 +41,6 @@ A ggplot object, allowing further styling.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-\code{label_outliers} adds a text_repel  layer to an existing ggplot object. It is intended to be used with boxplots or beeswarm plots.
+\code{label_outliers} adds a text_repel  layer to an existing ggplot object. It is intended to be used with boxplots or beeswarm plots. Faceting will result in separate computations for outliers.
 It requires the \code{ggrepel} package.
 }
