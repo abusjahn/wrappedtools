@@ -283,7 +283,7 @@ label_outliers <- function(plotbase, labelvar, #xvar, #yvar,
                              color=color, 
                              size=size, 
                              hjust=hjust,
-                             face=face) 
+                             fontface=face) 
 }
 
 
