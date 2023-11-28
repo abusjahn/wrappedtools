@@ -12,10 +12,13 @@ detect_outliers(x, coef = 1.5)
 \item{coef}{coefficient for boxplot.stats, defaults to 1.5.}
 }
 \value{
-A numeric vector with outliers.
+A list with elements positions and outliers as numeric vectors.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
 \code{detect_outliers} computes IQR and finds outliers. It gives the same results as \code{geom_boxplot} and thus differs slightly from \code{boxplot.stats}.
+}
+\examples{
+detect_outliers(rnorm(100))
 }

@@ -6,7 +6,7 @@
 \usage{
 label_outliers(
   plotbase,
-  labelvar,
+  labelvar = NULL,
   coef = 1.5,
   nudge_x = 0,
   nudge_y = 0,
@@ -19,7 +19,7 @@ label_outliers(
 \arguments{
 \item{plotbase}{ggplot object to add labels to.}
 
-\item{labelvar}{variable to use as label.}
+\item{labelvar}{variable to use as label. If NULL, rownames or rownumbers are used.}
 
 \item{coef}{coefficient for boxplot.stats, defaults to 1.5.}
 
