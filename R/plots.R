@@ -280,7 +280,8 @@ label_outliers <- function(plotbase, labelvar=NULL, #xvar, #yvar,
     group_by(across(all_of(groupvars))) |> 
     reframe(across(all_of(yvar),
                    ~detect_outliers(.x, coef=coef)$outliers)) |> 
-    left_join(plotdata)
+    left_join(plotdata) |> 
+    unique()
   plotbase + 
     ggrepel::geom_text_repel(data=outpositions,
                              aes(label=!!sym(labelvar)),
