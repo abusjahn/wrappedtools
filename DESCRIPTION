@@ -44,7 +44,8 @@ Imports:
     kableExtra,
     lifecycle,
     broom,
-    rlist
+    rlist,
+    DescTools
 Depends: 
     R (>= 4.2)
 Roxygen: list(markdown = TRUE)

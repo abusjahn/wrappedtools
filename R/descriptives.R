@@ -275,7 +275,27 @@ median_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3) {
     CIhigh = quantile(bt$t, uconf)
   )
 }
-
+#' Rename output from \link{median_cl_boot} for use in ggplot.
+#'
+#' \code{median_cl_boot_gg} computes lower and upper confidence limits for the
+#' estimated median, based on bootstrapping, using default settings.
+#'
+#' @param x Data for computation.
+# #' @param conf confidence interval with default 95%.
+# #' @param type type for function boot.ci.
+# #' @param nrepl number of bootstrap replications, defaults to 1000.
+#'
+#' @return A tibble with one row and three columns: y, ymin, ymax.
+#'
+#' @examples
+#' # basic usage of median_cl_boot
+#' median_cl_boot_gg(x = mtcars$wt)
+#' @export
+median_cl_boot_gg <- function(x){
+  out <- median_cl_boot(x = x) |> 
+    rename(y="Median",ymin="CIlow",ymax="CIhigh")
+  return(out)
+}
 #' Compute absolute and relative frequencies.
 #'
 #' \code{cat_desc_stats} computes absolute and relative frequencies for

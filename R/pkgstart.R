@@ -45,3 +45,9 @@ NULL
 
 #' @importFrom grDevices boxplot.stats
 NULL
+
+#' @importFrom stats prop.test
+NULL
+
+#' @importFrom DescTools BinomRatioCI
+NULL

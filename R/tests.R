@@ -1171,3 +1171,116 @@ compare_n_numvars <- function(.data = rawdata,
          raw = t))
 }
 utils::globalVariables('p_wcox_t_out')
+
+#' Comparison for groups in clinical trials based on all possible combinations of subjects
+#'
+#' \code{WINratio} computes the ratio of wins and losses for any number
+#' of comparison rules.
+#'
+#' @param data name of data set (tibble/data.frame) to analyze.
+#' @param groupvar name of grouping variable, has to translate to 2 groups.
+#' @param testvars names of variables for sequential rules.
+#' @param rules list of rules (cut-offs) for sequential comparison.
+#' @param idvar name of identifier variable. If NULL, rownumber is used.
+#' @param p_digits level for rounding p-value.
+#'
+#' @return
+#' A list with elements:
+#' 
+#' WINratio=vector with WINratio and CIs,
+#' 
+#' p.value=p.value from prop.test,
+#' 
+#' WINratioCI=character with merged WINratio, CI, and p
+#' 
+#' testdata= tibble with testdata from cross-join.
+#' 
+#' @export
+#' 
+WINratio <- function(data,groupvar,testvars,rules, idvar=NULL,
+                     p_digits=3){
+  data <- select(data,any_of(c(groupvar,testvars,idvar)))
+  if((!is.factor(data[[groupvar]]))){
+    data[[groupvar]] <- factor(data[[groupvar]])
+  }
+  if(nlevels(data[[groupvar]])!=2){
+    stop("groupvar must have exactly two levels")
+  }
+  groupvar_level <- levels(data[[groupvar]])
+  grp1 <- data |>filter(!!sym(groupvar)==groupvar_level[1])
+  colnames(grp1) <- c("GRP",paste0("X",seq_along(testvars)))
+  grp2 <- data |>filter(!!sym(groupvar)==groupvar_level[2])
+  colnames(grp2) <- c("GRP",paste0("Y",seq_along(testvars)))
+  
+  testdata <- cross_join(grp1,grp2) |>
+    mutate(WIN=0)
+  for(rule_i in seq_along(rules)){
+    testdata <-
+      testdata |>
+      rowwise() |>
+      mutate(
+        !!sym(paste0("rule",rule_i,"out")) :=
+          case_when(
+            WIN!=0 ~ NA_integer_,
+            abs(!!sym(paste0("X",rule_i))-
+                  !!sym(paste0("Y",rule_i)))>abs(rules[rule_i]) &
+              (sign(!!sym(paste0("X",rule_i))-
+                      !!sym(paste0("Y",rule_i)))==sign(rules[rule_i])) |
+              (!!sym(paste0("X",rule_i))-
+                 !!sym(paste0("Y",rule_i)))>rules[rule_i] &
+              sign(rules[rule_i])==0 ~ 1,
+            abs(!!sym(paste0("X",rule_i))-
+                  !!sym(paste0("Y",rule_i)))>abs(rules[rule_i]) &
+              (sign(!!sym(paste0("X",rule_i))-
+                      !!sym(paste0("Y",rule_i)))!=sign(rules[rule_i])) |
+              (!!sym(paste0("X",rule_i))-
+                 !!sym(paste0("Y",rule_i)))<rules[rule_i] &
+              sign(rules[rule_i])==0 ~ -1,
+            .default=0),
+        WIN=sum(c_across(starts_with("rule")),na.rm=TRUE)
+      ) |>
+      ungroup()
+  }
+  
+  WINners <-
+    testdata |>
+    # group_by() |>
+    summarize(
+      across(starts_with("rule"),
+             list(Wins=~sum(.x==1,na.rm=TRUE),
+                  Losses=~sum(.x==-1,na.rm=TRUE),
+                  Ties=~sum(.x==0,na.rm=TRUE),
+                  NC=~sum(is.na(.x))))) |>
+    pivot_longer(everything(),
+                 names_to=c("rule","outcome"),
+                 names_sep = "_") |>
+    pivot_wider(names_from = outcome) |>
+    add_row(rule="all") |>
+    mutate(across(-rule,
+                  ~case_when(rule=="all" ~sum(.x, na.rm=TRUE),
+                             .default=.x))) |>
+    mutate(rule=c(paste(testvars,rules, sep=": "),"all"))
+  
+  pT <- WINners |>
+    filter(rule=="all") |>
+    pull(Wins)# / nrow(testdata)
+  pC <- WINners |>
+    filter(rule=="all") |>
+    pull(Losses)# / nrow(testdata)
+  # WINratio=pT/pC
+  p.value <- prop.test(pT,pT+pC)$p.value
+  WINratio <- DescTools::BinomRatioCI(pT,nrow(testdata),
+                                      pC,nrow(testdata),
+                                      method = 'katz') |>
+    roundR(3)
+  WINratioCI <- paste0(roundR(WINratio[1],3)," (",
+                       roundR(WINratio[2],3),"/",
+                       roundR(WINratio[3],3),")",
+                       " p ",formatP(p.value, ndigits=p_digits, pretext=TRUE))
+  return(list(WIN=WINners,
+              WINratio=WINratio,
+              p.value=p.value,
+              WINratioCI=WINratioCI,
+              testdata=testdata))
+}
+utils::globalVariables(c('outcome',"Wins","Losses","rule"))

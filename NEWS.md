@@ -2,6 +2,7 @@
 - ksnormal can handle input of 0 data points
 - new function label_outliers to extend boxplots
 - new function detect_outliers for compatibility with geom_boxplot
+- new function WINratio to calculate the ratio of wins to losses in clinical trials
 
 # wrappedtools 0.9.3
 - compare2numvars checks indep. variables for 2 levels
