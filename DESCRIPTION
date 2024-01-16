@@ -53,3 +53,5 @@ RoxygenNote: 7.2.3
 LazyData: true
 VignetteBuilder: knitr
 Suggests: rmarkdown, testthat, ggrepel
+URL: https://github.com/abusjahn/wrappedtools
+BugReports: https://github.com/abusjahn/wrappedtools/issues
