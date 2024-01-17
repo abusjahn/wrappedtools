@@ -1223,18 +1223,18 @@ WINratio <- function(data,groupvar,testvars,rules, idvar=NULL,
           case_when(
             WIN!=0 ~ NA_integer_,
             abs(!!sym(paste0("X",rule_i))-
-                  !!sym(paste0("Y",rule_i)))>abs(rules[rule_i]) &
+                  !!sym(paste0("Y",rule_i)))>=abs(rules[rule_i]) &
               (sign(!!sym(paste0("X",rule_i))-
                       !!sym(paste0("Y",rule_i)))==sign(rules[rule_i])) |
               (!!sym(paste0("X",rule_i))-
-                 !!sym(paste0("Y",rule_i)))>rules[rule_i] &
+                 !!sym(paste0("Y",rule_i)))>=rules[rule_i] &
               sign(rules[rule_i])==0 ~ 1,
             abs(!!sym(paste0("X",rule_i))-
-                  !!sym(paste0("Y",rule_i)))>abs(rules[rule_i]) &
+                  !!sym(paste0("Y",rule_i)))>=abs(rules[rule_i]) &
               (sign(!!sym(paste0("X",rule_i))-
                       !!sym(paste0("Y",rule_i)))!=sign(rules[rule_i])) |
               (!!sym(paste0("X",rule_i))-
-                 !!sym(paste0("Y",rule_i)))<rules[rule_i] &
+                 !!sym(paste0("Y",rule_i)))<=rules[rule_i] &
               sign(rules[rule_i])==0 ~ -1,
             .default=0),
         WIN=sum(c_across(starts_with("rule")),na.rm=TRUE)
