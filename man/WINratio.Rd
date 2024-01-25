@@ -13,7 +13,7 @@ WINratio(data, groupvar, testvars, rules, idvar = NULL, p_digits = 3)
 
 \item{testvars}{names of variables for sequential rules.}
 
-\item{rules}{list of rules (cut-offs) for sequential comparison.}
+\item{rules}{list of rules (minimal cut-offs) for sequential comparison, negative if reduction is success, positive if increase is beneficial, must not be 0.}
 
 \item{idvar}{name of identifier variable. If NULL, rownumber is used.}
 

@@ -1180,7 +1180,7 @@ utils::globalVariables('p_wcox_t_out')
 #' @param data name of data set (tibble/data.frame) to analyze.
 #' @param groupvar name of grouping variable, has to translate to 2 groups.
 #' @param testvars names of variables for sequential rules.
-#' @param rules list of rules (cut-offs) for sequential comparison.
+#' @param rules list of rules (minimal cut-offs) for sequential comparison, negative if reduction is success, positive if increase is beneficial, must not be 0.
 #' @param idvar name of identifier variable. If NULL, rownumber is used.
 #' @param p_digits level for rounding p-value.
 #'
@@ -1199,6 +1199,9 @@ utils::globalVariables('p_wcox_t_out')
 #' 
 WINratio <- function(data,groupvar,testvars,rules, idvar=NULL,
                      p_digits=3){
+  if(any(rules==0)){
+    stop("rules must not be 0 but give direction and magnitude of minimal difference")
+  }
   data <- select(data,any_of(c(groupvar,testvars,idvar)))
   if((!is.factor(data[[groupvar]]))){
     data[[groupvar]] <- factor(data[[groupvar]])
@@ -1221,21 +1224,18 @@ WINratio <- function(data,groupvar,testvars,rules, idvar=NULL,
       mutate(
         !!sym(paste0("rule",rule_i,"out")) :=
           case_when(
+            #already decided
             WIN!=0 ~ NA_integer_,
+            #sign of delta=sign of rule and win
             abs(!!sym(paste0("X",rule_i))-
                   !!sym(paste0("Y",rule_i)))>=abs(rules[rule_i]) &
               (sign(!!sym(paste0("X",rule_i))-
-                      !!sym(paste0("Y",rule_i)))==sign(rules[rule_i])) |
-              (!!sym(paste0("X",rule_i))-
-                 !!sym(paste0("Y",rule_i)))>=rules[rule_i] &
-              sign(rules[rule_i])==0 ~ 1,
+                      !!sym(paste0("Y",rule_i)))==sign(rules[rule_i])) ~1,
+            #sign of delta!=sign of rule and loose
             abs(!!sym(paste0("X",rule_i))-
                   !!sym(paste0("Y",rule_i)))>=abs(rules[rule_i]) &
               (sign(!!sym(paste0("X",rule_i))-
-                      !!sym(paste0("Y",rule_i)))!=sign(rules[rule_i])) |
-              (!!sym(paste0("X",rule_i))-
-                 !!sym(paste0("Y",rule_i)))<=rules[rule_i] &
-              sign(rules[rule_i])==0 ~ -1,
+                      !!sym(paste0("Y",rule_i)))!=sign(rules[rule_i])) ~-1,
             .default=0),
         WIN=sum(c_across(starts_with("rule")),na.rm=TRUE)
       ) |>
