@@ -554,3 +554,20 @@ tab.search <- function(searchdata = rawdata, pattern,
 surprisal <- function(p, precision = 1){
   round(-log2(as.numeric(p)),precision) |> as.character()
 }
+
+
+#' Transform flextable to rmd if non-interactive
+#' 
+#' \code{flex2rmd} takes a flextable and returns a markdown table if not in an interactive session
+#' 
+#' @param ft a flextable
+#' 
+#' @return either a markdown table or the flextable
+#' @export
+flex2rmd <- function(ft){
+  if(interactive()){
+    return(ft)
+  } else {
+    return(flextable_to_rmd(ft))
+  }
+}

@@ -24,6 +24,8 @@ A list with elements:
 
 WINratio=vector with WINratio and CIs,
 
+WINodds=odds ratio of wins and losses, taking ties into account,
+
 p.value=p.value from prop.test,
 
 WINratioCI=character with merged WINratio, CI, and p

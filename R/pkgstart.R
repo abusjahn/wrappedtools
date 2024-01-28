@@ -51,3 +51,6 @@ NULL
 
 #' @importFrom DescTools BinomRatioCI
 NULL
+
+#' @importFrom flextable flextable_to_rmd
+NULL

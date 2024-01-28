@@ -1189,6 +1189,8 @@ utils::globalVariables('p_wcox_t_out')
 #' 
 #' WINratio=vector with WINratio and CIs,
 #' 
+#' WINodds=odds ratio of wins and losses, taking ties into account,
+#' 
 #' p.value=p.value from prop.test,
 #' 
 #' WINratioCI=character with merged WINratio, CI, and p
@@ -1261,26 +1263,31 @@ WINratio <- function(data,groupvar,testvars,rules, idvar=NULL,
                              .default=.x))) |>
     mutate(rule=c(paste(testvars,rules, sep=": "),"all"))
   
-  pT <- WINners |>
+  p_w <- WINners |>
     filter(rule=="all") |>
-    pull(Wins)# / nrow(testdata)
-  pC <- WINners |>
+    pull("Wins")# / nrow(testdata)
+  p_l <- WINners |>
     filter(rule=="all") |>
-    pull(Losses)# / nrow(testdata)
+    pull("Losses")# / nrow(testdata)
+  p_t <- WINners |>
+    filter(rule=="all") |>
+    pull("Ties")# / nrow(testdata)
   # WINratio=pT/pC
-  p.value <- prop.test(pT,pT+pC)$p.value
-  WINratio <- DescTools::BinomRatioCI(pT,nrow(testdata),
-                                      pC,nrow(testdata),
+  p.value <- prop.test(p_w,p_w+p_l)$p.value
+  WINratio <- DescTools::BinomRatioCI(p_w,nrow(testdata),
+                                      p_l,nrow(testdata),
                                       method = 'katz') |>
     roundR(3)
+  WINodds <- (p_w+p_t*.5) / (p_l+p_t*.5)
   WINratioCI <- paste0(roundR(WINratio[1],3)," (",
                        roundR(WINratio[2],3),"/",
                        roundR(WINratio[3],3),")",
                        " p ",formatP(p.value, ndigits=p_digits, pretext=TRUE))
   return(list(WIN=WINners,
               WINratio=WINratio,
+              WINodds=WINodds,
               p.value=p.value,
               WINratioCI=WINratioCI,
               testdata=testdata))
 }
-utils::globalVariables(c('outcome',"Wins","Losses","rule"))
+utils::globalVariables(c('outcome',"rule"))
