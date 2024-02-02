@@ -205,7 +205,7 @@ meanse <- function(x, mult = 1, roundDig = 2, drop0 = FALSE) {
   ms <- roundR(c(m, s * mult),
                level = roundDig, drop0 = drop0
   )
-  out <- paste(ms[1], ms[2], sep = "\u00B1")
+  out <- paste(ms[1], ms[2], sep = " \u00B1 ")
   return(out)
 }
 
