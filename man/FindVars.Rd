@@ -46,6 +46,4 @@ New function \code{\link[=ColSeeker]{ColSeeker()}} extends this by adding class-
 \examples{
 FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars))
 FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars), exclude = "r")
-rawdata <- mtcars
-FindVars(varnames = c("^c", "g"))
 }

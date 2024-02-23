@@ -41,6 +41,4 @@ Exclusion rules may be specified as well.
 \examples{
 ColSeeker(data = mtcars, namepattern = c("^c", "g"))
 ColSeeker(data = mtcars, namepattern = c("^c", "g"), exclude = "r")
-rawdata <- mtcars
-ColSeeker(namepattern = c("^c", "g"), varclass="numeric")
 }

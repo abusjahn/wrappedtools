@@ -1,7 +1,7 @@
 # out1 <- FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars))
 # out2 <- FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars),
 #                  exclude = "r", return_symbols = TRUE)
-# # rawdata <- mtcars
+# #' rawdata <- mtcars
 # # out3 <- FindVars(varnames = c("^c", "g"))
 # saveRDS(list(out1=out1, out2=out2),file = 'tests/testthat/FindVars_out.rda')
 

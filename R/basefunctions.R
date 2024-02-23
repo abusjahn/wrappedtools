@@ -1,4 +1,4 @@
-utils::globalVariables(c("rawdata", "stratum"))
+utils::globalVariables(c("rawdata","stratum"))
 #' Automatic rounding to a reasonable length, based on largest number
 #'
 #' \code{roundR} takes a vector or matrix of numbers and returns rounded values
@@ -207,8 +207,8 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 #' @examples
 #' FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars))
 #' FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars), exclude = "r")
-#' rawdata <- mtcars
-#' FindVars(varnames = c("^c", "g"))
+## rawdata <- mtcars
+## FindVars(varnames = c("^c", "g"))
 FindVars <- function(varnames, allnames = colnames(rawdata),
                      exact = FALSE, exclude = NA, casesensitive = TRUE,
                      fixed = FALSE, return_symbols=FALSE) {
@@ -290,8 +290,8 @@ FindVars <- function(varnames, allnames = colnames(rawdata),
 #' @examples
 #' ColSeeker(data = mtcars, namepattern = c("^c", "g"))
 #' ColSeeker(data = mtcars, namepattern = c("^c", "g"), exclude = "r")
-#' rawdata <- mtcars
-#' ColSeeker(namepattern = c("^c", "g"), varclass="numeric")
+## rawdata <- mtcars
+## ColSeeker(namepattern = c("^c", "g"), varclass="numeric")
 ColSeeker <- function(data=rawdata,
                       namepattern = '.',
                       varclass = NULL, 
