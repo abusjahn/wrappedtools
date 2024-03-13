@@ -20,3 +20,4 @@ options(
 # dplyr::summarize(cranlogs::cran_downloads('wrappedtools',
 #                                           from = '2021-01-01'),
 #                  total=sum(count))
+# nrow(collidr::CRAN_packages_and_functions())
