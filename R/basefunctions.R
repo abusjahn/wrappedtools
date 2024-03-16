@@ -383,6 +383,7 @@ ColSeeker <- function(data=rawdata,
 #' @param caption header.
 #' @param ... Further arguments passed to [kable].
 #' @return No return value, called for side effects.
+#' 
 #' @examples 
 #' \dontrun{
 #' print_kable(mtcars, caption = "test")

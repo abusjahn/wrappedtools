@@ -1,5 +1,8 @@
 #' Comparison for groups in clinical trials based on all possible combinations of subjects
 #'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#' 
 #' \code{WINratio} computes the ratio of wins and losses for any number
 #' of comparison rules.
 #'
@@ -120,6 +123,9 @@ utils::globalVariables(c('outcome',"rule"))
 
 #' Estimation of glomerular filtration rate (eGFR) based on sex, age, and either serum creatinine and/or cystatin C
 #'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#' 
 #' \code{eGFR} computes eGFR according to different rules (see references).
 #'
 #' @param data name of data set (tibble/data.frame) to analyze.
@@ -134,6 +140,12 @@ utils::globalVariables(c('outcome',"rule"))
 #' eGFR_crea 
 #' eGFR_cystatin 
 #' eGFR_creatinine_cystatin
+#' 
+#' @references https://www.kidney.org/content/ckd-epi-creatinine-cystatin-equation-2021
+#' 
+#' https://www.kidney.org/content/ckd-epi-creatinine-equation-2021
+#' 
+#' https://www.kidney.org/content/ckd-epi-cystatin-c-equation-2012
 #' 
 #' @export
 #' 

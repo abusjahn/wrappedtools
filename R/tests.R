@@ -442,7 +442,8 @@ compare2numvars <- function(data, dep_vars, indep_var,
     as_tibble()
   if(nlevels(data_l$Group)!=2){
     stop(paste0('Other than 2 groups provided for ',indep_var,': ',
-                paste(levels(data_l$Group),collapse='/')))
+                paste(levels(data_l$Group),collapse='/'),
+                ". Look into function compare_n_numvars."))
   }
   data_l <- data_l |> 
     filter(!is.na(Group))
@@ -549,7 +550,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
     stop(paste("Independent variable",indep_var,
                "has",data |> pull(indep_var) |> nlevels(),
                "levels but must have exactly 2.",
-               "Look into function compare_n_numvars."))
+               "Look into function compare_n_qualvars."))
   }
   for(var_i in dep_vars){
     if (!(is.factor(data |> pull(var_i)))) {

@@ -25,5 +25,14 @@ eGFR_cystatin
 eGFR_creatinine_cystatin
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 \code{eGFR} computes eGFR according to different rules (see references).
+}
+\references{
+https://www.kidney.org/content/ckd-epi-creatinine-cystatin-equation-2021
+
+https://www.kidney.org/content/ckd-epi-creatinine-equation-2021
+
+https://www.kidney.org/content/ckd-epi-cystatin-c-equation-2012
 }
