@@ -138,7 +138,9 @@ utils::globalVariables(c('outcome',"rule"))
 #' A list with 3 elements:
 #' 
 #' eGFR_crea 
+#' 
 #' eGFR_cystatin 
+#' 
 #' eGFR_creatinine_cystatin
 #' 
 #' @references https://www.kidney.org/content/ckd-epi-creatinine-cystatin-equation-2021
@@ -161,19 +163,19 @@ eGFR <- function(data,
   colnames(data)[which(colnames(data)==sex_var)] <- "SEX"
   data <- 
     mutate(data,
-           sex_cys=case_when(SEX=="female"~.932,
+           "sex_cys"=case_when(SEX=="female"~.932,
                              SEX=="male"~1),
-           sex_crcys=case_when(SEX=="female"~.963,
+           "sex_crcys"=case_when(SEX=="female"~.963,
                                SEX=="male"~1),
-           sex_cr=case_when(SEX=="female"~1.012,
+           "sex_cr"=case_when(SEX=="female"~1.012,
                             SEX=="male"~1),
-           alpha_crcys=case_when(SEX=="male"~-.144,
+           "alpha_crcys"=case_when(SEX=="male"~-.144,
                                  SEX=="female"~-.219),
-           alpha_cr=case_when(SEX=="male"~-.302,
+           "alpha_cr"=case_when(SEX=="male"~-.302,
                               SEX=="female"~-.241),
-           kappa_crcys=case_when(SEX=="male"~.9,
+           "kappa_crcys"=case_when(SEX=="male"~.9,
                                  SEX=="female"~.7),
-           kappa_cr=case_when(SEX=="male"~.9,
+           "kappa_cr"=case_when(SEX=="male"~.9,
                               SEX=="female"~.7))
   if(!is.null(crea_var)){
     colnames(data)[which(colnames(data)==crea_var)] <- "CREA"
@@ -229,12 +231,23 @@ eGFR <- function(data,
           .9961**AGE*
           sex_crcys) |>
       ungroup()
-    eGFR_creatinine_cystatin <- data$eGFR_crcys
+    # eGFR_creatinine_cystatin <- data$eGFR_crcys
   } else {
-    eGFR_creatinine_cystatin <- NULL
+    data <- 
+      data |> 
+      mutate(
+        eGFR_creatinine_cystatin = NULL)
   }
   
-  return(list("eGFR_crea"=eGFR_crea, 
-              "eGFR_cystatin"=eGFR_cystatin, 
-              "eGFR_creatinine_cystatin"=eGFR_creatinine_cystatin))
+  return(list(
+    "eGFR_crea"=eGFR_crea, 
+    "eGFR_cystatin"=eGFR_cystatin, 
+    "eGFR_creatinine_cystatin"=data$eGFR_creatinine_cystatin))
 }
+utils::globalVariables(c("AGE", "CREA", "CYS", "alpha_cr",
+                         "alpha_crcys", "crea_max_cr",
+                         "crea_max_crcys",
+                         "crea_min_cr", "crea_min_crcys",
+                         "cys_max_cys", "cys_min_cys", "kappa_cr",
+                         "kappa_crcys", "sex_cr", "sex_crcys",
+                         "sex_cys"))

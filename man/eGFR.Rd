@@ -21,7 +21,9 @@ eGFR(data, age_var = "age", sex_var = "sex", crea_var = NULL, cys_var = NULL)
 A list with 3 elements:
 
 eGFR_crea
+
 eGFR_cystatin
+
 eGFR_creatinine_cystatin
 }
 \description{

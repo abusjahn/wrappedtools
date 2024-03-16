@@ -19,7 +19,7 @@ glmCI(model, min = .01, max = 100, cisep = '\U000022ef', ndigit=2)
 A list with coefficient, CIs, and pasted coef([CIs]).
 }
 \description{
-\code{glm_CI} computes and formats of CIs for glm.
+\code{glm_CI} computes and formats CIs for glm.
 }
 \examples{
 glm_out <- glm(am ~ mpg, family = binomial, data = mtcars)

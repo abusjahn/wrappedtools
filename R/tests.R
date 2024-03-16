@@ -210,7 +210,7 @@ ksnormal <- function(x) {
 
 #' Confidence interval for generalized linear models
 #'
-#' \code{glm_CI} computes and formats of CIs for glm.
+#' \code{glm_CI} computes and formats CIs for glm.
 #'
 #' @usage glmCI(model, min = .01, max = 100, cisep = '\U000022ef', ndigit=2)
 #'
