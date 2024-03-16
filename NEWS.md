@@ -1,3 +1,5 @@
+#wrappedtools 0.9.5 combines all updates from minor releases 9.4.x
+
 #wrappedtools 0.9.4
 - ksnormal can handle input of 0 data points
 - new function label_outliers to extend boxplots
