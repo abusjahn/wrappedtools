@@ -16,7 +16,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-# wrappedtools <img src='wrappedtools_hex.png' align="right" height="139" />
+# wrappedtools <img src="wrappedtools_hex.png" align="right" height="139"/>
+
 <!-- ![](wrappedtools_hex.png "wrappedtools hex"){width=20%} -->
 
 <!-- badges: start -->
@@ -25,8 +26,8 @@ knitr::opts_chunk$set(
 
 The goal of 'wrappedtools' is to make my (and possibly your) life a bit
 easier by a set of convenience functions for many common tasks like e.g.
-computation of mean and SD and pasting them with ±. Instead of  
-paste(round(mean(x),some_level), round(sd(x),some_level), sep='±')  
+computation of mean and SD and pasting them with ±. Instead of\
+paste(round(mean(x),some_level), round(sd(x),some_level), sep='±')\
 a simple meansd(x, roundDig = some_level) is enough.
 
 ## Installation
@@ -62,7 +63,7 @@ compare2numvars(data = mtcars, dep_vars = c('wt','mpg', "disp"),
                 round_desc = 3)
 ```
 
-To explain the \*wrapper' part of the package name, here is another
+To explain the **'wrapper'** part of the package name, here is another
 example, using the ks.test as test for a Normal distribution, where
 ksnormal simply wraps around the ks.test function:
 
@@ -77,24 +78,35 @@ Saving variable selections: Variables may fall into different groups:
 Some are following a Gaussian distribution, others are ordinal or
 factorial. There may be several grouping variables like treatment,
 gender... To refer to such variables, it is convenient to have their
-index and name stored. The name may be needed as character or , symbol,
+index and name stored. The name may be needed as character,
 complex variable names like "size [cm]" may need to be surrounded by
-backticks in some function calls but must not have those in others.  
-Function FindVars finds columns in tibbles or dataframes, based on name
-pattern. This is comparable to the selection helpers in 'tidyselect',
+backticks in some function calls but must not have those in others. 
+Function ColSeeker finds columns in tibbles or dataframes, based on name
+pattern and/or class. This is comparable to the selection helpers in 'tidyselect',
 but does not select the content of matching variables, but names,
 positions, and count:
 
 ```{r example3}
-gaussvars <- FindVars(varnames = c('wt','mpg'),
-                      allnames = colnames(mtcars))
+gaussvars <- ColSeeker(data = mtcars,
+                       namepattern = c('wt','mpg'))
 gaussvars
 
 #Exclusion based on pattern
-factorvars <- FindVars(varnames = c('a','cy'),
-                      allnames = colnames(mtcars),
-                      exclude = c('t'))
-factorvars$names
+factorvars <- ColSeeker(mtcars,
+                        namepattern = c('a','cy'),
+                        exclude = c('t'))
+factorvars$names #drat excluded
+
+ColSeeker(mtcars,varclass = 'numeric')$names
+```
+
+Workflow with ColSeeker and compare2numvars to describe and test a number of variables between 2 groups:  
+  
+```{r example4}
+compare2numvars(data = mtcars,
+                dep_vars=gaussvars$names,
+                indep_var = 'am',
+                gaussian = TRUE)
 ```
 
 This should give you the general idea, I'll try to expand this intro
