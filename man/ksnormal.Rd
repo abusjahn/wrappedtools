@@ -4,10 +4,12 @@
 \alias{ksnormal}
 \title{Kolmogorov-Smirnov-Test against Normal distribution}
 \usage{
-ksnormal(x)
+ksnormal(x, lillie = TRUE)
 }
 \arguments{
 \item{x}{Vector of data to test.}
+
+\item{lillie}{Logical, should the Lilliefors test be used? Defaults to TRUE}
 }
 \value{
 p.value from \link{ks.test}.
@@ -24,5 +26,5 @@ ks.test(
   sd = sd(mtcars$wt, na.rm = TRUE)
 )
 # wrapped version:
-ksnormal(x = mtcars$wt)
+ksnormal(x = mtcars$wt, lillie=FALSE)
 }

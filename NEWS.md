@@ -1,4 +1,8 @@
-#wrappedtools 0.9.5 combines all updates from minor releases 9.4.x
+#wrappedtools 0.9.6
+- function ksnormal now uses Lilliefors test by default
+
+#wrappedtools 0.9.5 
+- combines all updates from minor releases 9.4.x
 
 #wrappedtools 0.9.4
 - ksnormal can handle input of 0 data points

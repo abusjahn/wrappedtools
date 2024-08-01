@@ -184,6 +184,7 @@ pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 #' If less than 2 values are provided, NA is returned.
 #'
 #' @param x Vector of data to test.
+#' @param lillie Logical, should the Lilliefors test be used? Defaults to TRUE
 #'
 #' @return p.value from \link{ks.test}.
 #'
@@ -194,14 +195,22 @@ pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 #'   sd = sd(mtcars$wt, na.rm = TRUE)
 #' )
 #' # wrapped version:
-#' ksnormal(x = mtcars$wt)
+#' ksnormal(x = mtcars$wt, lillie=FALSE)
 #' @export
-ksnormal <- function(x) {
+ksnormal <- function(x, lillie=TRUE) {
   if(length(na.omit(x))>1){
-  suppressWarnings(
-    assign("ksout",ks.test(x, "pnorm", mean(x, na.rm = TRUE), sd(x, na.rm = TRUE),
-                     exact = FALSE
-    )$p.value))
+    if(lillie){
+    assign("ksout",
+           nortest::lillie.test(x)$p.value)  
+    } else{
+      suppressWarnings(
+        assign("ksout",
+               ks.test(x, "pnorm", mean(x, na.rm = TRUE), 
+                       sd(x, na.rm = TRUE),
+                       exact = FALSE
+               )$p.value))
+    }
+    
   }else{
     ksout <- NA
   }
@@ -619,14 +628,14 @@ compare2qualvars <- function(data, dep_vars, indep_var,
           data |> 
           select(all_of(c(indep_var,var_i))) |> 
           mutate(testvar=forcats::fct_collapse(!!sym(var_i),
-                                      check=subgroups[sg_i],
-                                      other_level = 'other')) |> 
+                                               check=subgroups[sg_i],
+                                               other_level = 'other')) |> 
           select(all_of(indep_var),'testvar') |> table()
         if(ncol(testdata)>1) {
           p_sg <- fisher.test(testdata,
-                            simulate.p.value = TRUE,
-                            B = 10^5)$p.value |> 
-          formatP(mark = mark, pretext = pretext)
+                              simulate.p.value = TRUE,
+                              B = 10^5)$p.value |> 
+            formatP(mark = mark, pretext = pretext)
         } else{
           p_sg <- ''
         }
@@ -634,7 +643,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
           freqBYgroup[[var_i]]$p <- 
             paste(na.omit(freqBYgroup[[var_i]]$p),p_sg) |> 
             str_squish()} else {
-        freqBYgroup[[var_i]]$p[sg_i] <- p_sg
+              freqBYgroup[[var_i]]$p[sg_i] <- p_sg
             }
       }
     }
@@ -650,19 +659,19 @@ compare2qualvars <- function(data, dep_vars, indep_var,
   for (var_i in seq_along(dep_vars)) {
     if (!singleline) {
       out_tmp <- add_row(out[0,],
-                     Variable = c(
-                       dep_vars[var_i],
-                       glue::glue(
-                         "{indentor}{levels[[var_i]][[1]]}"
-                       )
-                     ),
-                     desc_all = c(spacer, freq[[var_i]][[1]]),
-                     g1 = c(spacer, freqBYgroup[[var_i]][[1]]),
-                     g2 = c(spacer, freqBYgroup[[var_i]][[2]]),
-                     p = c(
-                       p[[var_i]][[1]],
-                       rep(spacer, nrow(freqBYgroup[[var_i]]))
-                     )
+                         Variable = c(
+                           dep_vars[var_i],
+                           glue::glue(
+                             "{indentor}{levels[[var_i]][[1]]}"
+                           )
+                         ),
+                         desc_all = c(spacer, freq[[var_i]][[1]]),
+                         g1 = c(spacer, freqBYgroup[[var_i]][[1]]),
+                         g2 = c(spacer, freqBYgroup[[var_i]][[2]]),
+                         p = c(
+                           p[[var_i]][[1]],
+                           rep(spacer, nrow(freqBYgroup[[var_i]]))
+                         )
       )
       if(p_subgroups){
         out_tmp$pSubgroup <- c(spacer,freqBYgroup[[var_i]]$p)
@@ -670,16 +679,16 @@ compare2qualvars <- function(data, dep_vars, indep_var,
       out <- rbind(out,out_tmp)
     } else {
       out_tmp <- add_row(out[0,],
-                     Variable = paste(
-                       dep_vars[var_i],
-                       # rep(spacer,
-                       #     nrow(freqBYgroup[[var_i]])-1)),
-                       levels[[var_i]][[1]]
-                     ),
-                     desc_all = freq[[var_i]][[1]],
-                     g1 = freqBYgroup[[var_i]][[1]],
-                     g2 = freqBYgroup[[var_i]][[2]],
-                     p = p[[var_i]][[1]]
+                         Variable = paste(
+                           dep_vars[var_i],
+                           # rep(spacer,
+                           #     nrow(freqBYgroup[[var_i]])-1)),
+                           levels[[var_i]][[1]]
+                         ),
+                         desc_all = freq[[var_i]][[1]],
+                         g1 = freqBYgroup[[var_i]][[1]],
+                         g2 = freqBYgroup[[var_i]][[2]],
+                         p = p[[var_i]][[1]]
       )
       if(p_subgroups){
         out_tmp$pSubgroup <- freqBYgroup[[var_i]]$p
@@ -1142,7 +1151,7 @@ compare_n_numvars <- function(.data = rawdata,
       collapse = ";")) |>
         pivot_longer(everything(),names_to = 'Variable', 
                      values_to = 'p between groups')) |> 
-        # gather(key = "Variable", value = "p between groups")) |>
+    # gather(key = "Variable", value = "p between groups")) |>
     full_join(purrr::reduce(t$p_wcox_t_out, rbind) |>
                 matrix(nrow = length(dep_vars), byrow = FALSE) |>
                 as_tibble(.name_repair = "unique") |>
@@ -1155,7 +1164,7 @@ compare_n_numvars <- function(.data = rawdata,
     )) |>
       pivot_longer(everything(),names_to = 'Variable', 
                    values_to = 'p vs.ref'))  
-      # gather(key = "Variable", value = "p vs.ref"))
+  # gather(key = "Variable", value = "p vs.ref"))
   results <- cbind(
     results,
     purrr::map2_df(

@@ -10,8 +10,8 @@ Description: The main functionalities of 'wrappedtools' are:
     descriptive statistics and p-values; creating specialized plots for 
     correlation matrices. Functions were mainly written for my own daily work or 
     teaching, but may be of use to others as well.
-Version: 0.9.5
-Date: 2024-03-16
+Version: 0.9.6
+Date: 2024-07-30
 Authors@R: c(
     person(given = "Andreas",
            family = "Busjahn",
@@ -46,11 +46,12 @@ Imports:
     broom,
     rlist,
     DescTools,
-    flextable
+    flextable,
+    nortest
 Depends: 
     R (>= 4.2)
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 LazyData: true
 VignetteBuilder: knitr
 Suggests: rmarkdown, testthat, ggrepel
