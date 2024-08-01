@@ -209,6 +209,7 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 #' FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars), exclude = "r")
 ## rawdata <- mtcars
 ## FindVars(varnames = c("^c", "g"))
+
 FindVars <- function(varnames, allnames = colnames(rawdata),
                      exact = FALSE, exclude = NA, casesensitive = TRUE,
                      fixed = FALSE, return_symbols=FALSE) {
@@ -270,7 +271,7 @@ FindVars <- function(varnames, allnames = colnames(rawdata),
 }
 
 
-#' Find numeric index and names of columns based on type and patterns
+#' Find numeric index and names of columns based on class(es) and patterns
 #'
 #' \code{ColSeeker} looks up colnames (by default for tibble rawdata)
 #' based on type and parts of names, using regular expressions. 
@@ -286,12 +287,15 @@ FindVars <- function(varnames, allnames = colnames(rawdata),
 #' @param returnclass Logical if classes should be included in output
 #' 
 #' @export
-#' @return A list with index, names, and backticked names, optionally the classes as well
+#' @return A list with index, names, backticked names, and count;  optionally the classes as well
 #' @examples
 #' ColSeeker(data = mtcars, namepattern = c("^c", "g"))
 #' ColSeeker(data = mtcars, namepattern = c("^c", "g"), exclude = "r")
-## rawdata <- mtcars
-## ColSeeker(namepattern = c("^c", "g"), varclass="numeric")
+#' assign("rawdata", mtcars)
+#' ColSeeker(namepattern = c("^c", "g"), varclass="numeric")
+#' num_int_data <- data.frame(num1=rnorm(10), num2=runif(10), int1=1:10, int2=11:20)
+#' ColSeeker(num_int_data, varclass="numeric")  # integers are not found
+#' ColSeeker(num_int_data, varclass=c("numeric","integer")) 
 ColSeeker <- function(data=rawdata,
                       namepattern = '.',
                       varclass = NULL, 

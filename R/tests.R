@@ -202,6 +202,7 @@ ksnormal <- function(x, lillie=TRUE) {
     if(lillie){
     assign("ksout",
            nortest::lillie.test(x)$p.value)  
+      names(ksout) <- "p_Normal_Lilliefors"
     } else{
       suppressWarnings(
         assign("ksout",
@@ -209,6 +210,7 @@ ksnormal <- function(x, lillie=TRUE) {
                        sd(x, na.rm = TRUE),
                        exact = FALSE
                )$p.value))
+      names(ksout) <- "p_Normal_KS"
     }
     
   }else{

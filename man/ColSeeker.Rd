@@ -2,7 +2,7 @@
 % Please edit documentation in R/basefunctions.R
 \name{ColSeeker}
 \alias{ColSeeker}
-\title{Find numeric index and names of columns based on type and patterns}
+\title{Find numeric index and names of columns based on class(es) and patterns}
 \usage{
 ColSeeker(
   data = rawdata,
@@ -30,7 +30,7 @@ ColSeeker(
 \item{returnclass}{Logical if classes should be included in output}
 }
 \value{
-A list with index, names, and backticked names, optionally the classes as well
+A list with index, names, backticked names, and count;  optionally the classes as well
 }
 \description{
 \code{ColSeeker} looks up colnames (by default for tibble rawdata)
@@ -41,4 +41,9 @@ Exclusion rules may be specified as well.
 \examples{
 ColSeeker(data = mtcars, namepattern = c("^c", "g"))
 ColSeeker(data = mtcars, namepattern = c("^c", "g"), exclude = "r")
+assign("rawdata", mtcars)
+ColSeeker(namepattern = c("^c", "g"), varclass="numeric")
+num_int_data <- data.frame(num1=rnorm(10), num2=runif(10), int1=1:10, int2=11:20)
+ColSeeker(num_int_data, varclass="numeric")  # integers are not found
+ColSeeker(num_int_data, varclass=c("numeric","integer")) 
 }
