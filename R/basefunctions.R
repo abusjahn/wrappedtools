@@ -141,7 +141,8 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
         formatC, format = "f",
         digits = ndigits, drop0trailing = FALSE,
         decimal.mark = decimal.mark
-      )
+      )|> 
+      apply(MARGIN=c(1,2), gsub, pattern = ".*NA.*",replacement = "")
     if (pretext) {
       for (row_i in 1:nrow(pIn)) {
         for (col_i in 1:ncol(pIn)) {
@@ -150,25 +151,36 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
                    "<", "="
             ),
             formatp[row_i, col_i]
-          )
+          ) |> 
+            gsub(pattern = "NA.*",replacement = "", x=_) 
         }
       }
+      formatp <-  
+        apply(formatp,MARGIN=c(1,2), gsub, pattern = ".*NA.*",replacement = "")
     }
     if (mark) {
       formatp <- matrix(
         paste(
           formatp,
-          apply(gsub("[\\<\\=]", "", formatp), c(1, 2), markSign)
+          apply(gsub("[\\<\\=]", "", formatp) |> 
+                  gsub(",",".",x=_), c(1, 2), markSign)
         ),
         ncol = ncol(pIn)
-      )
+      ) |> apply(MARGIN = c(1, 2), 
+                       gsub, pattern = ".*NA.*",replacement = "")
     }
     if(add.surprisal){
-      s <- apply(pIn,MARGIN = c(1,2),surprisal, precision = sprecision)
+      s <- apply(pIn,MARGIN = c(1,2),surprisal, precision = sprecision) 
       if(german_num){
-        s <- str_replace(s,'\\.',',')
+        s <- gsub('\\.',',',s)
       }
-      formatp <- paste0(formatp,', s = ',s)
+      for (row_i in 1:nrow(pIn)) {
+        for (col_i in 1:ncol(pIn)) {
+          formatp[row_i, col_i] <- paste0(formatp[row_i, col_i],
+            ', s = ',s[row_i,col_i])|> 
+        gsub(pattern = ".*NA.*",replacement = "",x=_)
+        }
+      }
     }
     if (textout == FALSE & pretext == FALSE & add.surprisal == FALSE) {
       formatp <- apply(formatp, MARGIN = c(1, 2), as.numeric)
@@ -176,6 +188,8 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
     if(!pIn_is_matrix){
       formatp <- as.vector(formatp)
     }
+  } else{
+    formatP=""
   }
   return(formatp)
 }
