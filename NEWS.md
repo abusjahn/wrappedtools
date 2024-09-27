@@ -1,5 +1,7 @@
 #wrappedtools 0.9.6
 - function ksnormal now uses Lilliefors test by default
+- example for compare_n_numvars was corrected
+- compare2numvars now removes railing spaces
 
 #wrappedtools 0.9.5 
 - combines all updates from minor releases 9.4.x

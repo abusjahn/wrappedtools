@@ -1023,9 +1023,9 @@ pairwise_t_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
 #' # Usually,only the result table is relevant:
 #' compare_n_numvars(
 #'   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
-#'   indep_var = "drat",
+#'   indep_var = "cyl",
 #'   gaussian = TRUE
-#' )$results
+#'  )$results
 #' # For a report, result columns may be filtered as needed:
 #' compare_n_numvars(
 #'   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
@@ -1172,7 +1172,7 @@ compare_n_numvars <- function(.data = rawdata,
     purrr::map2_df(
       .x = dplyr::select(results, starts_with(indep_var)),
       .y = dplyr::select(results, starts_with("sign")),
-      .f = paste
+      .f = ~paste(.x, .y, sep = " ") |> str_squish()
     ) |>
       rename_all(paste, "fn")
   ) |>

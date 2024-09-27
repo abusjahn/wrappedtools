@@ -52,9 +52,9 @@ Some names were changed in August 2022, to reflect the update of the function to
 # Usually,only the result table is relevant:
 compare_n_numvars(
   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
-  indep_var = "drat",
+  indep_var = "cyl",
   gaussian = TRUE
-)$results
+ )$results
 # For a report, result columns may be filtered as needed:
 compare_n_numvars(
   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
