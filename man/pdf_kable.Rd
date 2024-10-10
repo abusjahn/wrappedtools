@@ -2,7 +2,7 @@
 % Please edit documentation in R/basefunctions.R
 \name{pdf_kable}
 \alias{pdf_kable}
-\title{Enhanced kable with latex}
+\title{Enhanced \link[knitr:kable]{knitr::kable} with latex}
 \usage{
 pdf_kable(
   .input,

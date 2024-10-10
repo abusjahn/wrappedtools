@@ -28,8 +28,8 @@ differences, e.g. b means different from group 2}
 
 \item{ref}{is the 1st subgroup the reference (like in Dunnett test)}
 
-\item{cmh}{Should  Cochran-Mantel-Haenszel test (\link{cmh_test}) be used for
-testing? If false, the linear-by-linear association test (\link{lbl_test})
+\item{cmh}{Should  Cochran-Mantel-Haenszel test (\link[coin:ContingencyTests]{coin::cmh_test}) be used for
+testing? If false, the linear-by-linear association test (\link[coin:ContingencyTests]{coin::lbl_test})
 is applied.}
 }
 \value{

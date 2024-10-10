@@ -385,7 +385,7 @@ ColSeeker <- function(data=rawdata,
 
 
 
-#' Enhanced [kable] with definable number of rows and/or columns for splitting
+#' Enhanced [knitr::kable] with definable number of rows and/or columns for splitting
 #'
 #' @description
 #' `r lifecycle::badge('superseded')`
@@ -437,7 +437,7 @@ print_kable <- function(t, nrows = 30, caption = "",
   }
 }
 
-#' Enhanced kable with latex
+#' Enhanced [knitr::kable] with latex
 #'
 #' \code{pdf_kable} formats tibbles/df's for markdown
 #'

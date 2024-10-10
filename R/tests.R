@@ -101,8 +101,8 @@ pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 #' @param symbols predefined as b,c, d...;  provides footnotes to mark group
 #' differences, e.g. b means different from group 2
 #' @param ref is the 1st subgroup the reference (like in Dunnett test)
-#' @param cmh Should  Cochran-Mantel-Haenszel test (\link{cmh_test}) be used for
-#' testing? If false, the linear-by-linear association test (\link{lbl_test})
+#' @param cmh Should  Cochran-Mantel-Haenszel test ([coin::cmh_test]) be used for
+#' testing? If false, the linear-by-linear association test ([coin::lbl_test])
 #' is applied.
 #'
 #' @return
