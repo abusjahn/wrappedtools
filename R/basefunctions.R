@@ -644,7 +644,9 @@ identical_cols <- function(df,
   duplicated_groups <- unique(identical.cols[purrr::map_lgl(identical.cols, ~ length(.x) > 1)])
   
   if (print_duplicates) {
-    print(duplicated_groups)
+    purrr::map(duplicated_groups,~paste(bt(.x), collapse = "\n")) |> 
+      paste(collapse = "\n\n") |> 
+      cat()
   }
   
   if (remove_duplicates) {
@@ -654,7 +656,7 @@ identical_cols <- function(df,
     } else{
       user_choice = "a"
     }
-    if (user_choice == "a") {
+    if(user_choice == "a") {
       cols_to_remove <- col_names[col_names %in% unlist(
         purrr::map(duplicated_groups, ~ .x[-1])
       )]
@@ -663,14 +665,14 @@ identical_cols <- function(df,
           purrr::map(duplicated_groups, ~ .x[-1])
         )]
       df <- df[, cols_to_keep, drop = FALSE]
-      if (clean_names) {
+      if(clean_names) {
         df <- rename_with(
           df,
           .cols = all_of(cols_to_keep),
           .fn = ~ str_remove(.x, "\\.{3}\\d+$")
         )
       }
-    } else if (user_choice == "s") {
+    } else if(user_choice == "s") {
       cn2rename <- ""
       cols_to_remove <- character(0)
       for (group in duplicated_groups) {
