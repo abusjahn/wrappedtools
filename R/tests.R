@@ -870,13 +870,13 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
 #'
 #' \code{pairwise_wilcox_test} calculates pairwise comparisons on ordinal data
 #' between all group levels with corrections for multiple testing based on
-#' \link{wilcox_test} from package 'coin'.
+#' [coin::wilcox_test] from package 'coin'.
 #'
 #' @param dep_var dependent variable, containing the data.
 #' @param indep_var independent variable, should be factor.
 #' @param strat_var optional factor for stratification.
 #' @param adjmethod method for adjusting p values (see [p.adjust])
-#' @param distr Computation of p-values, see \link{wilcox_test}.
+#' @param distr Computation of p-values, see [coin::wilcox_test].
 #' @param plevel threshold for significance.
 #' @param symbols predefined as b,c, d...;  provides footnotes to mark group
 #' differences, e.g. b means different from group 2.
