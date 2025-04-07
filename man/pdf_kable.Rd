@@ -30,7 +30,7 @@ pdf_kable(
 
 \item{foot}{footnote}
 
-\item{escape}{see kable}
+\item{escape}{see \link[knitr:kable]{knitr::kable}}
 }
 \value{
 A character vector of the table source code.

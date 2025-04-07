@@ -399,7 +399,7 @@ ColSeeker <- function(data=rawdata,
 #' @param nrows number of rows (30) before splitting.
 #' @param ncols number of columns (100) before splitting.
 #' @param caption header.
-#' @param ... Further arguments passed to [kable].
+#' @param ... Further arguments passed to [knitr::kable].
 #' @return No return value, called for side effects.
 #' 
 #' @examples 
@@ -448,7 +448,7 @@ print_kable <- function(t, nrows = 30, caption = "",
 #' @param innercaption subheader
 #' @param caption header
 #' @param foot footnote
-#' @param escape see kable
+#' @param escape see [knitr::kable]
 #'
 #'@return A character vector of the table source code. 
 #' @export
@@ -588,5 +588,116 @@ flex2rmd <- function(ft){
     return(ft)
   } else {
     return(flextable_to_rmd(ft))
+  }
+}
+
+
+#' Find and optionally remove identical columns in a data frame.
+#'
+#' This function identifies columns with identical values in a data frame and
+#' provides options to remove them, clean column names, and print the duplicated groups.
+#' It also includes an interactive mode where the user can choose to remove all,
+#' some, or none of the duplicated columns.
+#'
+#' @param df A data frame or tibble.
+#' @param interactive Logical. If TRUE, the function prompts the user to choose how
+#'   to handle duplicated columns. Defaults to TRUE.
+#' @param remove_duplicates Logical. If TRUE, removes duplicated columns. Defaults to TRUE.
+#' @param clean_names Logical. If TRUE, cleans column names by removing trailing
+#'   "..." followed by digits. Defaults to TRUE.
+#' @param print_duplicates Logical. If TRUE, prints the groups of duplicated columns.
+#'   Defaults to TRUE.
+#'
+#' @return A data frame with optionally removed and renamed columns.
+#'
+#' @examples
+#' library(tibble)
+#'
+#' dummy <- tibble(
+#'   A...1 = rnorm(10),
+#'   A...2 = A...1,
+#'   C = sample(letters, 10),
+#'   A...4 = A...1,
+#'   E = sample(1:10, 10),
+#'   `F` = C
+#' )
+#'
+#' # Example usage:
+#' identical_cols(dummy) # Interactive removal
+#' identical_cols(dummy, remove_duplicates = FALSE) # Find identical columns only
+#' identical_cols(dummy, print_duplicates = FALSE) # Interactive removal, no print
+#' identical_cols(dummy, clean_names = FALSE) # Interactive removal, no clean names
+#' identical_cols(dummy, interactive = FALSE) #Non interactive removal of all duplicates.
+#'
+#' @export
+identical_cols <- function(df,
+                           interactive = TRUE,
+                           remove_duplicates = TRUE,
+                           clean_names = TRUE,
+                           print_duplicates = TRUE) {
+  col_names <- names(df)
+  identical.cols <-
+    purrr::map(col_names, function(current_col) {
+      col_names[purrr::map_lgl(df, ~ identical(.x, df[[current_col]]))]
+    })
+  names(identical.cols) <- col_names
+  duplicated_groups <- unique(identical.cols[purrr::map_lgl(identical.cols, ~ length(.x) > 1)])
+  
+  if (print_duplicates) {
+    purrr::map(duplicated_groups,~paste(bt(.x), collapse = "\n")) |> 
+      paste(collapse = "\n\n") |> 
+      cat()
+  }
+  
+  if (remove_duplicates) {
+    if(interactive &
+       length(duplicated_groups) > 0) {
+      user_choice <- readline("Remove (a)ll, (s)ome, or (n)one of the duplicates? (a/s/n): ")
+    } else{
+      user_choice = "a"
+    }
+    if(user_choice == "a") {
+      cols_to_remove <- col_names[col_names %in% unlist(
+        purrr::map(duplicated_groups, ~ .x[-1])
+      )]
+      cols_to_keep <-
+        col_names[!col_names %in% unlist(
+          purrr::map(duplicated_groups, ~ .x[-1])
+        )]
+      df <- df[, cols_to_keep, drop = FALSE]
+      if(clean_names) {
+        df <- rename_with(
+          df,
+          .cols = all_of(cols_to_keep),
+          .fn = ~ str_remove(.x, "\\.{3}\\d+$")
+        )
+      }
+    } else if(user_choice == "s") {
+      cn2rename <- ""
+      cols_to_remove <- character(0)
+      for (group in duplicated_groups) {
+        cat(paste0("Duplicate group:\n", paste0("- ",
+                                                group,
+                                                collapse = "\n")))
+        remove_group <- readline("Remove this duplication? (y/n): ")
+        
+        if (remove_group == "y") {
+          cols_to_remove <- c(cols_to_remove, group[-1])
+          cn2rename <- c(cn2rename,group[1])
+        }
+      }
+      cols_to_keep <- col_names[!col_names %in% cols_to_remove]
+      df <- df[, cols_to_keep, drop = FALSE]
+      if (clean_names) {
+        df <- rename_with(
+          df,
+          .cols = any_of(cn2rename),
+          .fn = ~ str_remove(.x, "\\.{3}\\d+$")
+        )
+      }
+    } else {
+      cols_to_keep <- col_names
+    }
+    return(df)
   }
 }

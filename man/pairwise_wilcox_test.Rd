@@ -24,7 +24,7 @@ pairwise_wilcox_test(
 
 \item{adjmethod}{method for adjusting p values (see \link{p.adjust})}
 
-\item{distr}{Computation of p-values, see \link{wilcox_test}.}
+\item{distr}{Computation of p-values, see \link[coin:LocationTests]{coin::wilcox_test}.}
 
 \item{plevel}{threshold for significance.}
 
@@ -39,7 +39,7 @@ A list with matrix of adjusted p-values and character vector with significance i
 \description{
 \code{pairwise_wilcox_test} calculates pairwise comparisons on ordinal data
 between all group levels with corrections for multiple testing based on
-\link{wilcox_test} from package 'coin'.
+\link[coin:LocationTests]{coin::wilcox_test} from package 'coin'.
 }
 \examples{
 pairwise_wilcox_test(dep_var = mtcars$wt, indep_var = mtcars$cyl)
