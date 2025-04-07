@@ -1,3 +1,9 @@
+#wrappedtools 0.9.8
+- function compare2numvars can now additionally calculate confidence intervals
+- function compare2numvars now has the additional option for a singleline or stacked display
+- new function mean_cl_boot which calculates the mean and confidence intervals
+- function median_cl_boot now has an additional round option
+
 #wrappedtools 0.9.6
 - function ksnormal now uses Lilliefors test by default
 - example for compare_n_numvars was corrected
