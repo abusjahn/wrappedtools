@@ -438,7 +438,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
     DESC <- meansd
     COMP <- t_var_test
     DESC_CI <- mean_cl_boot
-    string <- "(\\d+ ± \\d+)\\s*(\\[\\d+ -> \\d+\\])\\s*(\\[n=\\d+\\])\\s*(\\[\\d+ ; \\d+\\])"
+    string <- "(\\d+ ± \\d+)\\s*(\\[\\d+ -> \\d+\\])\\s*(\\[n=\\d+\\])\\s*(\\[\\d+; \\d+\\])"
     order <- "\\1 \\4 \\2 \\3"
   } else {
     DESC <- median_quart
@@ -455,19 +455,19 @@ compare2numvars <- function(data, dep_vars, indep_var,
       Group = all_of(indep_var),
       all_of(dep_vars)
     ) |>
-    mutate(Group = factor(Group) |> fct_drop()) |>
-    pivot_longer(-Group,names_to = 'Variable',values_to = 'Value') |> 
-    # gather(key = Variable, value = Value, -Group) |>
+    mutate(Group = fct_drop(factor(Group))) |>
+    pivot_longer(-Group,names_to = 'Variable',values_to = 'Value') |>
     mutate(Variable = forcats::fct_inorder(Variable)) |>
     # na.omit() |>
     as_tibble()
+  
   if(nlevels(data_l$Group)!=2){
     stop(paste0('Other than 2 groups provided for ',indep_var,': ',
                 paste(levels(data_l$Group),collapse='/'),
                 ". Look into function compare_n_numvars."))
   }
   data_l <- data_l |> 
-    filter(!is.na(Group))
+    dplyr::filter(!is.na(Group))
   
   out <- data_l |> 
     group_by(Variable) |> 
@@ -515,20 +515,19 @@ compare2numvars <- function(data, dep_vars, indep_var,
   
   if (ci){ 
     out <- out |> 
-      mutate(desc_all = paste(desc_all, all_CI, sep = "  ") |> 
-               str_replace(
-                 string, order),
-             g1 = paste(g1, out[[10]], sep = "  ")|> 
-               str_replace(
-                 string, order),
-             g2 = paste(g2, out[[11]], sep = "  ")|> 
-               str_replace(
-                 string, order)) |> 
-      select(-contains("CI"))
+      mutate(
+        desc_all = paste(desc_all, all_CI) |> 
+          str_replace(string, order),
+        g1 = paste(g1, out[[10]]) |> 
+          str_replace(string, order),
+        g2 = paste(g2, out[[11]]) |> 
+          str_replace(string, order)
+      ) |> 
+      dplyr::select(-contains("CI"))
   }
   else{
     out <- out |> 
-      select(-contains("CI"))
+      dplyr::select(-contains("CI"))
   }
   
   if (!n) {
@@ -536,11 +535,9 @@ compare2numvars <- function(data, dep_vars, indep_var,
   }
   
   if (!singleline) {
-    indentor <- paste0(rep(spacer, 5), collapse = "")
-    
     out_tmp <- 
       out |>
-      select(-starts_with("n")) |>
+      dplyr::select(-starts_with("n")) |>
       pivot_longer(cols = -c(Variable, p),
                    names_to = "group",
                    values_to = "stats") |>
@@ -558,14 +555,13 @@ compare2numvars <- function(data, dep_vars, indep_var,
         } else {
           NA_character_},
         Median = if (!gaussian) {
-          str_extract(stats, "(\\d+)\\s*\\((\\d+/\\d+)\\)") |> 
-            str_extract("^\\d+") |> 
+          str_extract(stats, "^\\d+") |>
             as.character()
         } else {
           NA_character_},
         Quartiles = if (!gaussian) {
-          str_extract(stats, "(\\d+)\\s*\\((\\d+/\\d+)\\)") |> 
-            str_extract("\\d+/\\d+") |> 
+          str_extract(stats, "\\(\\d+/\\d+\\)") |> 
+            str_remove_all("[\\(\\)]") |> 
             as.character()
         } else {
           NA_character_},
@@ -592,7 +588,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
                "g1" = "",
                "g2" = "") |>
         unique()
-      out_tmp <- add_row(out_tmp, row)
+      out_tmp <- dplyr::add_row(out_tmp, row)
     }
     
     out <- out_tmp |>
