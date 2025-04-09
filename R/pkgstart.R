@@ -40,7 +40,7 @@ NULL
 #' @importFrom rlist list.append
 NULL 
 
-#' @importFrom forcats fct_lump_n fct_drop
+#' @importFrom forcats fct_lump_n fct_drop fct_inorder
 NULL
 
 #' @importFrom grDevices boxplot.stats
