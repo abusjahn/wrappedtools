@@ -401,7 +401,7 @@ t_var_test <- function(data, formula, cutoff = .05) {
 #' @param pretext for function [formatP].
 #' @param mark for function [formatP].
 #' @param n create columns for n per group?
-#' @param add_n add n to descriptive statistics?
+#' @param add_n add n to descriptive statistics. Will automatically be set to TRUE, if singleline = FALSE and n = TRUE to keep it for the long table format.
 #' @param singleline Put all group levels in a single line (default) or below each other.
 #' @param indentor Optional text element to indent descriptivestats when using singleline = FALSE. Defaults to "     ".
 #' @param ci Computes lower and upper confidence limits for the estimated mean/median, based on bootstrapping.
@@ -466,6 +466,12 @@ compare2numvars <- function(data, dep_vars, indep_var,
                 paste(levels(data_l$Group),collapse='/'),
                 ". Look into function compare_n_numvars."))
   }
+  
+  if (!singleline && n && !add_n){
+    add_n = TRUE
+    print(glue::glue("add_n will be set to TRUE to calculate n for long table format (singleline = FALSE)"))
+  }
+  
   data_l <- data_l |> 
     dplyr::filter(!is.na(Group))
   
@@ -507,7 +513,6 @@ compare2numvars <- function(data, dep_vars, indep_var,
     separate(desc_groups, into = c("g1", "g2"), 
              sep = ":", fill = "right") |> 
     separate(n_groups, into = glue::glue("n {indep_var} {levels(data_l$Group)}"), 
-             ## into = c("n g1", "n g2")
              sep = ":") |> 
     mutate(n = rowSums(across(starts_with("n "), as.numeric), 
                        na.rm = TRUE)) |> 
@@ -531,7 +536,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
   }
   
   if (!n) {
-    out <- dplyr::select(out, -n, -starts_with("n "))
+    out <- dplyr::select(out, -starts_with("n"))
   }
   
   if (!singleline) {
@@ -542,46 +547,46 @@ compare2numvars <- function(data, dep_vars, indep_var,
                    names_to = "group",
                    values_to = "stats") |>
       mutate(
-        Mean = if (gaussian) {
-          str_extract(stats, "(\\d+)\\s*±\\s*(\\d+)") |> 
-            str_extract("^\\d+") |> 
-            as.character()
-        } else {
-          NA_character_},
+        n = str_extract(stats, "\\[n=\\d+\\]") |>
+          str_extract("\\d+") |>
+          as.character(),
+        "Mean (95% CI)" = if (gaussian) {
+          paste0(str_extract(stats, "^\\d+")," (",
+                 str_extract(stats, "\\[\\d+; \\d+\\]") |> 
+                   str_remove_all("[\\[\\]]") |> 
+                   str_replace(";", "/"),
+                 ")")
+        } else {NA_character_},
         SD = if (gaussian) {
           str_extract(stats, "(\\d+)\\s*±\\s*(\\d+)") |> 
             str_extract("\\d+$") |> 
-            as.character()
-        } else {
-          NA_character_},
-        Median = if (!gaussian) {
-          str_extract(stats, "^\\d+") |>
-            as.character()
-        } else {
-          NA_character_},
+            as.character()} 
+        else {NA_character_},
+        "Median (95% CI)" = if (!gaussian) {
+          paste0(str_extract(stats, "^\\d+")," (",
+                 str_extract(stats, "\\[\\d+; \\d+\\]") |> 
+                   str_remove_all("[\\[\\]]") |> 
+                   str_replace(";", "/"),
+                 ")")} 
+        else {NA_character_},
         Quartiles = if (!gaussian) {
           str_extract(stats, "\\(\\d+/\\d+\\)") |> 
             str_remove_all("[\\(\\)]") |> 
             as.character()
         } else {
           NA_character_},
-        CI = as.character(str_extract(stats,"\\[\\d+; \\d+\\]")) |> 
-          str_remove_all("[\\[\\]]"),
         "min -> max" = str_extract(stats, "\\[\\d+\\s*->\\s*\\d+\\]") |>
-          str_remove_all("[\\[\\]]"),
-        n = str_extract(stats, "\\[n=\\d+\\]") |>
-          str_extract("\\d+") |>
-          as.character()
+          str_remove_all("[\\[\\]]")
       ) |>
       select(-stats) |>
-      select_if(~ !any(is.na(.))) |>  ## to remove empty columns (e.g. if range = FALSE)
+      select_if(~ !any(is.na(.))) |>  
       pivot_longer(-c(Variable, group, p),
                    names_to = "stats",
                    values_to = "values") |>
       pivot_wider(names_from = "group",
                   values_from = "values")
     
-    for (var_i in dep_vars){ ## add additional row with empty fields for groups
+    for (var_i in dep_vars){
       row <- filter(out_tmp, Variable == var_i) |>
         mutate(stats = "",
                desc_all = "",
@@ -597,18 +602,16 @@ compare2numvars <- function(data, dep_vars, indep_var,
       arrange(stats != "", .by_group = TRUE) |>
       ungroup() |>
       mutate(Variable = case_when(
-        stats == "Mean" ~ paste0(indentor, "Mean"),
-        stats == "Median" ~ paste0(indentor, "Median"),
-        stats == "CI" ~ paste0(indentor, "95% CI"),
+        stats == "n" ~ paste0(indentor, "n"),
+        stats == "Mean (95% CI)" ~ paste0(indentor, "Mean (95% CI)"),
+        stats == "Median (95% CI)" ~ paste0(indentor, "Median (95% CI)"),
         stats == "Quartiles" ~ paste0(indentor, "Quartiles"),
         stats == "SD" ~ paste0(indentor, "SD"),
         stats == "min -> max" ~ paste0(indentor, "min -> max"),
-        stats == "n" ~ paste0(indentor, "n"),
         TRUE ~ Variable),
         p = case_when(
-          stats == "Mean" ~ "",
-          stats == "Median" ~ "",
-          stats == "CI" ~ "",
+          stats == "Mean (95% CI)" ~ "",
+          stats == "Median (95% CI)" ~ "",
           stats == "SD" ~ "",
           stats == "Quartiles" ~ "",
           stats == "min -> max" ~ "",
