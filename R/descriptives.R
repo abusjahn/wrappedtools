@@ -255,7 +255,8 @@ se_median <- function(x) {
 #' @param conf confidence interval with default 95%.
 #' @param type type for function boot.ci.
 #' @param nrepl number of bootstrap replications, defaults to 1000.
-#' @param roundDig Number of relevant digits for functio [roundR].
+#' @param round logical, applies [roundR] function to results. Output is character.
+#' @param roundDig number of relevant digits for function [roundR].
 #'
 #' @return A tibble with one row and three columns: Median, CIlow, CIhigh.
 #'
@@ -263,18 +264,26 @@ se_median <- function(x) {
 #' # basic usage of median_cl_boot
 #' median_cl_boot(x = mtcars$wt)
 #' @export
-median_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3, roundDig = 2) {
+median_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3, round = FALSE, roundDig = 2) {
   x <- na.omit(x)
   lconf <- (1 - conf) / 2
   uconf <- 1 - lconf
   bmedian <- function(x, ind) median(x[ind], na.rm = TRUE)
   bt <- boot::boot(x, bmedian, nrepl)
   bb <- boot::boot.ci(bt, type = type)
-  tibble(
-    Median = median(x, na.rm = TRUE),
-    CIlow = roundR(quantile(bt$t, lconf), level = roundDig),
-    CIhigh = roundR(quantile(bt$t, uconf), level = roundDig)
-  )
+  if (round) {
+    return(tibble(
+      Median = roundR(median(x, na.rm = TRUE), level = roundDig),
+      CIlow = roundR(quantile(bt$t, lconf), level = roundDig),
+      CIhigh = roundR(quantile(bt$t, uconf), level = roundDig)
+    ))
+  } else {
+    return(tibble(
+      Median = median(x, na.rm = TRUE),
+      CIlow = quantile(bt$t, lconf),
+      CIhigh = quantile(bt$t, uconf)
+    ))
+  }
 }
 #' Rename output from \link{median_cl_boot} for use in ggplot.
 #'
@@ -307,6 +316,7 @@ median_cl_boot_gg <- function(x){
 #' @param conf confidence interval with default 95%.
 #' @param type type for function boot.ci.
 #' @param nrepl number of bootstrap replications, defaults to 1000.
+#' @param round logical, applies [roundR] function to results. Output is character.
 #' @param roundDig Number of relevant digits for functio [roundR].
 #'
 #' @return A tibble with one row and three columns: Mean, CIlow, CIhigh.
@@ -316,7 +326,7 @@ median_cl_boot_gg <- function(x){
 #' mean_cl_boot(x = mtcars$wt)
 #' @export
 mean_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3,
-                         roundDig = 2) ## 
+                         round = FALSE, roundDig = 2) ## 
 {
   x <- na.omit(x)
   lconf <- (1 - conf)/2
@@ -324,10 +334,18 @@ mean_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3,
   bmean <- function(x, ind) mean(x[ind], na.rm = TRUE)
   bt <- boot::boot(x, bmean, nrepl)
   bb <- boot::boot.ci(bt, type = type)
-  tibble(Mean = mean(x, na.rm = TRUE), 
-         CIlow = roundR(quantile(bt$t, lconf), level = roundDig),
-         CIhigh = roundR(quantile(bt$t, uconf), level = roundDig)
-  )
+  
+  if(round){
+    tibble(Mean = roundR(mean(x, na.rm = TRUE), level = roundDig), 
+           CIlow = roundR(quantile(bt$t, lconf), level = roundDig), 
+           CIhigh = roundR(quantile(bt$t, uconf), level = roundDig)
+    )
+  } else{
+    tibble(Mean = mean(x, na.rm = TRUE), 
+           CIlow = quantile(bt$t, lconf), 
+           CIhigh = quantile(bt$t, uconf)
+    )
+  }
 }
 #' Compute absolute and relative frequencies.
 #'

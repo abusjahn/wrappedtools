@@ -438,7 +438,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
     DESC <- meansd
     COMP <- t_var_test
     DESC_CI <- mean_cl_boot
-    string <- "(\\d+ ± \\d+)\\s*(\\[\\d+ -> \\d+\\])\\s*(\\[n=\\d+\\])\\s*(\\[\\d+; \\d+\\])"
+    string <- "(\\d+\\s*±\\s*\\d+)\\s*(\\[\\d+\\s*->\\s*\\d+\\])\\s*(\\[n=\\d+\\])\\s*(\\[\\d+\\s*;\\s*\\d+\\])"
     order <- "\\1 \\4 \\2 \\3"
   } else {
     DESC <- median_quart
@@ -483,7 +483,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
                       range = range, 
                       rangesep = rangesep, 
                       add_n = add_n),
-      all_CI = DESC_CI(Value) |> 
+      all_CI = DESC_CI(Value, round = TRUE) |> 
         transmute(ci = paste0("[", CIlow, "; ", CIhigh, "]")) |> 
         pull(ci), 
       desc_groups = try(DESC(Value, groupvar = Group, 
@@ -502,7 +502,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
   
   group_ci <-  data_l |> 
     group_by(Variable, Group) |> 
-    summarise(ci = DESC_CI(Value) |> 
+    summarise(ci = DESC_CI(Value, round = TRUE) |> 
                 transmute(ci = paste0("[", CIlow, "; ", CIhigh, "]")) |> 
                 pull(ci),
               .groups = "drop") |> 
