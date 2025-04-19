@@ -22,6 +22,11 @@ Authors@R: c(
            family = "Asser",
            role = c("aut"),
            email = "billyasser@hotmail.co.uk",
+           comment = ""),
+    person(given = "Franziska",
+           family = "Eidloth",
+           role = c("aut"),
+           email = "franziska.eidloth@gmail.com",
            comment = ""))
 Maintainer: Andreas Busjahn <andreas@busjahn.net>
 License: GPL-3

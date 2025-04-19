@@ -4,7 +4,7 @@
 \alias{median_cl_boot}
 \title{Compute confidence interval of median by bootstrapping.}
 \usage{
-median_cl_boot(x, conf = 0.95, type = "basic", nrepl = 10^3)
+median_cl_boot(x, conf = 0.95, type = "basic", nrepl = 10^3, roundDig = 2)
 }
 \arguments{
 \item{x}{Data for computation.}
@@ -14,6 +14,8 @@ median_cl_boot(x, conf = 0.95, type = "basic", nrepl = 10^3)
 \item{type}{type for function boot.ci.}
 
 \item{nrepl}{number of bootstrap replications, defaults to 1000.}
+
+\item{roundDig}{Number of relevant digits for functio \link{roundR}.}
 }
 \value{
 A tibble with one row and three columns: Median, CIlow, CIhigh.

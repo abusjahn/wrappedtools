@@ -401,7 +401,10 @@ t_var_test <- function(data, formula, cutoff = .05) {
 #' @param pretext for function [formatP].
 #' @param mark for function [formatP].
 #' @param n create columns for n per group?
-#' @param add_n add n to descriptive statistics?
+#' @param add_n add n to descriptive statistics. Will automatically be set to TRUE, if singleline = FALSE and n = TRUE to keep it for the long table format.
+#' @param singleline Put all group levels in a single line (default) or below each other.
+#' @param indentor Optional text element to indent descriptivestats when using singleline = FALSE. Defaults to "     ".
+#' @param ci Computes lower and upper confidence limits for the estimated mean/median, based on bootstrapping.
 #'
 #' @return
 #' A tibble with variable names, descriptive statistics, and p-value,
@@ -428,14 +431,21 @@ compare2numvars <- function(data, dep_vars, indep_var,
                             range = FALSE,
                             rangesep = " ",
                             pretext = FALSE, mark = FALSE, 
-                            n = FALSE, add_n = FALSE) {
+                            n = FALSE, add_n = FALSE,
+                            singleline = TRUE, indentor = "     ", ci = FALSE) {
   `.` <- Group <- Value <- Variable <- desc_groups <- NULL
   if (gaussian) {
     DESC <- meansd
     COMP <- t_var_test
+    DESC_CI <- mean_cl_boot
+    string <- "(\\d+\\s*±\\s*\\d+)\\s*(\\[\\d+\\s*->\\s*\\d+\\])\\s*(\\[n=\\d+\\])\\s*(\\[\\d+\\s*;\\s*\\d+\\])"
+    order <- "\\1 \\4 \\2 \\3"
   } else {
     DESC <- median_quart
     COMP <- wilcox.test
+    DESC_CI <- median_cl_boot
+    string <- "(\\d+)\\s*\\((\\d+/\\d+)\\)\\s*(\\[\\d+\\s*->\\s*\\d+\\])\\s*(\\[n=\\d+\\])\\s*(\\[\\d+\\s*;\\s*\\d+\\])"
+    order <- "\\1 (\\2) \\5 \\3 \\4"
   }
   # descnames <- names(formals(DESC))
   # pnames <- names(formals(COMP))
@@ -445,67 +455,178 @@ compare2numvars <- function(data, dep_vars, indep_var,
       Group = all_of(indep_var),
       all_of(dep_vars)
     ) |>
-    mutate(Group = factor(Group) |> fct_drop()) |>
-    pivot_longer(-Group,names_to = 'Variable',values_to = 'Value') |> 
-    # gather(key = Variable, value = Value, -Group) |>
+    mutate(Group = fct_drop(factor(Group))) |>
+    pivot_longer(-Group,names_to = 'Variable',values_to = 'Value') |>
     mutate(Variable = forcats::fct_inorder(Variable)) |>
     # na.omit() |>
     as_tibble()
+  
   if(nlevels(data_l$Group)!=2){
     stop(paste0('Other than 2 groups provided for ',indep_var,': ',
                 paste(levels(data_l$Group),collapse='/'),
                 ". Look into function compare_n_numvars."))
   }
-  data_l <- data_l |> 
-    filter(!is.na(Group))
-  out <- data_l |>
-    group_by(Variable) |>
-    do(summarise(
-      .data = .,
-      n_groups = paste(table(.$Group[which(!is.na(.$Value))]), collapse = ":"),
-      desc_all = DESC(.$Value,
-                      roundDig = round_desc,
-                      range = range, rangesep = rangesep,
-                      add_n = add_n
-      ),
-      desc_groups = paste(try(
-        DESC(
-          x = .$Value, groupvar = .$Group,
-          roundDig = round_desc, range = range,
-          rangesep = rangesep, add_n = add_n
-        ),
-        silent = TRUE
-      ),
-      collapse = ":"
-      ),
-      p = formatP(try(
-        suppressWarnings(COMP(formula = as.formula("Value~Group"), data = .)$p.value),
-        silent = TRUE
-      ),
-      ndigits = round_p, pretext = pretext,
-      mark = mark
-      ) |> as.character()
-    )) |> 
-    ungroup()
-  out$desc_groups[!str_detect(out$desc_groups, ":")] <- " : "
-  out <- separate(out,
-                  col = desc_groups,
-                  into = glue::glue("{indep_var} {levels(data_l$Group)}"),
-                  sep = ":"
-  )
-  out <- separate(out,
-                  col = n_groups,
-                  into = glue::glue("n {indep_var} {levels(data_l$Group)}"),
-                  sep = ":"
-  )
-  out$n <- apply(out[, 2:3], 1, function(x) {
-    sum(as.numeric(x))
-  })
-  out <- out |> dplyr::select(1, n, starts_with("n "), everything())
   
-  if (n == FALSE) {
-    out <- dplyr::select(out, -n, -starts_with("n "))
+  if (!singleline && n && !add_n){
+    add_n = TRUE
+    print(glue::glue("add_n will be set to TRUE to calculate n for long table format (singleline = FALSE)"))
   }
+  
+  data_l <- data_l |> 
+    dplyr::filter(!is.na(Group))
+  
+  out <- data_l |> 
+    group_by(Variable) |> 
+    summarise(
+      n_groups = paste(table(Group[!is.na(Value)]), collapse = ":"),
+      desc_all = DESC(Value, roundDig = round_desc, 
+                      range = range, 
+                      rangesep = rangesep, 
+                      add_n = add_n),
+      all_CI = DESC_CI(Value, round = TRUE) |> 
+        transmute(ci = paste0("[", CIlow, "; ", CIhigh, "]")) |> 
+        pull(ci), 
+      desc_groups = try(DESC(Value, groupvar = Group, 
+                             roundDig = round_desc, 
+                             range = range, rangesep = 
+                               rangesep, add_n = add_n), 
+                        silent = TRUE) |> 
+        paste(collapse = ":"),
+      p = try(suppressWarnings(COMP(Value ~ Group, data = cur_data())$p.value), 
+              silent = TRUE) |> 
+        formatP(ndigits = round_p, 
+                pretext = pretext, 
+                mark = mark) |> as.character(),
+      .groups = "drop"
+    )
+  
+  group_ci <-  data_l |> 
+    group_by(Variable, Group) |> 
+    summarise(ci = DESC_CI(Value, round = TRUE) |> 
+                transmute(ci = paste0("[", CIlow, "; ", CIhigh, "]")) |> 
+                pull(ci),
+              .groups = "drop") |> 
+    pivot_wider(names_from = Group, values_from = ci, names_prefix = "CI_")
+  
+  out <- left_join(out, group_ci, by = "Variable")
+  out <- out |> 
+    separate(desc_groups, into = c("g1", "g2"), 
+             sep = ":", fill = "right") |> 
+    separate(n_groups, into = glue::glue("n {indep_var} {levels(data_l$Group)}"), 
+             sep = ":") |> 
+    mutate(n = rowSums(across(starts_with("n "), as.numeric), 
+                       na.rm = TRUE)) |> 
+    dplyr::select(1, n, starts_with("n "), everything())
+  
+  if (ci){ 
+    out <- out |> 
+      mutate(
+        desc_all = paste(desc_all, all_CI) |> 
+          str_replace(string, order),
+        g1 = paste(g1, out[[10]]) |> 
+          str_replace(string, order),
+        g2 = paste(g2, out[[11]]) |> 
+          str_replace(string, order)
+      ) |> 
+      dplyr::select(-contains("CI"))
+  }
+  else{
+    out <- out |> 
+      dplyr::select(-contains("CI"))
+  }
+  
+  if (!n) {
+    out <- dplyr::select(out, -starts_with("n"))
+  }
+  
+  if (!singleline) {
+    out_tmp <- 
+      out |>
+      dplyr::select(-starts_with("n")) |>
+      pivot_longer(cols = -c(Variable, p),
+                   names_to = "group",
+                   values_to = "stats") |>
+      mutate(
+        n = str_extract(stats, "\\[n=\\d+\\]") |>
+          str_extract("\\d+") |>
+          as.character(),
+        "Mean (95% CI)" = if (gaussian) {
+          paste0(str_extract(stats, "^\\d+")," (",
+                 str_extract(stats, "\\[\\d+; \\d+\\]") |> 
+                   str_remove_all("[\\[\\]]") |> 
+                   str_replace(";", "/"),
+                 ")")
+        } else {NA_character_},
+        SD = if (gaussian) {
+          str_extract(stats, "(\\d+)\\s*±\\s*(\\d+)") |> 
+            str_extract("\\d+$") |> 
+            as.character()} 
+        else {NA_character_},
+        "Median (95% CI)" = if (!gaussian) {
+          paste0(str_extract(stats, "^\\d+")," (",
+                 str_extract(stats, "\\[\\d+; \\d+\\]") |> 
+                   str_remove_all("[\\[\\]]") |> 
+                   str_replace(";", "/"),
+                 ")")} 
+        else {NA_character_},
+        Quartiles = if (!gaussian) {
+          str_extract(stats, "\\(\\d+/\\d+\\)") |> 
+            str_remove_all("[\\(\\)]") |> 
+            as.character()
+        } else {
+          NA_character_},
+        "min -> max" = str_extract(stats, "\\[\\d+\\s*->\\s*\\d+\\]") |>
+          str_remove_all("[\\[\\]]")
+      ) |>
+      select(-stats) |>
+      select_if(~ !any(is.na(.))) |>  
+      pivot_longer(-c(Variable, group, p),
+                   names_to = "stats",
+                   values_to = "values") |>
+      pivot_wider(names_from = "group",
+                  values_from = "values")
+    
+    for (var_i in dep_vars){
+      row <- filter(out_tmp, Variable == var_i) |>
+        mutate(stats = "",
+               desc_all = "",
+               "g1" = "",
+               "g2" = "") |>
+        unique()
+      out_tmp <- dplyr::add_row(out_tmp, row)
+    }
+    
+    out <- out_tmp |>
+      arrange(Variable) |>
+      group_by(Variable) |>
+      arrange(stats != "", .by_group = TRUE) |>
+      ungroup() |>
+      mutate(Variable = case_when(
+        stats == "n" ~ paste0(indentor, "n"),
+        stats == "Mean (95% CI)" ~ paste0(indentor, "Mean (95% CI)"),
+        stats == "Median (95% CI)" ~ paste0(indentor, "Median (95% CI)"),
+        stats == "Quartiles" ~ paste0(indentor, "Quartiles"),
+        stats == "SD" ~ paste0(indentor, "SD"),
+        stats == "min -> max" ~ paste0(indentor, "min -> max"),
+        TRUE ~ Variable),
+        p = case_when(
+          stats == "Mean (95% CI)" ~ "",
+          stats == "Median (95% CI)" ~ "",
+          stats == "SD" ~ "",
+          stats == "Quartiles" ~ "",
+          stats == "min -> max" ~ "",
+          stats == "n" ~ "",
+          TRUE ~ p)
+      ) |>
+      select(Variable, desc_all, g1, g2, p)
+  }
+  
+  out <- out |> 
+    rename(
+      !!glue::glue("{indep_var} {levels(data_l$Group)[1]}") := "g1",
+      !!glue::glue("{indep_var} {levels(data_l$Group)[2]}") := "g2"
+    )
+  
   return(out)
 }
 

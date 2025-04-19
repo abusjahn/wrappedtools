@@ -16,7 +16,10 @@ compare2numvars(
   pretext = FALSE,
   mark = FALSE,
   n = FALSE,
-  add_n = FALSE
+  add_n = FALSE,
+  singleline = TRUE,
+  indentor = "     ",
+  ci = FALSE
 )
 }
 \arguments{
@@ -43,6 +46,12 @@ compare2numvars(
 \item{n}{create columns for n per group?}
 
 \item{add_n}{add n to descriptive statistics?}
+
+\item{singleline}{Put all group levels in a single line (default) or below each other.}
+
+\item{indentor}{Optional text element to indent descriptive stats when using singleline = FALSE. Defaults to "     ".}
+
+\item{ci}{Computes lower and upper confidence limits for the estimated mean/median, based on bootstrapping.}
 }
 \value{
 A tibble with variable names, descriptive statistics, and p-value,
