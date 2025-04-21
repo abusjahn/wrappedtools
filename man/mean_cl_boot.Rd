@@ -4,7 +4,14 @@
 \alias{mean_cl_boot}
 \title{Compute confidence interval of mean by bootstrapping.}
 \usage{
-mean_cl_boot(x, conf = 0.95, type = "basic", nrepl = 10^3, roundDig = 2)
+mean_cl_boot(
+  x,
+  conf = 0.95,
+  type = "basic",
+  nrepl = 10^3,
+  round = FALSE,
+  roundDig = 2
+)
 }
 \arguments{
 \item{x}{Data for computation.}
@@ -15,7 +22,9 @@ mean_cl_boot(x, conf = 0.95, type = "basic", nrepl = 10^3, roundDig = 2)
 
 \item{nrepl}{number of bootstrap replications, defaults to 1000.}
 
-\item{roundDig}{Number of relevant digits for functio \link{roundR}.}
+\item{round}{logical, applies \link{roundR} function to results. Output is character.}
+
+\item{roundDig}{Number of relevant digits for function \link{roundR}.}
 }
 \value{
 A tibble with one row and three columns: Mean, CIlow, CIhigh.

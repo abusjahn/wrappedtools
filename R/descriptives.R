@@ -317,7 +317,7 @@ median_cl_boot_gg <- function(x){
 #' @param type type for function boot.ci.
 #' @param nrepl number of bootstrap replications, defaults to 1000.
 #' @param round logical, applies [roundR] function to results. Output is character.
-#' @param roundDig Number of relevant digits for functio [roundR].
+#' @param roundDig Number of relevant digits for function [roundR].
 #'
 #' @return A tibble with one row and three columns: Mean, CIlow, CIhigh.
 #'

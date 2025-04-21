@@ -3,12 +3,16 @@
 #    data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
 #    gaussian = TRUE
 #  )
-# # Ordinal scale:
+# # # Ordinal scale:
 # out2 <- compare2numvars(
 #    data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
 #    gaussian = FALSE
 #  )
-# saveRDS(list(out1=out1, out2=out2),file = 'tests/testthat/compare2numvars_out.rda')
+# out3 <- compare2numvars(
+#   data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
+#   gaussian = TRUE,singleline = FALSE, n_boot = 10^5,round_desc = 1
+# )
+# saveRDS(list(out1=out1, out2=out2, out3=out3),file = 'tests/testthat/compare2numvars_out.rda')
 
 
 test_that("compare2numvars() with defaults and options set, plus tests for errors", {
@@ -22,6 +26,11 @@ test_that("compare2numvars() with defaults and options set, plus tests for error
         gaussian = FALSE
       ), 
                expected[[2]])
+  expect_equal(compare2numvars(
+    data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
+    gaussian = TRUE,singleline = FALSE, n_boot = 10^5, round_desc = 1
+  ), 
+  expected[[3]])
   expect_error(compare2numvars(
     data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = c("am","cyl"),
     gaussian = FALSE

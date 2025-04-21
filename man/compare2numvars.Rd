@@ -19,7 +19,8 @@ compare2numvars(
   add_n = FALSE,
   singleline = TRUE,
   indentor = "     ",
-  ci = FALSE
+  ci = FALSE,
+  n_boot = 10^4
 )
 }
 \arguments{
@@ -45,13 +46,15 @@ compare2numvars(
 
 \item{n}{create columns for n per group?}
 
-\item{add_n}{add n to descriptive statistics?}
+\item{add_n}{add n to descriptive statistics. Will automatically be set to TRUE, if singleline = FALSE and n = TRUE to keep it for the long table format.}
 
 \item{singleline}{Put all group levels in a single line (default) or below each other.}
 
-\item{indentor}{Optional text element to indent descriptive stats when using singleline = FALSE. Defaults to "     ".}
+\item{indentor}{Optional text element to indent descriptivestats when using singleline = FALSE. Defaults to "     ".}
 
 \item{ci}{Computes lower and upper confidence limits for the estimated mean/median, based on bootstrapping.}
+
+\item{n_boot}{Number of bootstrap samples for confidence limits.}
 }
 \value{
 A tibble with variable names, descriptive statistics, and p-value,
@@ -67,6 +70,10 @@ are reported as well.
 compare2numvars(
   data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
   gaussian = TRUE
+)
+compare2numvars(
+  data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
+  gaussian = TRUE, singleline = FALSE
 )
 # Ordinal scale:
 compare2numvars(
