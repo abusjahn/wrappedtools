@@ -18,15 +18,15 @@ Authors@R: c(
            role = c("cre", "aut"),
            email = "andreas@busjahn.net",
            comment = c(ORCID = "0000-0001-9650-6919")),
-    person(given = "Bilal",
-           family = "Asser",
-           role = c("aut"),
-           email = "billyasser@hotmail.co.uk",
-           comment = ""),
     person(given = "Franziska",
            family = "Eidloth",
            role = c("aut"),
            email = "franziska.eidloth@gmail.com",
+           comment = ""),
+    person(given = "Bilal",
+           family = "Asser",
+           role = c("aut"),
+           email = "billyasser@hotmail.co.uk",
            comment = ""))
 Maintainer: Andreas Busjahn <andreas@busjahn.net>
 License: GPL-3

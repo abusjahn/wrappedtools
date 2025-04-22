@@ -78,7 +78,7 @@ compare2numvars(
 # Ordinal scale:
 compare2numvars(
   data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
-  gaussian = FALSE
+  gaussian = FALSE, add_n = TRUE, range = TRUE
 )
 # If dependent variable has more than 2 levels, consider fct_lump:
 mtcars |> dplyr::mutate(gear=factor(gear) |> forcats::fct_lump_n(n=1)) |> 

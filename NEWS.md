@@ -1,7 +1,7 @@
 #wrappedtools 0.9.7
 - function identical_cols to find and remove duplicated columns
-- function compare2numvars can now additionally calculate confidence intervals
-- function compare2numvars now has the additional option for a singleline or stacked display
+- function compare2numvars can now additionally calculate confidence intervals on mean and median
+- function compare2numvars now has the additional option for a singleline (default) or stacked display
 - new function mean_cl_boot which calculates the mean and confidence intervals
 - function median_cl_boot now has an additional round option
 
