@@ -266,23 +266,31 @@ se_median <- function(x) {
 #' @export
 median_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3, round = FALSE, roundDig = 2) {
   x <- na.omit(x)
-  lconf <- (1 - conf) / 2
-  uconf <- 1 - lconf
-  bmedian <- function(x, ind) median(x[ind], na.rm = TRUE)
-  bt <- boot::boot(x, bmedian, nrepl)
-  bb <- boot::boot.ci(bt, type = type)
-  if (round) {
-    return(tibble(
-      Median = roundR(median(x, na.rm = TRUE), level = roundDig),
-      CIlow = roundR(quantile(bt$t, lconf), level = roundDig),
-      CIhigh = roundR(quantile(bt$t, uconf), level = roundDig)
-    ))
+  if(length(x) > 2) {
+    lconf <- (1 - conf) / 2
+    uconf <- 1 - lconf
+    bmedian <- function(x, ind) median(x[ind], na.rm = TRUE)
+    bt <- boot::boot(x, bmedian, nrepl)
+    bb <- boot::boot.ci(bt, type = type)
+    if (round) {
+      return(tibble(
+        Median = roundR(median(x, na.rm = TRUE), level = roundDig),
+        CIlow = roundR(quantile(bt$t, lconf), level = roundDig),
+        CIhigh = roundR(quantile(bt$t, uconf), level = roundDig)
+      ))
+    } else {
+      return(tibble(
+        Median = median(x, na.rm = TRUE),
+        CIlow = quantile(bt$t, lconf),
+        CIhigh = quantile(bt$t, uconf)
+      ))
+    }
   } else {
-    return(tibble(
-      Median = median(x, na.rm = TRUE),
-      CIlow = quantile(bt$t, lconf),
-      CIhigh = quantile(bt$t, uconf)
-    ))
+    warning("Less than 3 values provided, result will be NA")
+    return(tibble(Mean = NA_real_, 
+                  CIlow = NA_real_, 
+                  CIhigh = NA_real_)
+    )
   }
 }
 #' Rename output from \link{median_cl_boot} for use in ggplot.
@@ -329,21 +337,29 @@ mean_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3,
                          round = FALSE, roundDig = 2) ## 
 {
   x <- na.omit(x)
-  lconf <- (1 - conf)/2
-  uconf <- 1 - lconf
-  bmean <- function(x, ind) mean(x[ind], na.rm = TRUE)
-  bt <- boot::boot(x, bmean, nrepl)
-  bb <- boot::boot.ci(bt, type = type)
-  
-  if(round){
-    tibble(Mean = roundR(mean(x, na.rm = TRUE), level = roundDig), 
-           CIlow = roundR(quantile(bt$t, lconf), level = roundDig), 
-           CIhigh = roundR(quantile(bt$t, uconf), level = roundDig)
-    )
-  } else{
-    tibble(Mean = mean(x, na.rm = TRUE), 
-           CIlow = quantile(bt$t, lconf), 
-           CIhigh = quantile(bt$t, uconf)
+  if(length(x) > 2){
+    lconf <- (1 - conf)/2
+    uconf <- 1 - lconf
+    bmean <- function(x, ind) mean(x[ind], na.rm = TRUE)
+    bt <- boot::boot(x, bmean, nrepl)
+    bb <- boot::boot.ci(bt, type = type)
+    
+    if(round){
+      return(tibble(Mean = roundR(mean(x, na.rm = TRUE), level = roundDig), 
+                    CIlow = roundR(quantile(bt$t, lconf), level = roundDig), 
+                    CIhigh = roundR(quantile(bt$t, uconf), level = roundDig))
+      )
+    } else{
+      return(tibble(Mean = mean(x, na.rm = TRUE), 
+                    CIlow = quantile(bt$t, lconf), 
+                    CIhigh = quantile(bt$t, uconf))
+      )
+    }
+  } else {
+    warning("Less than 3 values provided, result will be NA")
+    return(tibble(Mean = NA_real_, 
+                  CIlow = NA_real_, 
+                  CIhigh = NA_real_)
     )
   }
 }
@@ -559,57 +575,57 @@ cat_desc_table <- function(data, desc_vars,
     purrr::map(as_tibble)
   out <- tibble(
     Variable = character(), desc_all = character())
-    for (var_i in seq_along(desc_vars)) {
-      if (!singleline) {
-        out_tmp <- add_row(out[0,],
-                           Variable = c(
-                             desc_vars[var_i],
-                             glue::glue(
-                               "{indentor}{levels[[var_i]][[1]]}"
-                             )
-                           ),
-                           desc_all = c(spacer, freq[[var_i]][[1]])
-        )
-        out <- rbind(out,out_tmp)
-      } else {
-        out_tmp <- add_row(out[0,],
-                           Variable = paste(
-                             desc_vars[var_i],
-                             levels[[var_i]][[1]]
-                           ),
-                           desc_all = freq[[var_i]][[1]]
-        )
-        out <- rbind(out,out_tmp)
-      }
+  for (var_i in seq_along(desc_vars)) {
+    if (!singleline) {
+      out_tmp <- add_row(out[0,],
+                         Variable = c(
+                           desc_vars[var_i],
+                           glue::glue(
+                             "{indentor}{levels[[var_i]][[1]]}"
+                           )
+                         ),
+                         desc_all = c(spacer, freq[[var_i]][[1]])
+      )
+      out <- rbind(out,out_tmp)
+    } else {
+      out_tmp <- add_row(out[0,],
+                         Variable = paste(
+                           desc_vars[var_i],
+                           levels[[var_i]][[1]]
+                         ),
+                         desc_all = freq[[var_i]][[1]]
+      )
+      out <- rbind(out,out_tmp)
     }
-    return(out)
+  }
+  return(out)
 }    
-    #' Compute coefficient of variance.
-    #'
-    #' \code{var_coeff computes relative variability as standard deviation/mean *100}
-    #'
-    #' @param x Data for computation.
-    #'
-    #' @return numeric vector with coefficient of variance.
-    #'
-    #' @examples
-    #' var_coeff(x = mtcars$wt)
-    #' @export
-    var_coeff <- function(x) {
-      return(sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE) * 100)
-    }
-    
-    #' Standard Error of Mean.
-    #'
-    #' \code{SEM} computes standard error of mean.
-    #'
-    #' @param x Data for computation.
-    #'
-    #' @return numeric vector with SEM.
-    #'
-    #' @examples
-    #' SEM(x = mtcars$wt)
-    #' @export
-    SEM <- function(x) {
-      return(sd(x, na.rm = TRUE) / sqrt(length(na.omit(x))))
-    }
+#' Compute coefficient of variance.
+#'
+#' \code{var_coeff computes relative variability as standard deviation/mean *100}
+#'
+#' @param x Data for computation.
+#'
+#' @return numeric vector with coefficient of variance.
+#'
+#' @examples
+#' var_coeff(x = mtcars$wt)
+#' @export
+var_coeff <- function(x) {
+  return(sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE) * 100)
+}
+
+#' Standard Error of Mean.
+#'
+#' \code{SEM} computes standard error of mean.
+#'
+#' @param x Data for computation.
+#'
+#' @return numeric vector with SEM.
+#'
+#' @examples
+#' SEM(x = mtcars$wt)
+#' @export
+SEM <- function(x) {
+  return(sd(x, na.rm = TRUE) / sqrt(length(na.omit(x))))
+}

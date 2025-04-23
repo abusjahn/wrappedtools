@@ -1,3 +1,7 @@
+#wrappedtools 0.9.8
+- bugfix compare2numvars now handles negative numbers
+- mean_cl_boot and median_cl_boot now require >= 3 values, otherwise a warning and NA are returned
+
 #wrappedtools 0.9.7
 - function identical_cols to find and remove duplicated columns
 - function compare2numvars can now additionally calculate confidence intervals on mean and median
