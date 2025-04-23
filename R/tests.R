@@ -449,13 +449,13 @@ compare2numvars <- function(data, dep_vars, indep_var,
     DESC <- meansd
     COMP <- t_var_test
     DESC_CI <- wrappedtools::mean_cl_boot
-    string <- "(\\d+\\s*\u00b1\\s*\\d+)\\s*(\\[\\d+\\s*->\\s*\\d+\\])\\s*(\\[n=\\d+\\])\\s*(\\[\\d+\\s*;\\s*\\d+\\])"
+    string <- "(-*\\d+\\s*\u00b1\\s*\\d+)\\s*(\\[-*\\d+\\s*->\\s*-*\\d+\\])\\s*(\\[n=\\d+\\])\\s*(\\[-*\\d+\\s*;\\s*-*\\d+\\])"
     order <- "\\1 \\4 \\2 \\3"
   } else {
     DESC <- median_quart
     COMP <- wilcox.test
     DESC_CI <- median_cl_boot
-    string <- "(\\d+)\\s*\\((\\d+/\\d+)\\)\\s*(\\[\\d+\\s*->\\s*\\d+\\])\\s*(\\[n=\\d+\\])\\s*(\\[\\d+\\s*;\\s*\\d+\\])"
+    string <- "(-*\\d+)\\s*\\((-*\\d+/-*\\d+)\\)\\s*(\\[-*\\d+\\s*->\\s*-*\\d+\\])\\s*(\\[n=\\d+\\])\\s*(\\[-*\\d+\\s*;\\s*-*\\d+\\])"
     order <- "\\1 (\\2) \\5 \\3 \\4"
   }
   # descnames <- names(formals(DESC))
@@ -561,7 +561,7 @@ compare2numvars <- function(data, dep_vars, indep_var,
                         pattern = "(?<=n=)\\d+"),
         "Mean (95% CI)" = if (gaussian) {
           str_replace(.data$stats, 
-                      "^(\\d+[.,]*\\d*) \u00b1.+\\[(\\d+[.,]*\\d*); (\\d+[.,]*\\d*).*",
+                      "^(-*\\d+[.,]*\\d*) \u00b1.+\\[(-*\\d+[.,]*\\d*); (-*\\d+[.,]*\\d*).*",
                       "\\1 (\\2 / \\3)")
         } else {NA_character_},
         SD = if (gaussian) {
@@ -569,16 +569,16 @@ compare2numvars <- function(data, dep_vars, indep_var,
           } else {NA_character_},
         "Median (95% CI)" = if (!gaussian) {
           str_replace(.data$stats, 
-                      "^(\\d+[.,]*\\d*) \\(.+\\[(\\d+[.,]*\\d*); (\\d+[.,]*\\d*).*",
+                      "^(-*\\d+[.,]*\\d*) \\(.+\\[(-*\\d+[.,]*\\d*); (-*\\d+[.,]*\\d*).*",
                       "\\1 (\\2 / \\3)")
           } else {NA_character_},
         Quartiles = if (!gaussian) {
-          str_extract(.data$stats, "(?<=\\()(\\d+.*?)(?=\\))") |> 
+          str_extract(.data$stats, "(?<=\\()(-*\\d+.*?)(?=\\))") |> 
             str_remove_all("[\\(\\)]") |> 
             as.character()
         } else {
           NA_character_},
-        "min -> max" = str_extract(.data$stats, "(?<=\\[)\\d+[.,]*\\d* -> \\d+[.,]*\\d*(?=\\])") |>
+        "min -> max" = str_extract(.data$stats, "(?<=\\[)-*\\d+[.,]*\\d* -> -*\\d+[.,]*\\d*(?=\\])") |>
           str_remove_all("[\\[\\]]")
       ) |>
       select(-"stats") |>
