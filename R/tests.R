@@ -449,13 +449,13 @@ compare2numvars <- function(data, dep_vars, indep_var,
     DESC <- meansd
     COMP <- t_var_test
     DESC_CI <- wrappedtools::mean_cl_boot
-    string <- "(-*\\d+\\s*\u00b1\\s*\\d+)\\s*(\\[-*\\d+\\s*->\\s*-*\\d+\\])\\s*(\\[n=\\d+\\])\\s*(\\[-*\\d+\\s*;\\s*-*\\d+\\])"
+    string <- "(-*\\d+[.,]*\\d*\\s*\u00b1\\s*\\d+[.,]*\\d*)\\s*(\\[-*\\d+[.,]*\\d*\\s*->\\s*-*\\d+[.,]*\\d*\\])\\s*(\\[n=\\d+\\])\\s*(\\[-*\\d+[.,]*\\d*\\s*;\\s*-*\\d+[.,]*\\d*\\])"
     order <- "\\1 \\4 \\2 \\3"
   } else {
     DESC <- median_quart
     COMP <- wilcox.test
     DESC_CI <- median_cl_boot
-    string <- "(-*\\d+)\\s*\\((-*\\d+/-*\\d+)\\)\\s*(\\[-*\\d+\\s*->\\s*-*\\d+\\])\\s*(\\[n=\\d+\\])\\s*(\\[-*\\d+\\s*;\\s*-*\\d+\\])"
+    string <- "(-*\\d+[.,]*\\d*)\\s*\\((-*\\d+[.,]*\\d*/-*\\d+[.,]*\\d*)\\)\\s*(\\[-*\\d+[.,]*\\d*\\s*->\\s*-*\\d+[.,]*\\d*\\])\\s*(\\[n=\\d+\\])\\s*(\\[-*\\d+[.,]*\\d*\\s*;\\s*-*\\d+[.,]*\\d*\\])"
     order <- "\\1 (\\2) \\5 \\3 \\4"
   }
   # descnames <- names(formals(DESC))
