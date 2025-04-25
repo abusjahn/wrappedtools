@@ -198,8 +198,9 @@ pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 #' ksnormal(x = mtcars$wt, lillie=FALSE)
 #' @export
 ksnormal <- function(x, lillie=TRUE) {
-  if(length(na.omit(x))>1){
-    if(lillie){
+  x <-  na.omit(x)
+  if(length(x)>1){
+    if(lillie & length(x)>4){
     assign("ksout",
            nortest::lillie.test(x)$p.value)  
       names(ksout) <- "p_Normal_Lilliefors"
@@ -449,13 +450,13 @@ compare2numvars <- function(data, dep_vars, indep_var,
     DESC <- meansd
     COMP <- t_var_test
     DESC_CI <- wrappedtools::mean_cl_boot
-    string <- "(-*\\d+[.,]*\\d*\\s*\u00b1\\s*\\d+[.,]*\\d*)\\s*(\\[-*\\d+[.,]*\\d*\\s*->\\s*-*\\d+[.,]*\\d*\\])\\s*(\\[n=\\d+\\])\\s*(\\[-*\\d+[.,]*\\d*\\s*;\\s*-*\\d+[.,]*\\d*\\])"
+    string <- "(-*\\d+[.,]*\\d*\\s*\u00b1\\s*NA|\\d+[.,]*\\d*)\\s*(\\[-*\\d+[.,]*\\d*\\s*->\\s*-*\\d+[.,]*\\d*\\])\\s*(\\[n=\\d+\\])\\s*([.+;.+\\])"
     order <- "\\1 \\4 \\2 \\3"
   } else {
     DESC <- median_quart
     COMP <- wilcox.test
     DESC_CI <- median_cl_boot
-    string <- "(-*\\d+[.,]*\\d*)\\s*\\((-*\\d+[.,]*\\d*/-*\\d+[.,]*\\d*)\\)\\s*(\\[-*\\d+[.,]*\\d*\\s*->\\s*-*\\d+[.,]*\\d*\\])\\s*(\\[n=\\d+\\])\\s*(\\[-*\\d+[.,]*\\d*\\s*;\\s*-*\\d+[.,]*\\d*\\])"
+    string <- "(-*\\d+[.,]*\\d*)\\s*\\((-*\\d+[.,]*\\d*/-*\\d+[.,]*\\d*)\\)\\s*(\\[-*\\d+[.,]*\\d*\\s*->\\s*-*\\d+[.,]*\\d*\\])\\s*(\\[n=\\d+\\])\\s*(\\[.+;.+\\])"
     order <- "\\1 (\\2) \\5 \\3 \\4"
   }
   # descnames <- names(formals(DESC))
@@ -508,6 +509,9 @@ compare2numvars <- function(data, dep_vars, indep_var,
         formatP(ndigits = round_p, 
                 pretext = pretext, 
                 mark = mark) |> as.character(),
+      p = case_when(
+        str_detect(p,"\\d{1}.+") ~ p,
+        .default = ""),
       .groups = "drop"
     )
   
@@ -561,17 +565,17 @@ compare2numvars <- function(data, dep_vars, indep_var,
                         pattern = "(?<=n=)\\d+"),
         "Mean (95% CI)" = if (gaussian) {
           str_replace(.data$stats, 
-                      "^(-*\\d+[.,]*\\d*) \u00b1.+\\[(-*\\d+[.,]*\\d*); (-*\\d+[.,]*\\d*).*",
+                      "^(-*\\d+[.,]*\\d*) \u00b1.+\\[(NA|-*\\d+[.,]*\\d*); (NA|-*\\d+[.,]*\\d*).*",
                       "\\1 (\\2 / \\3)")
         } else {NA_character_},
         SD = if (gaussian) {
-          str_extract(.data$stats, "(?<=\u00b1 )\\d+[.,]*\\d*")
-          } else {NA_character_},
+          str_extract(.data$stats, "(?<=\u00b1 )(NA|\\d+[.,]*\\d*)")
+        } else {NA_character_},
         "Median (95% CI)" = if (!gaussian) {
           str_replace(.data$stats, 
-                      "^(-*\\d+[.,]*\\d*) \\(.+\\[(-*\\d+[.,]*\\d*); (-*\\d+[.,]*\\d*).*",
+                      "^(-*\\d+[.,]*\\d*) \\(.+\\[(NA|-*\\d+[.,]*\\d*); (NA|-*\\d+[.,]*\\d*)\\].*",
                       "\\1 (\\2 / \\3)")
-          } else {NA_character_},
+        } else {NA_character_},
         Quartiles = if (!gaussian) {
           str_extract(.data$stats, "(?<=\\()(-*\\d+.*?)(?=\\))") |> 
             str_remove_all("[\\(\\)]") |> 

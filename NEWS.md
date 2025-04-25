@@ -1,6 +1,7 @@
 #wrappedtools 0.9.8
 - bugfix compare2numvars now handles negative numbers
 - mean_cl_boot and median_cl_boot now require >= 3 values, otherwise a warning and NA are returned
+- ksnormal uses Lilliefors test only for n>=5
 
 #wrappedtools 0.9.7
 - function identical_cols to find and remove duplicated columns
