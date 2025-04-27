@@ -245,11 +245,11 @@ label_outliers <- function(plotbase, labelvar=NULL, #xvar, #yvar,
                            coef=1.5, nudge_x=0, nudge_y=0,
                            color="darkred", size=3, hjust=0,
                            face="bold") {
-  if(!requireNamespace("ggrepel", quietly = TRUE)) {
+  if (!requireNamespace("ggrepel", quietly = TRUE)) {
     stop("ggrepel package is required")
   }
   plotdata <- plotbase$data
-  if(is.null(labelvar)) {
+  if (is.null(labelvar)) {
     labelvar <- "Position"
     plotdata <- mutate(plotdata, Position = row.names(plotdata))
   }
@@ -267,11 +267,11 @@ label_outliers <- function(plotbase, labelvar=NULL, #xvar, #yvar,
   #   c('^.+\\"(.+)\\".*'="\\1",
   #     "~"=""))
   # groupvars <- xvar
-  # if(!is.null(plotlist$layout$facet$params$row)){
+  # if (!is.null(plotlist$layout$facet$params$row)){
   facet_rows <- names(plotlist$layout$facet$params$row)
   # groupvars <- c(groupvars,facet_rows)
   # }
-  # if(!is.null(plotlist$layout$facet$params$col)){
+  # if (!is.null(plotlist$layout$facet$params$col)){
   facet_cols <- names(plotlist$layout$facet$params$col)
   facet_wraps <- names(plotlist$layout$facet$params$facets)
   groupvars <- c(xvar,facet_rows,facet_cols,facet_wraps)

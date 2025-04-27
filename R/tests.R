@@ -199,8 +199,8 @@ pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 #' @export
 ksnormal <- function(x, lillie=TRUE) {
   x <-  na.omit(x)
-  if(length(x)>1){
-    if(lillie & length(x)>4){
+  if (length(x)>1){
+    if (lillie & length(x)>4){
     assign("ksout",
            nortest::lillie.test(x)$p.value)  
       names(ksout) <- "p_Normal_Lilliefors"
@@ -296,7 +296,7 @@ cortestR <- function(cordata, method = "pearson",
                      sign_symbol = TRUE,
                      split = FALSE,
                      space = "") {
-  if(!is.matrix(cordata)){
+  if (!is.matrix(cordata)){
     cordata <- as.matrix(cordata)
   }
   n <- ncol(cordata)
@@ -403,7 +403,7 @@ t_var_test <- function(data, formula, cutoff = .05) {
 #' @param mark for function [formatP].
 #' @param n create columns for n per group?
 #' @param add_n add n to descriptive statistics. Will automatically be set to TRUE, if singleline = FALSE and n = TRUE to keep it for the long table format.
-#' @param singleline Put all group levels in a single line (default) or below each other.
+#' @param singleline Put all computed stats in a single line (default) or below each other.
 #' @param indentor Optional text element to indent descriptivestats when using singleline = FALSE. Defaults to "     ".
 #' @param ci Computes lower and upper confidence limits for the estimated mean/median, based on bootstrapping.
 #' @param n_boot Number of bootstrap samples for confidence limits.
@@ -441,27 +441,23 @@ compare2numvars <- function(data, dep_vars, indep_var,
                             singleline = TRUE, 
                             indentor = "     ", 
                             ci = FALSE,
-                            n_boot = 10^4) {
+                            n_boot = 10^3) {
   `.` <- Group <- Value <- Variable <- desc_groups <- NULL
-  if(!singleline){
+  if (!singleline){
     ci <- TRUE
+    add_n <- TRUE
+    n <- FALSE
   }
   if (gaussian) {
-    DESC <- meansd
+    DESC <- wrappedtools::meansd
     COMP <- t_var_test
     DESC_CI <- wrappedtools::mean_cl_boot
-    string <- "(-*\\d+[.,]*\\d*\\s*\u00b1\\s*NA|\\d+[.,]*\\d*)\\s*(\\[-*\\d+[.,]*\\d*\\s*->\\s*-*\\d+[.,]*\\d*\\])\\s*(\\[n=\\d+\\])\\s*([.+;.+\\])"
-    order <- "\\1 \\4 \\2 \\3"
   } else {
     DESC <- median_quart
     COMP <- wilcox.test
     DESC_CI <- median_cl_boot
-    string <- "(-*\\d+[.,]*\\d*)\\s*\\((-*\\d+[.,]*\\d*/-*\\d+[.,]*\\d*)\\)\\s*(\\[-*\\d+[.,]*\\d*\\s*->\\s*-*\\d+[.,]*\\d*\\])\\s*(\\[n=\\d+\\])\\s*(\\[.+;.+\\])"
-    order <- "\\1 (\\2) \\5 \\3 \\4"
   }
-  # descnames <- names(formals(DESC))
-  # pnames <- names(formals(COMP))
-  
+
   data_l <- data |>
     dplyr::select(
       Group = all_of(indep_var),
@@ -473,13 +469,13 @@ compare2numvars <- function(data, dep_vars, indep_var,
     # na.omit() |>
     tibble::as_tibble()
   
-  if(nlevels(data_l$Group)!=2){
+  if (nlevels(data_l$Group)!=2){
     stop(paste0('Other than 2 groups provided for ',indep_var,': ',
                 paste(levels(data_l$Group),collapse='/'),
                 ". Look into function compare_n_numvars."))
   }
   
-  if(!singleline && n && !add_n){
+  if (!singleline && n && !add_n){
     add_n = TRUE
     cat("add_n will be set to TRUE to calculate n for long table format (singleline = FALSE)\n")
   }
@@ -489,145 +485,100 @@ compare2numvars <- function(data, dep_vars, indep_var,
   
   out <- data_l |> 
     group_by(Variable) |> 
-    summarise(
-      n_groups = paste(table(Group[!is.na(Value)]), collapse = ":"),
+    reframe(
+      `n all` = sum(table(Group[!is.na(Value)])) |> 
+        as.character(),
+      `n g1` = table(Group[!is.na(Value)])[1] |> 
+        as.character(),
+      `n g2` = table(Group[!is.na(Value)])[2] |> 
+        as.character(),
       desc_all = DESC(Value, roundDig = round_desc, 
                       range = range, 
                       rangesep = rangesep, 
-                      add_n = add_n),
-      all_CI = DESC_CI(Value, round = TRUE, nrepl = n_boot, roundDig = round_desc) |> 
-        transmute(ci = paste0("[", .data$CIlow, "; ", .data$CIhigh, "]")) |> 
-        pull(ci), 
-      desc_groups = try(DESC(Value, groupvar = Group, 
-                             roundDig = round_desc, 
-                             range = range, rangesep = 
-                               rangesep, add_n = add_n), 
-                        silent = TRUE) |> 
-        paste(collapse = ":"),
-      p = try(suppressWarnings(COMP(Value ~ Group, data = pick(everything()))$p.value), 
-              silent = TRUE) |> 
-        formatP(ndigits = round_p, 
-                pretext = pretext, 
-                mark = mark) |> as.character(),
-      p = case_when(
-        str_detect(p,"\\d{1}.+") ~ p,
-        .default = ""),
-      .groups = "drop"
-    )
-  
-  group_ci <-  data_l |> 
-    group_by(Variable, Group) |> 
-    summarise(ci = DESC_CI(Value, round = TRUE, nrepl = n_boot, roundDig = round_desc) |> 
-                transmute(ci = paste0("[", .data$CIlow, "; ", .data$CIhigh, "]")) |> 
-                pull(ci),
-              .groups = "drop") |> 
-    pivot_wider(names_from = Group, values_from = ci, names_prefix = "CI_")
-  
-  out <- left_join(out, group_ci, by = "Variable")
-  out <- out |> 
-    separate(desc_groups, into = c("g1", "g2"), 
-             sep = ":", fill = "right") |> 
-    separate(n_groups, into = glue::glue("n {indep_var} {levels(data_l$Group)}"), 
-             sep = ":") |> 
-    mutate(n = rowSums(across(starts_with("n "), as.numeric), 
-                       na.rm = TRUE)) |> 
-    dplyr::select(1, n, starts_with("n "), everything())
-  
-  if (ci){ 
-    out <- out |> 
+                      add_n = add_n,
+                      ci = ci,
+                      singleline = singleline) |> 
+        as.character(),  
+      desc_groups = case_when(
+        !singleline ~
+          try(suppressWarnings(DESC(Value, groupvar = Group,
+                             roundDig = round_desc,
+                             range = range,
+                             rangesep = rangesep,
+                             add_n = add_n,
+                             ci = ci,
+                             singleline = singleline
+                             )),
+              silent = TRUE),
+        singleline ~ 
+          try(suppressWarnings(DESC(Value, groupvar = Group, 
+                   roundDig = round_desc, 
+                   range = range, 
+                   rangesep = rangesep, 
+                   add_n = add_n,
+                   ci = ci,
+                   singleline = singleline
+          ) |> #paste(collapse="!!!"))) 
+             matrix(ncol=2)),
+          silent = TRUE))) |>
+    unique() 
+  if (!singleline) { 
+    out <- mutate(
+      out,
+      Stats=rep(c(paste(indentor,"n"),
+                  ifelse(gaussian,paste(indentor,"Mean (95% CI)"),
+                         paste(indentor,"Median (95% CI)")),
+                  ifelse(gaussian,paste(indentor,"SD"),
+                         paste(indentor,"Quartiles")),
+                  ifelse(range,paste(indentor,"Range"),NA_character_) |> 
+                    na.omit()),
+                times = length(dep_vars)),
+      g1=desc_groups[,1],
+      g2=desc_groups[,2],
+      p=NA_character_) |> 
+      select(-desc_groups) |> 
+      add_row(data_l |> 
+                group_by(Variable) |> 
+                reframe(
+                  p = 
+                    try(
+                      suppressWarnings(
+                        COMP(Value ~ Group, data = pick(everything()))$p.value|> 
+                          formatP(ndigits = round_p, 
+                                  pretext = pretext, 
+                                  mark = mark)),
+                      silent = TRUE)) |> 
+      mutate(Stats=Variable)) |> 
+      arrange(Variable,p) |> 
       mutate(
-        desc_all = paste(.data$desc_all, .data$all_CI) |> 
-          str_replace(string, order),
-        g1 = paste(.data$g1, out[[10]]) |> 
-          str_replace(string, order),
-        g2 = paste(.data$g2, out[[11]]) |> 
-          str_replace(string, order)
-      ) |> 
-      dplyr::select(-contains("CI"))
-  } else{
-    out <- out |> 
-      dplyr::select(-contains("CI"))
+        across(everything(),
+               ~tidyr::replace_na(.x,''))) |>
+      select(Stats, desc_all,g1,g2,p) |> 
+      rename(Variable = Stats)
+  } else {
+    out <- 
+      suppressMessages(
+        mutate(
+          out,
+          g1=desc_groups[,1],
+          g2=desc_groups[,2]) |> 
+          full_join(
+            data_l |> 
+               group_by(Variable) |> 
+               reframe(
+                 p = 
+                   try(
+                     suppressWarnings(
+                       COMP(Value ~ Group, data = pick(everything()))$p.value|> 
+                         formatP(ndigits = round_p, 
+                                 pretext = pretext, 
+                                 mark = mark)),
+                   silent = TRUE) 
+               ))) |> 
+      select(Variable, "n all", "desc_all", "n g1", "g1", "n g2", "g2", "p")
   }
-  
   if (!n) {
     out <- dplyr::select(out, -starts_with("n"))
-  }
-  
-  if (!singleline) {
-    out_tmp <- 
-      out |>
-      dplyr::select(-starts_with("n")) |>
-      pivot_longer(cols = -c("Variable", "p"),
-                   names_to = "group",
-                   values_to = "stats") |>
-      mutate(
-        n = str_extract(.data$stats, 
-                        pattern = "(?<=n=)\\d+"),
-        "Mean (95% CI)" = if (gaussian) {
-          str_replace(.data$stats, 
-                      "^(-*\\d+[.,]*\\d*) \u00b1.+\\[(NA|-*\\d+[.,]*\\d*); (NA|-*\\d+[.,]*\\d*).*",
-                      "\\1 (\\2 / \\3)")
-        } else {NA_character_},
-        SD = if (gaussian) {
-          str_extract(.data$stats, "(?<=\u00b1 )(NA|\\d+[.,]*\\d*)")
-        } else {NA_character_},
-        "Median (95% CI)" = if (!gaussian) {
-          str_replace(.data$stats, 
-                      "^(-*\\d+[.,]*\\d*) \\(.+\\[(NA|-*\\d+[.,]*\\d*); (NA|-*\\d+[.,]*\\d*)\\].*",
-                      "\\1 (\\2 / \\3)")
-        } else {NA_character_},
-        Quartiles = if (!gaussian) {
-          str_extract(.data$stats, "(?<=\\()(-*\\d+.*?)(?=\\))") |> 
-            str_remove_all("[\\(\\)]") |> 
-            as.character()
-        } else {
-          NA_character_},
-        "min -> max" = str_extract(.data$stats, "(?<=\\[)-*\\d+[.,]*\\d* -> -*\\d+[.,]*\\d*(?=\\])") |>
-          str_remove_all("[\\[\\]]")
-      ) |>
-      select(-"stats") |>
-      select_if(~ !any(is.na(.))) |>  
-      pivot_longer(-c("Variable", "group", "p"),
-                   names_to = "stats",
-                   values_to = "values") |>
-      pivot_wider(names_from = "group",
-                  values_from = "values")
-    
-    for (var_i in dep_vars){
-      row <- filter(out_tmp, Variable == var_i) |>
-        mutate(stats = "",
-               desc_all = "",
-               "g1" = "",
-               "g2" = "") |>
-        unique()
-      out_tmp <- dplyr::add_row(out_tmp, row)
-    }
-    
-    out <- out_tmp |>
-      arrange(Variable) |>
-      group_by(Variable) |>
-      arrange(.data$stats != "", .by_group = TRUE) |>
-      ungroup() |>
-      mutate(Variable = case_match(
-        .data$stats,
-        "n" ~ paste0(indentor, "n"),
-        "Mean (95% CI)" ~ paste0(indentor, "Mean (95% CI)"),
-        "Median (95% CI)" ~ paste0(indentor, "Median (95% CI)"),
-        "Quartiles" ~ paste0(indentor, "Quartiles"),
-        "SD" ~ paste0(indentor, "SD"),
-        "min -> max" ~ paste0(indentor, "min -> max"),
-        .default = Variable),
-        p = case_match(
-          .data$stats,
-          "Mean (95% CI)" ~ "",
-          "Median (95% CI)" ~ "",
-          "SD" ~ "",
-          "Quartiles" ~ "",
-          "min -> max" ~ "",
-          "n" ~ "",
-          .default = .data$p)
-      ) |>
-      select(Variable, "desc_all", "g1", "g2", "p")
   }
   
   out <- out |> 
@@ -687,7 +638,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
   if (!(is.factor(data |> pull(indep_var)))) {
     data <- data |> mutate(!!indep_var := factor(!!sym(indep_var)))
   }
-  if(data |> pull(indep_var) |> nlevels() !=2){
+  if (data |> pull(indep_var) |> nlevels() !=2){
     stop(paste("Independent variable",indep_var,
                "has",data |> pull(indep_var) |> nlevels(),
                "levels but must have exactly 2.",
@@ -751,7 +702,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
     ) |> 
     purrr::map(~case_when(str_detect(.,'.\\d+') ~ .,TRUE~''))
   
-  if(p_subgroups){
+  if (p_subgroups){
     for(var_i in dep_vars){
       freqBYgroup[[var_i]]$p <- NA_character_
       subgroups=data |> pull(var_i) |> levels()
@@ -763,7 +714,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
                                                check=subgroups[sg_i],
                                                other_level = 'other')) |> 
           select(all_of(indep_var),'testvar') |> table()
-        if(ncol(testdata)>1) {
+        if (ncol(testdata)>1) {
           p_sg <- fisher.test(testdata,
                               simulate.p.value = TRUE,
                               B = 10^5)$p.value |> 
@@ -771,7 +722,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
         } else{
           p_sg <- ''
         }
-        if(singleline){
+        if (singleline){
           freqBYgroup[[var_i]]$p <- 
             paste(na.omit(freqBYgroup[[var_i]]$p),p_sg) |> 
             str_squish()} else {
@@ -785,7 +736,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
     Variable = character(), desc_all = character(),
     g1 = character(), g2 = character(), p = character()
   )
-  if(p_subgroups){
+  if (p_subgroups){
     out$pSubgroup <- NA_character_
   }
   for (var_i in seq_along(dep_vars)) {
@@ -805,7 +756,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
                            rep(spacer, nrow(freqBYgroup[[var_i]]))
                          )
       )
-      if(p_subgroups){
+      if (p_subgroups){
         out_tmp$pSubgroup <- c(spacer,freqBYgroup[[var_i]]$p)
       }     
       out <- rbind(out,out_tmp)
@@ -822,7 +773,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
                          g2 = freqBYgroup[[var_i]][[2]],
                          p = p[[var_i]][[1]]
       )
-      if(p_subgroups){
+      if (p_subgroups){
         out_tmp$pSubgroup <- freqBYgroup[[var_i]]$p
       }     
       out <- rbind(out,out_tmp)
@@ -1171,7 +1122,7 @@ compare_n_numvars <- function(.data = rawdata,
                               pretext = FALSE, mark = FALSE, round_p = 3,
                               add_n = FALSE) {
   value <- Variable <- lm_out <- p_tout <- pANOVA <- NULL
-  if(gaussian){
+  if (gaussian){
     desc_fun <- wrappedtools::meansd
     grptest <- stats::lm
   } else {
@@ -1204,7 +1155,7 @@ compare_n_numvars <- function(.data = rawdata,
                                                  add_n = add_n
       )),
       desc_grp = purrr::map(data, ~ desc_fun(.$value,
-                                             groupvar = .[indep_var],
+                                             groupvar = .[[indep_var]],
                                              roundDig = round_desc,
                                              range = range,
                                              rangesep = rangesep,
@@ -1259,7 +1210,9 @@ compare_n_numvars <- function(.data = rawdata,
     multivar_p <- "pKW"
   }
   results <- NULL
-  results <- tibble(Variable = forcats::fct_inorder(dep_vars), all = t$desc_tab) |>
+  results <- 
+    suppressMessages(
+    tibble(Variable = forcats::fct_inorder(dep_vars), all = t$desc_tab) |>
     full_join(purrr::reduce(t$desc_grp, rbind) |>
                 matrix(nrow = length(dep_vars), byrow = FALSE) |>
                 as_tibble(.name_repair = "unique") |>
@@ -1295,7 +1248,7 @@ compare_n_numvars <- function(.data = rawdata,
     collapse = ";"
     )) |>
       pivot_longer(everything(),names_to = 'Variable', 
-                   values_to = 'p vs.ref'))  
+                   values_to = 'p vs.ref')))  
   # gather(key = "Variable", value = "p vs.ref"))
   results <- cbind(
     results,
@@ -1312,5 +1265,6 @@ compare_n_numvars <- function(.data = rawdata,
     list(results = results,
          raw = t))
 }
+
 utils::globalVariables('p_wcox_t_out')
 

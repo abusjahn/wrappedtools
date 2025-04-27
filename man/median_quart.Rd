@@ -7,7 +7,6 @@
 median_quart(
   x,
   nround = NULL,
-  probs = c(0.25, 0.5, 0.75),
   qtype = 8,
   roundDig = 2,
   drop0 = FALSE,
@@ -17,15 +16,16 @@ median_quart(
   rangearrow = " -> ",
   prettynum = FALSE,
   .german = FALSE,
-  add_n = FALSE
+  add_n = FALSE,
+  ci = FALSE,
+  nrepl = 10^3,
+  singleline = TRUE
 )
 }
 \arguments{
 \item{x}{Data for computation.}
 
 \item{nround}{Number of digits for fixed round.}
-
-\item{probs}{Quantiles to compute.}
 
 \item{qtype}{Type of quantiles.}
 
@@ -46,9 +46,17 @@ median_quart(
 \item{.german}{logical, should "." and "," be used as bigmark and decimal?}
 
 \item{add_n}{Should n be included in output?}
+
+\item{ci}{Should bootstrap based 95\% confidence interval be computed?}
+
+\item{nrepl}{Number of bootstrap replications, defaults to 1000.}
+
+\item{singleline}{Put all descriptive stats in a single element (default) or below each other. singleline = FALSE sets ci and add_n as TRUE}
+
+\item{probs}{Quantiles to compute.}
 }
 \value{
-character vector with median \code{[1stQuartile/3rdQuartile]}, rounded to desired precision
+Either character vector with median \code{[1stQuartile/3rdQuartile]} and additional results (singleline), or matrix with rows for n, median \link{CI} and quartiles, and optionally range.
 }
 \description{
 Compute median and quartiles and put together.

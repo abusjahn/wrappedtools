@@ -38,6 +38,7 @@ Imports:
     coin,
     utils,
     dplyr,
+    tidyr,
     forcats,
     purrr,
     glue,

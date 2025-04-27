@@ -23,8 +23,8 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Bilal Asser \email{billyasser@hotmail.co.uk}
   \item Franziska Eidloth \email{franziska.eidloth@gmail.com}
+  \item Bilal Asser \email{billyasser@hotmail.co.uk}
 }
 
 }

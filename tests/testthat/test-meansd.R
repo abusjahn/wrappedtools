@@ -1,6 +1,6 @@
 
 # out1 <- meansd(x = mtcars$mpg)
-# out2 <- meansd(x = mtcars$mpg, roundDig = 5, groupvar = mtcars$cyl, 
+# out2 <- meansd(x = mtcars$mpg, roundDig = 5, groupvar = mtcars$cyl,
 #                range = TRUE, add_n = TRUE, .german = TRUE)
 # saveRDS(list(out1=out1, out2=out2),file = 'tests/testthat/meansdout.rda')
 test_that("meansd() with defaults and options set", {

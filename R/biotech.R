@@ -35,7 +35,7 @@ plot_MM <- function(
     substrate, velocity, group = NULL,
     title = "Michaelis-Menten", 
     xlab = "substrate", ylab = "velocity"){
-  if(is.null(group)) {
+  if (is.null(group)) {
     group <- 'Group'  
     data[[group]] <- 'all data'
   }
@@ -96,7 +96,7 @@ plot_MM <- function(
       xlab(xlab)+
       ylab(ylab)+
       ggtitle(title)
-    if(length(groups)>1){
+    if (length(groups)>1){
       MMplot <- 
         MMplot+
         labs(subtitle = groups[group_i])
@@ -143,7 +143,7 @@ plot_LB <- function(data,
                     substrate, velocity, group = NULL,
                     title = "Lineweaver-Burk-Plot", xlab = "1/substrate", 
                     ylab = "1/velocity"){
-  if(is.null(group)) {
+  if (is.null(group)) {
     group <- 'Group'  
     data[[group]] <- 'all data'
   }
@@ -171,7 +171,7 @@ plot_LB <- function(data,
     ggtitle(title)+
     xlab(xlab)+
     ylab(ylab) 
-  if(length(groups)>1){
+  if (length(groups)>1){
     LBplot <- 
       LBplot+
       labs(subtitle = groups[group_i])

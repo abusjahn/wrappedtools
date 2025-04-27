@@ -30,14 +30,14 @@
 #' 
 WINratio <- function(data,groupvar,testvars,rules, idvar=NULL,
                      p_digits=3){
-  if(any(rules==0)){
+  if (any(rules==0)){
     stop("rules must not be 0 but give direction and magnitude of minimal difference")
   }
   data <- select(data,any_of(c(groupvar,testvars,idvar)))
-  if((!is.factor(data[[groupvar]]))){
+  if ((!is.factor(data[[groupvar]]))){
     data[[groupvar]] <- factor(data[[groupvar]])
   }
-  if(nlevels(data[[groupvar]])!=2){
+  if (nlevels(data[[groupvar]])!=2){
     stop("groupvar must have exactly two levels")
   }
   groupvar_level <- levels(data[[groupvar]])
@@ -156,7 +156,7 @@ eGFR <- function(data,
                  sex_var="sex", 
                  crea_var=NULL, 
                  cys_var=NULL){
-  if(is.null(crea_var) & is.null(cys_var)){
+  if (is.null(crea_var) & is.null(cys_var)){
     stop("At least one of crea or cys must be provided")
   }
   colnames(data)[which(colnames(data)==age_var)] <- "AGE"
@@ -177,7 +177,7 @@ eGFR <- function(data,
                                  SEX=="female"~.7),
            "kappa_cr"=case_when(SEX=="male"~.9,
                               SEX=="female"~.7))
-  if(!is.null(crea_var)){
+  if (!is.null(crea_var)){
     colnames(data)[which(colnames(data)==crea_var)] <- "CREA"
     data <- 
       data |> 
@@ -195,7 +195,7 @@ eGFR <- function(data,
   } else {
     eGFR_crea <- NULL
   }
-  if(!is.null(cys_var)){
+  if (!is.null(cys_var)){
     colnames(data)[which(colnames(data)==cys_var)] <- "CYS"
     data <- 
       data |> 
@@ -214,7 +214,7 @@ eGFR <- function(data,
   } else {
     eGFR_cystatin <- NULL
   }
-  if(!is.null(crea_var) & !is.null(cys_var)){
+  if (!is.null(crea_var) & !is.null(cys_var)){
     data <- 
       data |> 
       rowwise() |>

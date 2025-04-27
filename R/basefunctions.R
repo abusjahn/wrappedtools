@@ -46,7 +46,7 @@ roundR <- function(roundin, level = 2, smooth = FALSE,
       ) + 1
     )
   )
-  if(is.infinite(roundlevel)) {
+  if (is.infinite(roundlevel)) {
     roundlevel <- level
   }
   roundout[which(!is.na(roundout))] <-
@@ -121,7 +121,7 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
                     add.surprisal = FALSE, sprecision = 1) {
   decimal.mark <- ifelse(german_num, ",", ".")
   pIn_is_matrix <- is.matrix(pIn)
-  if(pIn_is_matrix){
+  if (pIn_is_matrix){
     pIn <- apply(pIn,c(1,2),as.numeric)
   } else{
     pIn <- as.numeric(pIn)
@@ -169,9 +169,9 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
       ) |> apply(MARGIN = c(1, 2), 
                        gsub, pattern = ".*NA.*",replacement = "")
     }
-    if(add.surprisal){
+    if (add.surprisal){
       s <- apply(pIn,MARGIN = c(1,2),surprisal, precision = sprecision) 
-      if(german_num){
+      if (german_num){
         s <- gsub('\\.',',',s)
       }
       for (row_i in 1:nrow(pIn)) {
@@ -185,7 +185,7 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
     if (textout == FALSE & pretext == FALSE & add.surprisal == FALSE) {
       formatp <- apply(formatp, MARGIN = c(1, 2), as.numeric)
     }
-    if(!pIn_is_matrix){
+    if (!pIn_is_matrix){
       formatp <- as.vector(formatp)
     }
   } else{
@@ -267,7 +267,7 @@ FindVars <- function(varnames, allnames = colnames(rawdata),
     }
     vars <- unique(vars)
   }
-  if(return_symbols) {
+  if (return_symbols) {
     return_list <- list(
       index = vars,
       names = allnames[vars],
@@ -323,7 +323,7 @@ ColSeeker <- function(data=rawdata,
   if (!casesensitive) {
     namepattern <- tolower(namepattern)
     allnames_tmp <- tolower(allnames)
-    if(!is.null(exclude)) {
+    if (!is.null(exclude)) {
       exclude <- tolower(exclude)
     }
   }
@@ -349,7 +349,7 @@ ColSeeker <- function(data=rawdata,
   }
   vars <- unique(vars)
   
-  if(!is.null(varclass)){
+  if (!is.null(varclass)){
     vars_typed <- NULL
     for(type_i in seq_along(varclass)){
       vars_typed <- c(vars_typed,
@@ -358,7 +358,7 @@ ColSeeker <- function(data=rawdata,
     
     vars <- vars[which(vars %in% vars_typed)]
   }
-  if(!is.null(excludeclass)){
+  if (!is.null(excludeclass)){
     vars_typed <- NULL
     for(type_i in seq_along(excludeclass)){
       vars_typed <- c(vars_typed,
@@ -366,7 +366,7 @@ ColSeeker <- function(data=rawdata,
     }
     vars <- vars[-which(vars %in% vars_typed)]
   }
-  if(returnclass){
+  if (returnclass){
     return_list <- list(
       index = vars,
       names = allnames[vars],
@@ -584,7 +584,7 @@ surprisal <- function(p, precision = 1){
 #' @return either a markdown table or the flextable
 #' @export
 flex2rmd <- function(ft){
-  if(interactive()){
+  if (interactive()){
     return(ft)
   } else {
     return(flextable_to_rmd(ft))
@@ -650,13 +650,13 @@ identical_cols <- function(df,
   }
   
   if (remove_duplicates) {
-    if(interactive &
+    if (interactive &
        length(duplicated_groups) > 0) {
       user_choice <- readline("Remove (a)ll, (s)ome, or (n)one of the duplicates? (a/s/n): ")
     } else{
       user_choice = "a"
     }
-    if(user_choice == "a") {
+    if (user_choice == "a") {
       cols_to_remove <- col_names[col_names %in% unlist(
         purrr::map(duplicated_groups, ~ .x[-1])
       )]
@@ -665,14 +665,14 @@ identical_cols <- function(df,
           purrr::map(duplicated_groups, ~ .x[-1])
         )]
       df <- df[, cols_to_keep, drop = FALSE]
-      if(clean_names) {
+      if (clean_names) {
         df <- rename_with(
           df,
           .cols = all_of(cols_to_keep),
           .fn = ~ str_remove(.x, "\\.{3}\\d+$")
         )
       }
-    } else if(user_choice == "s") {
+    } else if (user_choice == "s") {
       cn2rename <- ""
       cols_to_remove <- character(0)
       for (group in duplicated_groups) {
