@@ -36,9 +36,11 @@ categorical data with a number of formatting options.
 }
 \examples{
 cat_desc_table(
-  data = mtcars, desc_vars = c("gear", "cyl", "carb"))
+  data = mtcars, desc_vars = c("gear", "cyl", "carb")
+)
 
 cat_desc_table(
-  data = mtcars, desc_vars = c("gear", "cyl", "carb"), singleline = TRUE)
+  data = mtcars, desc_vars = c("gear", "cyl", "carb"), singleline = TRUE
+)
 
 }

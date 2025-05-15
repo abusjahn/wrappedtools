@@ -54,7 +54,7 @@ compare_n_numvars(
   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
   indep_var = "cyl",
   gaussian = TRUE
- )$results
+)$results
 # For a report, result columns may be filtered as needed:
 compare_n_numvars(
   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),

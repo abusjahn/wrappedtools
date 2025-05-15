@@ -26,5 +26,5 @@ ks.test(
   sd = sd(mtcars$wt, na.rm = TRUE)
 )
 # wrapped version:
-ksnormal(x = mtcars$wt, lillie=FALSE)
+ksnormal(x = mtcars$wt, lillie = FALSE)
 }

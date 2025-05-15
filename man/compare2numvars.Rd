@@ -18,7 +18,7 @@ compare2numvars(
   n = FALSE,
   add_n = FALSE,
   singleline = TRUE,
-  indentor = "     ",
+  indentor = "   ",
   ci = FALSE,
   n_boot = 10^3
 )
@@ -81,7 +81,8 @@ compare2numvars(
   gaussian = FALSE, add_n = TRUE, range = TRUE
 )
 # If dependent variable has more than 2 levels, consider fct_lump:
-mtcars |> dplyr::mutate(gear=factor(gear) |> forcats::fct_lump_n(n=1)) |> 
-compare2numvars(dep_vars="wt",indep_var="gear",gaussian=TRUE)
+mtcars |>
+  dplyr::mutate(gear = factor(gear) |> forcats::fct_lump_n(n = 1)) |>
+  compare2numvars(dep_vars = "wt", indep_var = "gear", gaussian = TRUE)
 
 }

@@ -42,7 +42,7 @@ meansd(
 \item{singleline}{Put all descriptive stats in a single element (default) or below each other. singleline = FALSE sets ci and add_n as TRUE}
 }
 \value{
-Either character vector with mean ± SD and additional results (singleline), or matrix with rows for n, mean \link{CI} and SD, and optionally range.
+Either character vector with mean ± SD and additional results (singleline), or matrix with rows for n, mean with CI, and SD, and optionally range.
 }
 \description{
 Compute mean and sd and put together with the ± symbol.
@@ -52,5 +52,5 @@ Compute mean and sd and put together with the ± symbol.
 meansd(x = mtcars$wt)
 # with additional options
 meansd(x = mtcars$wt, groupvar = mtcars$am, add_n = TRUE)
-meansd(x = mtcars$wt, groupvar = mtcars$am, add_n = TRUE, ci=TRUE, singleline = FALSE)
+meansd(x = mtcars$wt, groupvar = mtcars$am, add_n = TRUE, ci = TRUE, singleline = FALSE)
 }

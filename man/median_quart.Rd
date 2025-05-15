@@ -52,11 +52,9 @@ median_quart(
 \item{nrepl}{Number of bootstrap replications, defaults to 1000.}
 
 \item{singleline}{Put all descriptive stats in a single element (default) or below each other. singleline = FALSE sets ci and add_n as TRUE}
-
-\item{probs}{Quantiles to compute.}
 }
 \value{
-Either character vector with median \code{[1stQuartile/3rdQuartile]} and additional results (singleline), or matrix with rows for n, median \link{CI} and quartiles, and optionally range.
+Either character vector with median \code{[1stQuartile/3rdQuartile]} and additional results (singleline), or matrix with rows for n, median with CI, and quartiles, and optionally range.
 }
 \description{
 Compute median and quartiles and put together.
@@ -67,5 +65,5 @@ median_quart(x = mtcars$wt)
 # with additional options
 median_quart(x = mtcars$wt, groupvar = mtcars$am, add_n = TRUE)
 data(faketrial)
-median_quart(x=faketrial$`Biomarker 1 [units]`,groupvar = faketrial$Treatment)
+median_quart(x = faketrial$`Biomarker 1 [units]`, groupvar = faketrial$Treatment)
 }

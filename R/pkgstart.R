@@ -28,7 +28,7 @@ NULL
 #' @import rlang
 NULL
 
-#' @importFrom tidyr separate nest pivot_longer pivot_wider
+#' @importFrom tidyr separate nest pivot_longer pivot_wider replace_na
 NULL
 
 #' @importFrom utils data
@@ -38,7 +38,7 @@ NULL
 NULL
 
 #' @importFrom rlist list.append
-NULL 
+NULL
 
 #' @importFrom forcats fct_lump_n fct_drop fct_inorder
 NULL
@@ -53,4 +53,7 @@ NULL
 NULL
 
 #' @importFrom flextable flextable_to_rmd
+NULL
+
+#' @importFrom stringr str_glue
 NULL
