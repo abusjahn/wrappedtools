@@ -417,7 +417,7 @@ median_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3, round =
     uconf <- 1 - lconf
     bmedian <- function(x, ind) median(x[ind], na.rm = TRUE)
     bt <- suppressWarnings(boot::boot(x, bmedian, nrepl))
-    bb <- suppressWarnings(boot::boot.ci(bt, type = type))
+    bb <- invisible(capture.output(suppressWarnings(boot::boot.ci(bt, type = type))))
     if (round) {
       return(tibble(
         Median = roundR(median(x, na.rm = TRUE), level = roundDig),
@@ -489,7 +489,7 @@ mean_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3,
     uconf <- 1 - lconf
     bmean <- function(x, ind) mean(x[ind], na.rm = TRUE)
     bt <- boot::boot(x, bmean, nrepl)
-    bb <- boot::boot.ci(bt, type = type)
+    bb <- invisible(capture.output(boot::boot.ci(bt, type = type)))
 
     if (round) {
       return(tibble(
