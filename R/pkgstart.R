@@ -55,5 +55,5 @@ NULL
 #' @importFrom flextable flextable_to_rmd
 NULL
 
-#' @importFrom stringr str_glue
+#' @importFrom stringr str_glue str_detect
 NULL

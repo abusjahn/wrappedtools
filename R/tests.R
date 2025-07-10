@@ -766,7 +766,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
           as.character()
       }
     ) |>
-    purrr::map(~ case_when(str_detect(., ".\\d+") ~ ., TRUE ~ ""))
+    purrr::map(~ case_when(stringr::str_detect(., ".\\d+") ~ ., TRUE ~ ""))
 
   if (p_subgroups) {
     for (var_i in dep_vars) {

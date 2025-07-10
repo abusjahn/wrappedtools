@@ -1,6 +1,6 @@
 #wrappedtools 0.9.8
 - bugfix compare2numvars now handles negative numbers
-- related to bugfix: meansd and median_quart got a new argument singleline toreport various statistics as single text element or as a matrix with rows for stats
+- related to bugfix: meansd and median_quart got a new argument singleline to report various statistics as single text element or as a matrix with rows for stats
 - mean_cl_boot and median_cl_boot now require >= 3 values, otherwise a warning and NA are returned
 - ksnormal uses Lilliefors test only for n>=5
 

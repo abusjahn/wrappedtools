@@ -12,7 +12,7 @@ options(
     role = c("aut", "cre"), 
     comment = c(ORCID = "0000-0001-9650-6919"))',
     License =  "GPL-3",
-    Version = "0.9.1"
+    Version = "0.9.7"
   ),
   usethis.protocol  = "ssh"  
 )
