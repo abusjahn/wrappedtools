@@ -439,6 +439,7 @@ t_var_test <- function(data, formula, cutoff = .05) {
 #'   compare2numvars(dep_vars = "wt", indep_var = "gear", gaussian = TRUE)
 #'
 #' @export
+
 compare2numvars <- function(data, dep_vars, indep_var,
                             gaussian, round_p = 3, round_desc = 2,
                             range = FALSE,
@@ -653,6 +654,8 @@ compare2numvars <- function(data, dep_vars, indep_var,
 
   return(out)
 }
+
+utils::globalVariables(c("Stats", "desc_all", "g1", "g2", "p"))
 
 #' Comparison for columns of factors for 2 groups
 #'
