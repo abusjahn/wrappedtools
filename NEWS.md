@@ -1,3 +1,6 @@
+#wrappedtools 0.9.9
+- change in flex2rmd with explicit printing in interactive mode
+
 #wrappedtools 0.9.8
 - bugfix compare2numvars now handles negative numbers
 - related to bugfix: meansd and median_quart got a new argument singleline to report various statistics as single text element or as a matrix with rows for stats

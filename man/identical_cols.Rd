@@ -52,6 +52,6 @@ identical_cols(dummy) # Interactive removal
 identical_cols(dummy, remove_duplicates = FALSE) # Find identical columns only
 identical_cols(dummy, print_duplicates = FALSE) # Interactive removal, no print
 identical_cols(dummy, clean_names = FALSE) # Interactive removal, no clean names
-identical_cols(dummy, interactive = FALSE) #Non interactive removal of all duplicates.
+identical_cols(dummy, interactive = FALSE) # Non interactive removal of all duplicates.
 
 }

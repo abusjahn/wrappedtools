@@ -19,6 +19,6 @@ Character vector with backticks added.
 usable. Optionally removes them.
 }
 \examples{
-bt('name 1')
+bt("name 1")
 
 }

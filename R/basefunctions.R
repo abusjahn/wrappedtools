@@ -1,4 +1,4 @@
-utils::globalVariables(c("rawdata","stratum"))
+utils::globalVariables(c("rawdata", "stratum"))
 #' Automatic rounding to a reasonable length, based on largest number
 #'
 #' \code{roundR} takes a vector or matrix of numbers and returns rounded values
@@ -57,15 +57,15 @@ roundR <- function(roundin, level = 2, smooth = FALSE,
         roundin[which(!is.na(roundin))] /
           10^ceiling(log10(max(abs(roundin), na.rm = TRUE)) - level)
       ) *
-      10^ceiling(log10(max(abs(roundin), na.rm = TRUE)) - level)
+        10^ceiling(log10(max(abs(roundin), na.rm = TRUE)) - level)
   }
   if (textout) {
     roundout[which(!is.na(roundout))] <-
       formatC(roundout[which(!is.na(roundout))],
-              format = "f",
-              digits = roundlevel, drop0trailing = drop0,
-              big.mark = bigmark,
-              decimal.mark = decimalmark
+        format = "f",
+        digits = roundlevel, drop0trailing = drop0,
+        big.mark = bigmark,
+        decimal.mark = decimalmark
       )
   }
   return(roundout)
@@ -86,8 +86,8 @@ roundR <- function(roundin, level = 2, smooth = FALSE,
 markSign <- function(SignIn, plabel = c("n.s.", "+", "*", "**", "***")) {
   SignIn <- as.numeric(SignIn)
   SignOut <- cut(SignIn,
-                 breaks = c(-Inf, .001, .01, .05, .1, 1),
-                 labels = rev(plabel)
+    breaks = c(-Inf, .001, .01, .05, .1, 1),
+    labels = rev(plabel)
   )
   return(SignOut)
 }
@@ -116,18 +116,18 @@ markSign <- function(SignIn, plabel = c("n.s.", "+", "*", "**", "***")) {
 #' formatP(0.012345, ndigits = 4)
 #' formatP(0.000122345, ndigits = 3, pretext = TRUE)
 #' @export
-formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE, 
+formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
                     mark = FALSE, german_num = FALSE,
                     add.surprisal = FALSE, sprecision = 1) {
   decimal.mark <- ifelse(german_num, ",", ".")
   pIn_is_matrix <- is.matrix(pIn)
-  if (pIn_is_matrix){
-    pIn <- apply(pIn,c(1,2),as.numeric)
-  } else{
+  if (pIn_is_matrix) {
+    pIn <- apply(pIn, c(1, 2), as.numeric)
+  } else {
     pIn <- as.numeric(pIn)
   }
   formatp <- NA_character_
-  if (length(na.omit(pIn))>0) {
+  if (length(na.omit(pIn)) > 0) {
     if (!pIn_is_matrix) {
       pIn <- matrix(pIn)
     }
@@ -141,55 +141,59 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
         formatC, format = "f",
         digits = ndigits, drop0trailing = FALSE,
         decimal.mark = decimal.mark
-      )|> 
-      apply(MARGIN=c(1,2), gsub, pattern = ".*NA.*",replacement = "")
+      ) |>
+      apply(MARGIN = c(1, 2), gsub, pattern = ".*NA.*", replacement = "")
     if (pretext) {
       for (row_i in 1:nrow(pIn)) {
         for (col_i in 1:ncol(pIn)) {
           formatp[row_i, col_i] <- paste(
             ifelse(pIn[row_i, col_i] < 10**(-ndigits),
-                   "<", "="
+              "<", "="
             ),
             formatp[row_i, col_i]
-          ) |> 
-            gsub(pattern = "NA.*",replacement = "", x=_) 
+          ) |>
+            gsub(pattern = "NA.*", replacement = "", x = _)
         }
       }
-      formatp <-  
-        apply(formatp,MARGIN=c(1,2), gsub, pattern = ".*NA.*",replacement = "")
+      formatp <-
+        apply(formatp, MARGIN = c(1, 2), gsub, pattern = ".*NA.*", replacement = "")
     }
     if (mark) {
       formatp <- matrix(
         paste(
           formatp,
-          apply(gsub("[\\<\\=]", "", formatp) |> 
-                  gsub(",",".",x=_), c(1, 2), markSign)
+          apply(gsub("[\\<\\=]", "", formatp) |>
+            gsub(",", ".", x = _), c(1, 2), markSign)
         ),
         ncol = ncol(pIn)
-      ) |> apply(MARGIN = c(1, 2), 
-                       gsub, pattern = ".*NA.*",replacement = "")
+      ) |> apply(
+        MARGIN = c(1, 2),
+        gsub, pattern = ".*NA.*", replacement = ""
+      )
     }
-    if (add.surprisal){
-      s <- apply(pIn,MARGIN = c(1,2),surprisal, precision = sprecision) 
-      if (german_num){
-        s <- gsub('\\.',',',s)
+    if (add.surprisal) {
+      s <- apply(pIn, MARGIN = c(1, 2), surprisal, precision = sprecision)
+      if (german_num) {
+        s <- gsub("\\.", ",", s)
       }
       for (row_i in 1:nrow(pIn)) {
         for (col_i in 1:ncol(pIn)) {
-          formatp[row_i, col_i] <- paste0(formatp[row_i, col_i],
-            ', s = ',s[row_i,col_i])|> 
-        gsub(pattern = ".*NA.*",replacement = "",x=_)
+          formatp[row_i, col_i] <- paste0(
+            formatp[row_i, col_i],
+            ", s = ", s[row_i, col_i]
+          ) |>
+            gsub(pattern = ".*NA.*", replacement = "", x = _)
         }
       }
     }
     if (textout == FALSE & pretext == FALSE & add.surprisal == FALSE) {
       formatp <- apply(formatp, MARGIN = c(1, 2), as.numeric)
     }
-    if (!pIn_is_matrix){
+    if (!pIn_is_matrix) {
       formatp <- as.vector(formatp)
     }
-  } else{
-    formatP=""
+  } else {
+    formatP <- ""
   }
   return(formatp)
 }
@@ -199,9 +203,9 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 #'
 #' @description
 #' `r lifecycle::badge('superseded')`
-#' 
+#'
 #' Function [ColSeeker] extends this by adding class-checks.
-#' 
+#'
 #' \code{FindVars} looks up colnames (by default for data-frame rawdata)
 #' based on parts of names, using regular expressions. Be warned that
 #' special characters as e.g. `[` `(` need to be escaped or replaced by `.`
@@ -213,9 +217,9 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 #' @param exact Partial matching or exact only (adding ^ and $)?
 #' @param exclude Vector of pattern to exclude from found names.
 #' @param casesensitive Logical if case is respected in matching (default FALSE: a<>A)
-#' @param fixed Logical, match as is, argument is passed to [grep()]. 
+#' @param fixed Logical, match as is, argument is passed to [grep()].
 #' @param return_symbols Should names be reported as symbols additionally? (Default FALSE)
-#' 
+#'
 #' @export
 #' @return A list with index, names, backticked names, and symbols
 #' @examples
@@ -223,10 +227,9 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 #' FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars), exclude = "r")
 ## rawdata <- mtcars
 ## FindVars(varnames = c("^c", "g"))
-
 FindVars <- function(varnames, allnames = colnames(rawdata),
                      exact = FALSE, exclude = NA, casesensitive = TRUE,
-                     fixed = FALSE, return_symbols=FALSE) {
+                     fixed = FALSE, return_symbols = FALSE) {
   # if (is.null(allnames)) {
   #   allnames <- colnames(get("rawdata"))
   # }
@@ -249,7 +252,7 @@ FindVars <- function(varnames, allnames = colnames(rawdata),
   } else {
     for (i in 1:length(varnames)) {
       vars <- c(vars, grep(varnames[i], allnames_tmp,
-                           fixed = fixed
+        fixed = fixed
       ))
     }
     vars <- sort(unique(vars))
@@ -273,13 +276,15 @@ FindVars <- function(varnames, allnames = colnames(rawdata),
       names = allnames[vars],
       bticked = bt(allnames[vars]),
       symbols = rlang::syms(allnames[vars]),
-      count = length(vars))
+      count = length(vars)
+    )
   } else {
     return_list <- list(
       index = vars,
       names = allnames[vars],
       bticked = bt(allnames[vars]),
-      count = length(vars))
+      count = length(vars)
+    )
   }
   return(return_list)
 }
@@ -288,36 +293,36 @@ FindVars <- function(varnames, allnames = colnames(rawdata),
 #' Find numeric index and names of columns based on class(es) and patterns
 #'
 #' \code{ColSeeker} looks up colnames (by default for tibble rawdata)
-#' based on type and parts of names, using regular expressions. 
+#' based on type and parts of names, using regular expressions.
 #' Be warned that special characters as e.g. `[` `(` need to be escaped or replaced by `.`
 #' Exclusion rules may be specified as well.
 #'
-#' @param data tibble or data.frame, where columns are to be found; by default rawdata 
+#' @param data tibble or data.frame, where columns are to be found; by default rawdata
 #' @param namepattern Vector of pattern to look for.
 #' @param varclass Vector, only columns of defined class(es) are returned
 #' @param exclude Vector of pattern to exclude from found names.
 #' @param excludeclass Vector, exclude columns of specified class(es)
 #' @param casesensitive Logical if case is respected in matching (default FALSE: a<>A)
 #' @param returnclass Logical if classes should be included in output
-#' 
+#'
 #' @export
 #' @return A list with index, names, backticked names, and count;  optionally the classes as well
 #' @examples
 #' ColSeeker(data = mtcars, namepattern = c("^c", "g"))
 #' ColSeeker(data = mtcars, namepattern = c("^c", "g"), exclude = "r")
 #' assign("rawdata", mtcars)
-#' ColSeeker(namepattern = c("^c", "g"), varclass="numeric")
-#' num_int_data <- data.frame(num1=rnorm(10), num2=runif(10), int1=1:10, int2=11:20)
-#' ColSeeker(num_int_data, varclass="numeric")  # integers are not found
-#' ColSeeker(num_int_data, varclass=c("numeric","integer")) 
-ColSeeker <- function(data=rawdata,
-                      namepattern = '.',
-                      varclass = NULL, 
-                      exclude = NULL, 
+#' ColSeeker(namepattern = c("^c", "g"), varclass = "numeric")
+#' num_int_data <- data.frame(num1 = rnorm(10), num2 = runif(10), int1 = 1:10, int2 = 11:20)
+#' ColSeeker(num_int_data, varclass = "numeric") # integers are not found
+#' ColSeeker(num_int_data, varclass = c("numeric", "integer"))
+ColSeeker <- function(data = rawdata,
+                      namepattern = ".",
+                      varclass = NULL,
+                      exclude = NULL,
                       excludeclass = NULL,
                       casesensitive = TRUE,
                       returnclass = FALSE) {
-  allclasses <- sapply(sapply(data,class),paste,collapse = '+')
+  allclasses <- sapply(sapply(data, class), paste, collapse = "+")
   # allclasses <- allclasses[which(allclasses!='ordered')]
   allnames_tmp <- allnames <- colnames(data)
   if (!casesensitive) {
@@ -331,7 +336,7 @@ ColSeeker <- function(data=rawdata,
   evars <- numeric()
   for (i in 1:length(namepattern)) {
     vars <- c(vars, grep(namepattern[i], allnames_tmp,
-                         fixed = FALSE
+      fixed = FALSE
     ))
   }
   vars <- sort(unique(vars))
@@ -348,37 +353,43 @@ ColSeeker <- function(data=rawdata,
     }
   }
   vars <- unique(vars)
-  
-  if (!is.null(varclass)){
+
+  if (!is.null(varclass)) {
     vars_typed <- NULL
-    for(type_i in seq_along(varclass)){
-      vars_typed <- c(vars_typed,
-                      which(grepl(pattern = varclass[type_i], allclasses)))
+    for (type_i in seq_along(varclass)) {
+      vars_typed <- c(
+        vars_typed,
+        which(grepl(pattern = varclass[type_i], allclasses))
+      )
     }
-    
+
     vars <- vars[which(vars %in% vars_typed)]
   }
-  if (!is.null(excludeclass)){
+  if (!is.null(excludeclass)) {
     vars_typed <- NULL
-    for(type_i in seq_along(excludeclass)){
-      vars_typed <- c(vars_typed,
-                      which(grepl(excludeclass[type_i],allclasses)))
+    for (type_i in seq_along(excludeclass)) {
+      vars_typed <- c(
+        vars_typed,
+        which(grepl(excludeclass[type_i], allclasses))
+      )
     }
     vars <- vars[-which(vars %in% vars_typed)]
   }
-  if (returnclass){
+  if (returnclass) {
     return_list <- list(
       index = vars,
       names = allnames[vars],
       bticked = bt(allnames[vars]),
       count = length(vars),
-      varclass = allclasses[vars])
+      varclass = allclasses[vars]
+    )
   } else {
     return_list <- list(
       index = vars,
       names = allnames[vars],
       bticked = bt(allnames[vars]),
-      count = length(vars))
+      count = length(vars)
+    )
   }
   return(return_list)
 }
@@ -389,9 +400,9 @@ ColSeeker <- function(data=rawdata,
 #'
 #' @description
 #' `r lifecycle::badge('superseded')`
-#' 
+#'
 #' package flextable is a more powerful alternative
-#' 
+#'
 #' \code{print_kable} formats and prints tibbles/df's in markdown with splitting
 #' into sub-tables with repeated caption and header.
 #'
@@ -401,17 +412,19 @@ ColSeeker <- function(data=rawdata,
 #' @param caption header.
 #' @param ... Further arguments passed to [knitr::kable].
 #' @return No return value, called for side effects.
-#' 
-#' @examples 
+#'
+#' @examples
 #' \dontrun{
 #' print_kable(mtcars, caption = "test")
 #' }
 #' @export
 print_kable <- function(t, nrows = 30, caption = "",
                         ncols = 100, ...) {
-  lifecycle::deprecate_warn(when = '0.8.0',
-                            what = 'print_kable()',
-                            with = 'flextable::flextable()') # require(knitr)
+  lifecycle::deprecate_warn(
+    when = "0.8.0",
+    what = "print_kable()",
+    with = "flextable::flextable()"
+  ) # require(knitr)
   for (block_i in 1:ceiling(nrow(t) / nrows)) {
     for (col_i in 1:ceiling((ncol(t) - 1) / ncols)) {
       if (block_i + col_i > 2) {
@@ -421,7 +434,7 @@ print_kable <- function(t, nrows = 30, caption = "",
         knitr::kable(
           t[
             (1 + (block_i - 1) * nrows):
-              min(nrow(t), block_i * nrows),
+            min(nrow(t), block_i * nrows),
             c(1, (2 + (col_i - 1) * ncols):min((1 + col_i * ncols), ncol(t)))
           ],
           row.names = FALSE,
@@ -450,7 +463,7 @@ print_kable <- function(t, nrows = 30, caption = "",
 #' @param foot footnote
 #' @param escape see [knitr::kable]
 #'
-#'@return A character vector of the table source code. 
+#' @return A character vector of the table source code.
 #' @export
 pdf_kable <- function(.input, width1 = 6,
                       twidth = 14,
@@ -461,10 +474,10 @@ pdf_kable <- function(.input, width1 = 6,
                       escape = TRUE) {
   ncols <- ncol(.input)
   out <- knitr::kable(.input,
-                      format = "latex", booktabs = TRUE,
-                      linesep = "",
-                      escape = escape, caption = caption,
-                      align = c("l", rep("c", ncols - 1))
+    format = "latex", booktabs = TRUE,
+    linesep = "",
+    escape = escape, caption = caption,
+    align = c("l", rep("c", ncols - 1))
   ) |>
     kableExtra::kable_styling(
       position = tposition,
@@ -474,7 +487,7 @@ pdf_kable <- function(.input, width1 = 6,
       )
     ) |>
     kableExtra::column_spec(-1, # border_left = TRUE,
-                            width = paste0((twidth - width1) / (ncols - 1), "cm"),
+      width = paste0((twidth - width1) / (ncols - 1), "cm"),
     ) |>
     kableExtra::column_spec(1, bold = TRUE, width = paste0(width1, "cm")) |>
     kableExtra::row_spec(0, bold = TRUE)
@@ -497,10 +510,10 @@ pdf_kable <- function(.input, width1 = 6,
 #' \code{cn} lists column names, by default for variable rawdata.
 #'
 #' @param data Data structure to read column names from.
-#' 
+#'
 #' @return Character vector with column names.
-#' 
-#' @examples 
+#'
+#' @examples
 #' cn(mtcars)
 #' @export
 cn <- function(data = rawdata) {
@@ -514,12 +527,12 @@ cn <- function(data = rawdata) {
 #'
 #' @param x Names to add backtick to.
 #' @param remove Option to remove existing backticks, default=FALSE.
-#' 
+#'
 #' @return Character vector with backticks added.
-#' 
+#'
 #' @examples
-#' bt('name 1')
-#' 
+#' bt("name 1")
+#'
 #' @export
 bt <- function(x, remove = FALSE) {
   if (remove) {
@@ -560,32 +573,32 @@ tab.search <- function(searchdata = rawdata, pattern,
 }
 
 #' Compute surprisal aka Shannon information from p-values
-#' 
+#'
 #' \code{surprisal} takes p-values and returns s, a value representing the
-#' number of consecutive heads on a fair coin, that would be as surprising 
+#' number of consecutive heads on a fair coin, that would be as surprising
 #' as the p-value
-#' 
+#'
 #' @param p a vector of p-values
 #' @param precision rounding level with default 1
 #'
 #' @return a character vector of s-values
 #' @export
-surprisal <- function(p, precision = 1){
-  round(-log2(as.numeric(p)),precision) |> as.character()
+surprisal <- function(p, precision = 1) {
+  round(-log2(as.numeric(p)), precision) |> as.character()
 }
 
 
 #' Transform flextable to rmd if non-interactive
-#' 
+#'
 #' \code{flex2rmd} takes a flextable and returns a markdown table if not in an interactive session
-#' 
+#'
 #' @param ft a flextable
-#' 
+#'
 #' @return either a markdown table or the flextable
 #' @export
-flex2rmd <- function(ft){
-  if (interactive()){
-    return(ft)
+flex2rmd <- function(ft) {
+  if (interactive()) {
+    print(ft)
   } else {
     return(flextable_to_rmd(ft))
   }
@@ -627,7 +640,7 @@ flex2rmd <- function(ft){
 #' identical_cols(dummy, remove_duplicates = FALSE) # Find identical columns only
 #' identical_cols(dummy, print_duplicates = FALSE) # Interactive removal, no print
 #' identical_cols(dummy, clean_names = FALSE) # Interactive removal, no clean names
-#' identical_cols(dummy, interactive = FALSE) #Non interactive removal of all duplicates.
+#' identical_cols(dummy, interactive = FALSE) # Non interactive removal of all duplicates.
 #'
 #' @export
 identical_cols <- function(df,
@@ -642,19 +655,19 @@ identical_cols <- function(df,
     })
   names(identical.cols) <- col_names
   duplicated_groups <- unique(identical.cols[purrr::map_lgl(identical.cols, ~ length(.x) > 1)])
-  
+
   if (print_duplicates) {
-    purrr::map(duplicated_groups,~paste(bt(.x), collapse = "\n")) |> 
-      paste(collapse = "\n\n") |> 
+    purrr::map(duplicated_groups, ~ paste(bt(.x), collapse = "\n")) |>
+      paste(collapse = "\n\n") |>
       cat()
   }
-  
+
   if (remove_duplicates) {
     if (interactive &
-       length(duplicated_groups) > 0) {
+      length(duplicated_groups) > 0) {
       user_choice <- readline("Remove (a)ll, (s)ome, or (n)one of the duplicates? (a/s/n): ")
-    } else{
-      user_choice = "a"
+    } else {
+      user_choice <- "a"
     }
     if (user_choice == "a") {
       cols_to_remove <- col_names[col_names %in% unlist(
@@ -677,13 +690,14 @@ identical_cols <- function(df,
       cols_to_remove <- character(0)
       for (group in duplicated_groups) {
         cat(paste0("Duplicate group:\n", paste0("- ",
-                                                group,
-                                                collapse = "\n")))
+          group,
+          collapse = "\n"
+        )))
         remove_group <- readline("Remove this duplication? (y/n): ")
-        
+
         if (remove_group == "y") {
           cols_to_remove <- c(cols_to_remove, group[-1])
-          cn2rename <- c(cn2rename,group[1])
+          cn2rename <- c(cn2rename, group[1])
         }
       }
       cols_to_keep <- col_names[!col_names %in% cols_to_remove]

@@ -42,8 +42,8 @@ Exclusion rules may be specified as well.
 ColSeeker(data = mtcars, namepattern = c("^c", "g"))
 ColSeeker(data = mtcars, namepattern = c("^c", "g"), exclude = "r")
 assign("rawdata", mtcars)
-ColSeeker(namepattern = c("^c", "g"), varclass="numeric")
-num_int_data <- data.frame(num1=rnorm(10), num2=runif(10), int1=1:10, int2=11:20)
-ColSeeker(num_int_data, varclass="numeric")  # integers are not found
-ColSeeker(num_int_data, varclass=c("numeric","integer")) 
+ColSeeker(namepattern = c("^c", "g"), varclass = "numeric")
+num_int_data <- data.frame(num1 = rnorm(10), num2 = runif(10), int1 = 1:10, int2 = 11:20)
+ColSeeker(num_int_data, varclass = "numeric") # integers are not found
+ColSeeker(num_int_data, varclass = c("numeric", "integer"))
 }
