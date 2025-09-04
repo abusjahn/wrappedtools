@@ -11,7 +11,7 @@ Description: The main functionalities of 'wrappedtools' are:
     correlation matrices. Functions were mainly written for my own daily work or 
     teaching, but may be of use to others as well.
 Version: 0.9.9
-Date: 2025-08-29
+Date: 2025-09-04
 Authors@R: c(
     person(given = "Andreas",
            family = "Busjahn",
@@ -57,7 +57,7 @@ Imports:
 Depends: 
     R (>= 4.2)
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 LazyData: true
 VignetteBuilder: knitr
 Suggests: rmarkdown, testthat, ggrepel

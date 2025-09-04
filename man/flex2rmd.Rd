@@ -10,8 +10,8 @@ flex2rmd(ft)
 \item{ft}{a flextable}
 }
 \value{
-either a markdown table or the flextable
+either a markdown table from \code{flextable_to_rmd} or the printed flextable
 }
 \description{
-\code{flex2rmd} takes a flextable and returns a markdown table if not in an interactive session
+\code{flex2rmd} takes a flextable and returns a markdown table if not in an interactive session, otherwise it prints the flextable. This is usefull e.g. in a loop.
 }

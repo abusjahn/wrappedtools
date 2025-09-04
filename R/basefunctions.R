@@ -590,11 +590,11 @@ surprisal <- function(p, precision = 1) {
 
 #' Transform flextable to rmd if non-interactive
 #'
-#' \code{flex2rmd} takes a flextable and returns a markdown table if not in an interactive session
+#' \code{flex2rmd} takes a flextable and returns a markdown table if not in an interactive session, otherwise it prints the flextable. This is usefull e.g. in a loop.
 #'
 #' @param ft a flextable
 #'
-#' @return either a markdown table or the flextable
+#' @return either a markdown table from `flextable_to_rmd` or the printed flextable
 #' @export
 flex2rmd <- function(ft) {
   if (interactive()) {

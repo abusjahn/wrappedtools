@@ -1,4 +1,4 @@
-# # Assuming Normal distribution:
+# Assuming Normal distribution:
 # out1 <- compare2numvars(
 #   data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
 #   gaussian = TRUE

@@ -1,5 +1,6 @@
 #wrappedtools 0.9.9
 - change in flex2rmd with explicit printing in interactive mode
+- bugfix in unit test for compare2numvars
 
 #wrappedtools 0.9.8
 - bugfix compare2numvars now handles negative numbers

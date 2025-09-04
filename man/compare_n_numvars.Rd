@@ -43,6 +43,7 @@ compare_n_numvars(
 A list with elements "results": tibble with descriptive statistics,
 p-value from ANOVA/Kruskal-Wallis test, p-values for pairwise comparisons, significance
 indicators, and descriptives pasted with significance.
+Columns ending with \code{ fn} report descriptive statistics with post-hoc results as footnote.
 "raw": nested list with output from all underlying analyses.
 }
 \description{
