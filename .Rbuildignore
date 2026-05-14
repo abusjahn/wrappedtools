@@ -13,3 +13,5 @@ Hammer_.*
 wrappedtools_hex.png
 ^\\.Rprofile$
 ^CRAN-SUBMISSION$
+^\.positai$
+^\.claude$

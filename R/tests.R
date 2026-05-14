@@ -976,7 +976,7 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
     )
 
   out <- tibble(Variable = character(), desc_all = character()) |>
-    left_join(freqBYgroup[[1]] |> slice(0), by = character()) |>
+    cross_join(freqBYgroup[[1]] |> slice(0)) |>
     mutate(p = character())
   out_template <- out
   groupcols <- 3:(ncol(out) - 1)
@@ -1168,6 +1168,7 @@ pairwise_t_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
 #' @param range include min/max?
 #' @param rangesep text between statistics and range or other elements.
 #' @param pretext,mark for function formatP.
+#' @param ci include bootstrap CI for descriptive statistics? Defaults to FALSE
 #' @param add_n add n to descriptive statistics?
 #'
 #' @return
@@ -1197,7 +1198,8 @@ compare_n_numvars <- function(.data = rawdata,
                               round_desc = 2, range = FALSE,
                               rangesep = " ",
                               pretext = FALSE, mark = FALSE, round_p = 3,
-                              add_n = FALSE) {
+                              add_n = FALSE,
+                              ci = FALSE) {
   value <- Variable <- lm_out <- p_tout <- pANOVA <- NULL
   if (gaussian) {
     desc_fun <- wrappedtools::meansd
@@ -1230,14 +1232,16 @@ compare_n_numvars <- function(.data = rawdata,
         roundDig = round_desc,
         range = range,
         rangesep = rangesep,
-        add_n = add_n
+        add_n = add_n,
+        ci = ci
       )),
       desc_grp = purrr::map(data, ~ desc_fun(.$value,
         groupvar = .[[indep_var]],
         roundDig = round_desc,
         range = range,
         rangesep = rangesep,
-        add_n = add_n
+        add_n = add_n,
+        ci = ci
       )) |>
         purrr::map(~ set_names(
           .x,

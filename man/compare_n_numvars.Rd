@@ -15,7 +15,8 @@ compare_n_numvars(
   pretext = FALSE,
   mark = FALSE,
   round_p = 3,
-  add_n = FALSE
+  add_n = FALSE,
+  ci = FALSE
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ compare_n_numvars(
 \item{round_p}{level for rounding p-value.}
 
 \item{add_n}{add n to descriptive statistics?}
+
+\item{ci}{include bootstrap CI for descriptive statistics? Defaults to FALSE}
 }
 \value{
 A list with elements "results": tibble with descriptive statistics,

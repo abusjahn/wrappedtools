@@ -121,10 +121,12 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
                     add.surprisal = FALSE, sprecision = 1) {
   decimal.mark <- ifelse(german_num, ",", ".")
   pIn_is_matrix <- is.matrix(pIn)
+  if(!is.numeric(pIn)){
   if (pIn_is_matrix) {
-    pIn <- apply(pIn, c(1, 2), as.numeric)
+    pIn <- apply(pIn, c(1, 2), readr::parse_number)#as.numeric)
   } else {
-    pIn <- as.numeric(pIn)
+    pIn <- readr::parse_number(pIn)#as.numeric(pIn)
+  }
   }
   formatp <- NA_character_
   if (length(na.omit(pIn)) > 0) {

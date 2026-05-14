@@ -1,5 +1,5 @@
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage("Package wrappedtools is still maturing, so please report any inconviniences...")
+  packageStartupMessage("Package wrappedtools is still maturing, so please report any inconveniences...")
 }
 .onLoad <- function(libname, pkgname) {
   # options(stringsAsFactors=F)
@@ -53,4 +53,7 @@ NULL
 NULL
 
 #' @importFrom stringr str_glue str_detect
+NULL
+
+#' @importFrom readr parse_number
 NULL

@@ -23,6 +23,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Andreas Busjahn \email{andreas@busjahn.net} (\href{https://orcid.org/0000-0001-9650-6919}{ORCID})
   \item Franziska Eidloth \email{franziska.eidloth@gmail.com}
   \item Bilal Asser \email{billyasser@hotmail.co.uk}
 }
