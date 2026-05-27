@@ -1,8 +1,6 @@
-# wrappedtools 0.9.11
-- compare_n_qualvars updated to dplyr 1.1.0 syntax
-- formatP now uses readr::parse_number rather than as.numeric
-
 # wrappedtools 0.9.10
+- compare_n_qualvars updated to dplyr 1.1.0 syntax
+- formatP and markSign now use readr::parse_number rather than as.numeric
 - compare_n_numvars gains option for CI on mean and median
 
 #wrappedtools 0.9.9

@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-The main functionalities of 'wrappedtools' are: adding backticks to variable names; rounding to desired precision with special case for p-values; selecting columns based on pattern and storing their position, name, and backticked name; computing and formatting of descriptive statistics (e.g. mean±SD), comparing groups and creating publication-ready tables with descriptive statistics and p-values; creating specialized plots for correlation matrices. Functions were mainly written for my own daily work or teaching, but may be of use to others as well.
+The main functionalities of 'wrappedtools' are: adding backticks to variable names; rounding to desired precision with special case for p-values; selecting columns based on pattern and/or class and storing their position, name, and backticked name; computing and formatting of descriptive statistics (e.g. mean±SD), comparing groups and creating publication-ready tables with descriptive statistics and p-values; creating specialized plots for correlation matrices. Functions were mainly written for my own daily work or teaching, but may be of use to others as well.
 }
 \seealso{
 Useful links:

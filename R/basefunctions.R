@@ -81,10 +81,12 @@ roundR <- function(roundin, level = 2, smooth = FALSE,
 #' @returns factor with label as defined in plabel.
 #'
 #' @examples
-#' markSign(0.012)
+#' markSign(c(0.12, 0.012, 0.0012))
 #' @export
 markSign <- function(SignIn, plabel = c("n.s.", "+", "*", "**", "***")) {
-  SignIn <- as.numeric(SignIn)
+  if(!is.numeric(SignIn)){
+    SignIn <- readr::parse_number(SignIn)
+  }
   SignOut <- cut(SignIn,
     breaks = c(-Inf, .001, .01, .05, .1, 1),
     labels = rev(plabel)

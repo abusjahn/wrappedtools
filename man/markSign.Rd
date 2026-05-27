@@ -18,5 +18,5 @@ factor with label as defined in plabel.
 \code{markSign} returns the symbol associated with a significance level.
 }
 \examples{
-markSign(0.012)
+markSign(c(0.12, 0.012, 0.0012))
 }
