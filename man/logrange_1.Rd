@@ -35,14 +35,14 @@ numeric vector
 1, 2, 3 ... 9, 10, 20, 30 ... 90, 100 ...
 
 \item \code{logrange_12357}: vector for log-labels at
-1 ,2, 3, 5, 7, 10, 20 ,30, 50, 70 ...
+1 , 2, 3, 5, 7, 10, 20 , 30, 50, 70 ...
 
 \item \code{logrange_15}: vector for log-labels at
 1, 5, 10, 50 ...
 
 }}
 \examples{
-ggplot2::ggplot(mtcars) + 
+ggplot2::ggplot(mtcars) +
 ggplot2::aes(wt, mpg) +
   ggplot2::geom_point() +
   ggplot2::scale_y_log10(breaks = logrange_5)

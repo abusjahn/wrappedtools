@@ -5,7 +5,7 @@
 #' @return numeric vector
 #'
 #' @examples
-#' ggplot2::ggplot(mtcars) + 
+#' ggplot2::ggplot(mtcars) +
 #' ggplot2::aes(wt, mpg) +
 #'   ggplot2::geom_point() +
 #'   ggplot2::scale_y_log10(breaks = logrange_5)
@@ -31,7 +31,7 @@ logrange_5 <- seq(1, 9.5, .5) * rep(10^(-30:30), each = 18)
 logrange_123456789 <- c(1:9) * rep(10^(-30:30), each = 9)
 
 #' @describeIn logrange_1 vector for log-labels at
-#' 1 ,2, 3, 5, 7, 10, 20 ,30, 50, 70 ...
+#' 1 , 2, 3, 5, 7, 10, 20 , 30, 50, 70 ...
 
 #' @export
 logrange_12357 <- c(1, 2, 3, 5, 7) * rep(10^(-30:30), each = 5)

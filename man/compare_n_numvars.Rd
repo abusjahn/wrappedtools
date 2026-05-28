@@ -34,7 +34,9 @@ compare_n_numvars(
 
 \item{rangesep}{text between statistics and range or other elements.}
 
-\item{pretext, mark}{for function formatP.}
+\item{pretext}{argument for function formatP, adding = or <.}
+
+\item{mark}{argument for formatP, adding significance indicators.}
 
 \item{round_p}{level for rounding p-value.}
 
@@ -53,7 +55,7 @@ Columns ending with \code{ fn} report descriptive statistics with post-hoc resul
 Some names were changed in August 2022, to reflect the update of the function to handle ordinal data using non-parametric equivalents.
 }
 \examples{
-# Usually,only the result table is relevant:
+# Usually, only the result table is relevant:
 compare_n_numvars(
   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
   indep_var = "cyl",

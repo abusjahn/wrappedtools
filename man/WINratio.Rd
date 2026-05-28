@@ -22,13 +22,13 @@ WINratio(data, groupvar, testvars, rules, idvar = NULL, p_digits = 3)
 \value{
 A list with elements:
 
-WINratio=vector with WINratio and CIs,
+WINratio = vector with WINratio and CIs,
 
-WINodds=odds ratio of wins and losses, taking ties into account,
+WINodds = odds ratio of wins and losses, taking ties into account,
 
-p.value=p.value from prop.test,
+p.value = p.value from prop.test,
 
-WINratioCI=character with merged WINratio, CI, and p
+WINratioCI = character with merged WINratio, CI, and p
 
 testdata= tibble with testdata from cross-join.
 }

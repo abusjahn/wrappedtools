@@ -35,16 +35,16 @@ plot_LB(
 \examples{
 MMdata <- data.frame(subst = c(2.00, 1.00, 0.50, 0.25),
                  velo = c(0.2253, 0.1795, 0.1380, 0.1000))
-                 
-plot_LB(data=MMdata,
-        substrate = 'subst',velocity = 'velo')
 
-MMdata <- data.frame(subst = rep(c(2.00, 1.00, 0.50, 0.25),2),
+plot_LB(data = MMdata,
+        substrate = "subst", velocity = "velo")
+
+MMdata <- data.frame(subst = rep(c(2.00, 1.00, 0.50, 0.25), 2),
                  velo = c(0.2253, 0.1795, 0.1380, 0.1000,
                           0.4731333, 0.4089333, 0.3473000, 0.2546667),
-                 condition = rep(c('C1','C2'),each=4))
-                 
-plot_LB(data=MMdata,substrate = 'subst',
-        velocity = 'velo',group='condition')
+                 condition = rep(c("C1","C2"), each = 4))
+
+plot_LB(data = MMdata, substrate = "subst",
+        velocity = "velo", group="condition")
 
 }

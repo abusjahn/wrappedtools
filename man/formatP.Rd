@@ -18,19 +18,19 @@ formatP(
 \arguments{
 \item{pIn}{A numeric vector or matrix with p-values.}
 
-\item{ndigits}{Number of digits (default=3).}
+\item{ndigits}{Number of digits (default = 3).}
 
-\item{textout}{Cast output to character (default=TRUE)?}
+\item{textout}{Cast output to character (default = TRUE)?}
 
-\item{pretext}{Should = or < be added before p (default=FALSE)?}
+\item{pretext}{Should = or < be added before p (default = FALSE)?}
 
-\item{mark}{Should significance level be added after p (default=FALSE)?}
+\item{mark}{Should significance level be added after p (default = FALSE)?}
 
 \item{german_num}{change dot (default) to comma?}
 
-\item{add.surprisal}{Add surprisal aka Shannon information to p-value (default=FALSE)?}
+\item{add.surprisal}{Add surprisal aka Shannon information to p-value (default = FALSE)?}
 
-\item{sprecision}{Rounding level for surprisal (default=1).}
+\item{sprecision}{Rounding level for surprisal (default = 1).}
 }
 \value{
 vector or matrix (depending on type of pIn) with type character (default) or numeric,

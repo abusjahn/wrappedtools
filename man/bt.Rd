@@ -9,7 +9,7 @@ bt(x, remove = FALSE)
 \arguments{
 \item{x}{Names to add backtick to.}
 
-\item{remove}{Option to remove existing backticks, default=FALSE.}
+\item{remove}{Option to remove existing backticks, default = FALSE.}
 }
 \value{
 Character vector with backticks added.

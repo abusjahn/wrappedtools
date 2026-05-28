@@ -4,7 +4,7 @@
 \alias{glmCI}
 \title{Confidence interval for generalized linear models}
 \usage{
-glmCI(model, min = .01, max = 100, cisep = '\U000022ef', ndigit=2)
+glmCI(model, min = .01, max = 100, cisep = '\U000022ef', ndigit = 2)
 }
 \arguments{
 \item{model}{Output from \link{glm}.}

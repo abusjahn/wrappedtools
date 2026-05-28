@@ -51,21 +51,21 @@ roundR <- function(roundin, level = 2, smooth = FALSE,
   }
   roundout[which(!is.na(roundout))] <-
     round(roundin[which(!is.na(roundin))], roundlevel)
-  if (smooth & max(abs(roundout), na.rm = TRUE) != 0) {
+  if (smooth && max(abs(roundout), na.rm = TRUE) != 0) {
     roundout[which(!is.na(roundout))] <-
       round(
         roundin[which(!is.na(roundin))] /
           10^ceiling(log10(max(abs(roundin), na.rm = TRUE)) - level)
       ) *
-        10^ceiling(log10(max(abs(roundin), na.rm = TRUE)) - level)
+      10^ceiling(log10(max(abs(roundin), na.rm = TRUE)) - level)
   }
   if (textout) {
     roundout[which(!is.na(roundout))] <-
       formatC(roundout[which(!is.na(roundout))],
-        format = "f",
-        digits = roundlevel, drop0trailing = drop0,
-        big.mark = bigmark,
-        decimal.mark = decimalmark
+              format = "f",
+              digits = roundlevel, drop0trailing = drop0,
+              big.mark = bigmark,
+              decimal.mark = decimalmark
       )
   }
   return(roundout)
@@ -84,12 +84,12 @@ roundR <- function(roundin, level = 2, smooth = FALSE,
 #' markSign(c(0.12, 0.012, 0.0012))
 #' @export
 markSign <- function(SignIn, plabel = c("n.s.", "+", "*", "**", "***")) {
-  if(!is.numeric(SignIn)){
+  if (!is.numeric(SignIn)) {
     SignIn <- readr::parse_number(SignIn)
   }
   SignOut <- cut(SignIn,
-    breaks = c(-Inf, .001, .01, .05, .1, 1),
-    labels = rev(plabel)
+                 breaks = c(-Inf, .001, .01, .05, .1, 1),
+                 labels = rev(plabel)
   )
   return(SignOut)
 }
@@ -101,13 +101,13 @@ markSign <- function(SignIn, plabel = c("n.s.", "+", "*", "**", "***")) {
 #' symbols according to significance level.
 #'
 #' @param pIn A numeric vector or matrix with p-values.
-#' @param ndigits Number of digits (default=3).
-#' @param textout Cast output to character (default=TRUE)?
-#' @param pretext Should = or < be added before p (default=FALSE)?
-#' @param mark Should significance level be added after p (default=FALSE)?
+#' @param ndigits Number of digits (default = 3).
+#' @param textout Cast output to character (default = TRUE)?
+#' @param pretext Should = or < be added before p (default = FALSE)?
+#' @param mark Should significance level be added after p (default = FALSE)?
 #' @param german_num change dot (default) to comma?
-#' @param add.surprisal Add surprisal aka Shannon information to p-value (default=FALSE)?
-#' @param sprecision Rounding level for surprisal (default=1).
+#' @param add.surprisal Add surprisal aka Shannon information to p-value (default = FALSE)?
+#' @param sprecision Rounding level for surprisal (default = 1).
 #'
 #' @returns vector or matrix (depending on type of pIn) with type character (default) or numeric,
 #' depending on parameter textout
@@ -123,12 +123,12 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
                     add.surprisal = FALSE, sprecision = 1) {
   decimal.mark <- ifelse(german_num, ",", ".")
   pIn_is_matrix <- is.matrix(pIn)
-  if(!is.numeric(pIn)){
-  if (pIn_is_matrix) {
-    pIn <- apply(pIn, c(1, 2), readr::parse_number)#as.numeric)
-  } else {
-    pIn <- readr::parse_number(pIn)#as.numeric(pIn)
-  }
+  if (!is.numeric(pIn)) {
+    if (pIn_is_matrix) {
+      pIn <- apply(pIn, c(1, 2), readr::parse_number)
+    } else {
+      pIn <- readr::parse_number(pIn)
+    }
   }
   formatp <- NA_character_
   if (length(na.omit(pIn)) > 0) {
@@ -148,11 +148,11 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
       ) |>
       apply(MARGIN = c(1, 2), gsub, pattern = ".*NA.*", replacement = "")
     if (pretext) {
-      for (row_i in 1:nrow(pIn)) {
-        for (col_i in 1:ncol(pIn)) {
+      for (row_i in seq_len(nrow(pIn))) {
+        for (col_i in seq_len(ncol(pIn))) {
           formatp[row_i, col_i] <- paste(
             ifelse(pIn[row_i, col_i] < 10**(-ndigits),
-              "<", "="
+                   "<", "="
             ),
             formatp[row_i, col_i]
           ) |>
@@ -167,21 +167,22 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
         paste(
           formatp,
           apply(gsub("[\\<\\=]", "", formatp) |>
-            gsub(",", ".", x = _), c(1, 2), markSign)
+                  gsub(",", ".", x = _), c(1, 2), markSign)
         ),
         ncol = ncol(pIn)
-      ) |> apply(
-        MARGIN = c(1, 2),
-        gsub, pattern = ".*NA.*", replacement = ""
-      )
+      ) |>
+        apply(
+          MARGIN = c(1, 2),
+          gsub, pattern = ".*NA.*", replacement = ""
+        )
     }
     if (add.surprisal) {
       s <- apply(pIn, MARGIN = c(1, 2), surprisal, precision = sprecision)
       if (german_num) {
         s <- gsub("\\.", ",", s)
       }
-      for (row_i in 1:nrow(pIn)) {
-        for (col_i in 1:ncol(pIn)) {
+      for (row_i in seq_len(nrow(pIn))) {
+        for (col_i in seq_len(ncol(pIn))) {
           formatp[row_i, col_i] <- paste0(
             formatp[row_i, col_i],
             ", s = ", s[row_i, col_i]
@@ -190,14 +191,14 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
         }
       }
     }
-    if (textout == FALSE & pretext == FALSE & add.surprisal == FALSE) {
+    if (textout == FALSE && pretext == FALSE && add.surprisal == FALSE) {
       formatp <- apply(formatp, MARGIN = c(1, 2), as.numeric)
     }
     if (!pIn_is_matrix) {
       formatp <- as.vector(formatp)
     }
   } else {
-    formatP <- ""
+    formatp <- ""
   }
   return(formatp)
 }
@@ -229,14 +230,9 @@ formatP <- function(pIn, ndigits = 3, textout = TRUE, pretext = FALSE,
 #' @examples
 #' FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars))
 #' FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars), exclude = "r")
-## rawdata <- mtcars
-## FindVars(varnames = c("^c", "g"))
 FindVars <- function(varnames, allnames = colnames(rawdata),
                      exact = FALSE, exclude = NA, casesensitive = TRUE,
                      fixed = FALSE, return_symbols = FALSE) {
-  # if (is.null(allnames)) {
-  #   allnames <- colnames(get("rawdata"))
-  # }
   if (fixed) {
     exact <- FALSE
   }
@@ -249,20 +245,19 @@ FindVars <- function(varnames, allnames = colnames(rawdata),
   vars <- numeric()
   evars <- numeric()
   if (exact) {
-    for (i in 1:length(varnames)) {
+    for (i in seq_along(varnames)) {
       vars <- c(vars, grep(paste0("^", varnames[i], "$"), allnames_tmp))
     }
     vars <- unique(vars)
   } else {
-    for (i in 1:length(varnames)) {
+    for (i in seq_along(varnames)) {
       vars <- c(vars, grep(varnames[i], allnames_tmp,
-        fixed = fixed
+                           fixed = fixed
       ))
     }
     vars <- sort(unique(vars))
     if (any(!is.na(exclude))) {
-      for (i in 1:length(exclude))
-      {
+      for (i in seq_along(exclude)) {
         evars <- c(evars, grep(exclude[i], allnames_tmp))
       }
       evars <- unique(na.omit(match(
@@ -327,7 +322,6 @@ ColSeeker <- function(data = rawdata,
                       casesensitive = TRUE,
                       returnclass = FALSE) {
   allclasses <- sapply(sapply(data, class), paste, collapse = "+")
-  # allclasses <- allclasses[which(allclasses!='ordered')]
   allnames_tmp <- allnames <- colnames(data)
   if (!casesensitive) {
     namepattern <- tolower(namepattern)
@@ -338,15 +332,14 @@ ColSeeker <- function(data = rawdata,
   }
   vars <- numeric()
   evars <- numeric()
-  for (i in 1:length(namepattern)) {
+  for (i in seq_along(namepattern)) {
     vars <- c(vars, grep(namepattern[i], allnames_tmp,
-      fixed = FALSE
+                         fixed = FALSE
     ))
   }
   vars <- sort(unique(vars))
   if (!is.null(exclude)) {
-    for (i in 1:length(exclude))
-    {
+    for (i in seq_along(exclude)) {
       evars <- c(evars, grep(exclude[i], allnames_tmp))
     }
     evars <- unique(na.omit(match(
@@ -428,7 +421,7 @@ print_kable <- function(t, nrows = 30, caption = "",
     when = "0.8.0",
     what = "print_kable()",
     with = "flextable::flextable()"
-  ) # require(knitr)
+  )
   for (block_i in 1:ceiling(nrow(t) / nrows)) {
     for (col_i in 1:ceiling((ncol(t) - 1) / ncols)) {
       if (block_i + col_i > 2) {
@@ -437,8 +430,7 @@ print_kable <- function(t, nrows = 30, caption = "",
       print(
         knitr::kable(
           t[
-            (1 + (block_i - 1) * nrows):
-            min(nrow(t), block_i * nrows),
+            (1 + (block_i - 1) * nrows):min(nrow(t), block_i * nrows),
             c(1, (2 + (col_i - 1) * ncols):min((1 + col_i * ncols), ncol(t)))
           ],
           row.names = FALSE,
@@ -478,10 +470,10 @@ pdf_kable <- function(.input, width1 = 6,
                       escape = TRUE) {
   ncols <- ncol(.input)
   out <- knitr::kable(.input,
-    format = "latex", booktabs = TRUE,
-    linesep = "",
-    escape = escape, caption = caption,
-    align = c("l", rep("c", ncols - 1))
+                      format = "latex", booktabs = TRUE,
+                      linesep = "",
+                      escape = escape, caption = caption,
+                      align = c("l", rep("c", ncols - 1))
   ) |>
     kableExtra::kable_styling(
       position = tposition,
@@ -490,8 +482,8 @@ pdf_kable <- function(.input, width1 = 6,
         "hold_position"
       )
     ) |>
-    kableExtra::column_spec(-1, # border_left = TRUE,
-      width = paste0((twidth - width1) / (ncols - 1), "cm"),
+    kableExtra::column_spec(-1,
+                            width = paste0((twidth - width1) / (ncols - 1), "cm"),
     ) |>
     kableExtra::column_spec(1, bold = TRUE, width = paste0(width1, "cm")) |>
     kableExtra::row_spec(0, bold = TRUE)
@@ -530,7 +522,7 @@ cn <- function(data = rawdata) {
 #' usable. Optionally removes them.
 #'
 #' @param x Names to add backtick to.
-#' @param remove Option to remove existing backticks, default=FALSE.
+#' @param remove Option to remove existing backticks, default = FALSE.
 #'
 #' @return Character vector with backticks added.
 #'
@@ -554,21 +546,21 @@ bt <- function(x, remove = FALSE) {
 #'
 #' @param searchdata table to search in, predefined as rawdata
 #' @param pattern regex, for exact matches add ^findme$
-#' @param find.all return all row indices or only 1st per column,default=TRUE
+#' @param find.all return all row indices or only 1st per column, default = TRUE
 #' @param names.only return only vector of colnames rather than list with names
-#' and rows, default=FALSE
+#' and rows, default = FALSE
 #'
 #' @return A list with numeric vectors for each column giving row numbers
 #' of matched elements
 #' @export
 tab.search <- function(searchdata = rawdata, pattern,
-                       find.all = T, names.only = FALSE) {
+                       find.all = TRUE, names.only = FALSE) {
   if (!is.character(pattern)) {
     pattern <- as.character(pattern)
   }
-  positions <- purrr::map(searchdata, str_which, pattern = pattern) |> purrr::compact()
+  positions <- purrr::map(searchdata, stringr::str_which, pattern = pattern) |> purrr::compact()
   if (!find.all) {
-    positions <- purrr::map(positions, nth, n = 1)
+    positions <- purrr::map(positions, dplyr::first)#nth, n = 1)
   }
   if (names.only) {
     positions <- names(positions)
@@ -667,8 +659,8 @@ identical_cols <- function(df,
   }
 
   if (remove_duplicates) {
-    if (interactive &
-      length(duplicated_groups) > 0) {
+    if (interactive &&
+        length(duplicated_groups) > 0) {
       user_choice <- readline("Remove (a)ll, (s)ome, or (n)one of the duplicates? (a/s/n): ")
     } else {
       user_choice <- "a"
@@ -694,8 +686,8 @@ identical_cols <- function(df,
       cols_to_remove <- character(0)
       for (group in duplicated_groups) {
         cat(paste0("Duplicate group:\n", paste0("- ",
-          group,
-          collapse = "\n"
+                                                group,
+                                                collapse = "\n"
         )))
         remove_group <- readline("Remove this duplication? (y/n): ")
 

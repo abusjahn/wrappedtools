@@ -22,7 +22,7 @@ pairwise_fisher_test(
 
 \item{plevel}{threshold for significance.}
 
-\item{symbols}{predefined as b,c, d...;  provides footnotes to mark group
+\item{symbols}{predefined as b, c, d...;  provides footnotes to mark group
 differences, e.g. b means different from group 2}
 
 \item{ref}{is the 1st subgroup the reference (like in Dunnett test)?}
@@ -38,6 +38,6 @@ group levels with corrections for multiple testing.
 \examples{
 # All pairwise comparisons
 pairwise_fisher_test(dep_var = mtcars$cyl, indep_var = mtcars$gear)
-# Only comparison against reference gear=3
+# Only comparison against reference gear = 3
 pairwise_fisher_test(dep_var = mtcars$cyl, indep_var = mtcars$gear, ref = TRUE)
 }

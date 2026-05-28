@@ -9,7 +9,7 @@ eGFR(data, age_var = "age", sex_var = "sex", crea_var = NULL, cys_var = NULL)
 \arguments{
 \item{data}{name of data set (tibble/data.frame) to analyze.}
 
-\item{age_var}{name of column with patient age in years, default=age.}
+\item{age_var}{name of column with patient age in years, default = age.}
 
 \item{sex_var}{name of column with sex, assumed as female and male.}
 

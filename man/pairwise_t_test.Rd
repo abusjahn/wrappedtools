@@ -21,7 +21,7 @@ pairwise_t_test(
 
 \item{plevel}{threshold for significance}
 
-\item{symbols}{predefined as b,c, d...;  provides footnotes to mark group
+\item{symbols}{predefined as b, c, d...;  provides footnotes to mark group
 differences, e.g. b means different from group 2}
 }
 \value{

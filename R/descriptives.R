@@ -82,7 +82,6 @@ meansd <- function(x,
       meansd[, 1:4] <- meansd[, 1:4] |>
         roundR(level = roundDig, drop0 = drop0, .german = .german)
       meansd[, 5:6] <- meansd[, 5:6] |>
-        # as.numeric() |>
         roundR(level = roundDig, drop0 = drop0, .german = .german)
       meansd <- meansd |>
         cbind(by(x, groupvar, function(x) {
@@ -97,7 +96,7 @@ meansd <- function(x,
           apply(matrix(meansd[, 3:4], ncol = 2), 1, paste,
             collapse = "; "
           ), "]"
-        ) # \u22ef
+        )
       }
       if (range) {
         out <- paste0(
@@ -173,7 +172,6 @@ meansd <- function(x,
 #' @export
 median_quart <- function(x,
                          nround = NULL,
-                         # probs = c(.25, .5, .75),
                          qtype = 8,
                          roundDig = 2,
                          drop0 = FALSE,
@@ -222,7 +220,8 @@ median_quart <- function(x,
         by(x, groupvar, quantile,
           probs = probs, na.rm = TRUE,
           type = qtype
-        ) |> unlist() |>
+        ) |>
+          unlist() |>
           as.numeric(),
         ncol = 3, byrow = TRUE
       ) |>
@@ -232,7 +231,8 @@ median_quart <- function(x,
           by(x, groupvar, quantile,
             probs = c(0, 1), na.rm = TRUE,
             type = qtype
-          ) |> unlist() |>
+          ) |>
+            unlist() |>
             as.numeric(),
           ncol = 2, byrow = TRUE
         )) |>
@@ -245,10 +245,6 @@ median_quart <- function(x,
         )
     }
     if (is.null(nround)) {
-      # colcount <- ncol(quart)
-      # quart[, 1:(colcount - 3)] <- roundR(quart[, 1:(colcount - 3)],
-      #                                     level = roundDig, drop0 = drop0, .german = .german
-      # )
       quart[, 1:5] <-
         roundR(as.numeric(quart[, 1:5]),
           level = roundDig, drop0 = drop0, .german = .german
@@ -257,15 +253,6 @@ median_quart <- function(x,
         roundR(as.numeric(quart[, 6:7]),
           level = roundDig, drop0 = drop0, .german = .german
         )
-      # if (prettynum) {
-      #   quart <- apply(quart,1:2,function(x){
-      #     formatC(as.numeric(x),
-      #             digits = roundDig-1,
-      #             format = 'f',
-      #             big.mark = bigmark,
-      #             decimal.mark = decimal,
-      #             preserve.width = 'common',drop0trailing = FALSE)})
-      # }
     } else {
       quart[, -ncol(quart)] <-
         round(as.numeric(quart[, -ncol(quart)]), nround)
@@ -282,19 +269,19 @@ median_quart <- function(x,
       }
     }
     if (singleline) {
-      out <- stringr::str_glue("{quart[,2]} ({quart[,1]}/{quart[,3]})")
+      out <- stringr::str_glue("{quart[, 2]} ({quart[, 1]}/{quart[, 3]})")
       if (ci) {
         out <- stringr::str_glue("{out}{rangesep} [\\
-                        {apply(matrix(quart[,4:5],ncol=2),1,glue::glue_collapse,
+                        {apply(matrix(quart[, 4:5], ncol = 2), 1, glue::glue_collapse,
                         sep='; ')}]")
       }
       if (range) {
         out <- stringr::str_glue("{out}{rangesep} [\\
-                      {apply(matrix(quart[,6:7],ncol=2),1,glue::glue_collapse,
-                      sep=rangearrow)}]")
+                      {apply(matrix(quart[, 6:7], ncol = 2), 1, glue::glue_collapse,
+                      sep = rangearrow)}]")
       }
       if (add_n) {
-        out <- stringr::str_glue("{out}{rangesep} [n = {quart[,8]}]")
+        out <- stringr::str_glue("{out}{rangesep} [n = {quart[, 8]}]")
       }
       out <- as.character(out)
     } else {
@@ -374,8 +361,11 @@ medianse <- function(x) {
 
 #' Compute standard error of median
 #'
+#' `r lifecycle::badge('deprecated')`
+#'
+#' (Please see \link{medianse}, which is the same but named more consistently)
+#'
 #' \code{se_median} is based on \code{\link{mad}}/square root(n)
-#' (Deprecated, please see \link{medianse}, which is the same but named more consistently)
 #'
 #' @param x Data for computation.
 #'
@@ -481,8 +471,7 @@ median_cl_boot_gg <- function(x) {
 #' mean_cl_boot(x = mtcars$wt)
 #' @export
 mean_cl_boot <- function(x, conf = 0.95, type = "basic", nrepl = 10^3,
-                         round = FALSE, roundDig = 2) ##
-{
+                         round = FALSE, roundDig = 2) {
   x <- na.omit(x)
   if (length(x) > 2) {
     lconf <- (1 - conf) / 2
@@ -561,11 +550,6 @@ cat_desc_stats <- function(source = NULL, separator = " ",
   bigmark <- ifelse(.german, ".", ",")
   decimal <- ifelse(.german, ",", ".")
   if (!is.factor(source)) {
-    # if (is.numeric(source)) {
-    #   source<-factor(source,
-    #                  levels=sort(unique(source)),
-    #                  labels=sort(unique(source)))
-    # } else {
     source <- factor(source)
   }
   level <- levels(source) |> enframe(name = NULL)

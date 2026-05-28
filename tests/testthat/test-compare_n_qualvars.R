@@ -11,8 +11,8 @@
 # out3 <- compare_n_qualvars(
 #   data = mtcars, dep_vars = c("am", "cyl", "carb"), indep_var = "gear",
 #   singleline = TRUE, linebreak = "; ")
-# saveRDS(list(out1=out1, out2=out2, out3=out3),file = 'tests/testthat/compare_n_qualvars_out.rda')
-# 
+# saveRDS(list(out1 = out1, out2 = out2, out3 = out3), file = 'tests/testthat/compare_n_qualvars_out.rda')
+#
 # test_that("compare_n_qualvars() with defaults and options set", {
 #   expected <- readRDS('compare_n_qualvars_out.rda')
 #   expect_equal(compare_n_qualvars(
@@ -28,5 +28,3 @@
 #     singleline = TRUE, linebreak = "; "),
 #     expected[[3]])
 # })
-
-

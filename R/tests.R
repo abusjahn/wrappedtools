@@ -7,7 +7,7 @@
 #' @param indep_var independent variable, should be factor or coercible.
 #' @param adjmethod method for adjusting p values (see [p.adjust]).
 #' @param plevel threshold for significance.
-#' @param symbols predefined as b,c, d...;  provides footnotes to mark group
+#' @param symbols predefined as b, c, d...;  provides footnotes to mark group
 #' differences, e.g. b means different from group 2
 #' @param ref is the 1st subgroup the reference (like in Dunnett test)?
 #'
@@ -18,11 +18,11 @@
 #' @examples
 #' # All pairwise comparisons
 #' pairwise_fisher_test(dep_var = mtcars$cyl, indep_var = mtcars$gear)
-#' # Only comparison against reference gear=3
+#' # Only comparison against reference gear = 3
 #' pairwise_fisher_test(dep_var = mtcars$cyl, indep_var = mtcars$gear, ref = TRUE)
 #' @export
 pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
-                                 symbols = letters[-1], # c('b','c','d','e','f','g'),
+                                 symbols = letters[-1],
                                  ref = FALSE) {
   if (!is.factor(indep_var)) {
     indep_var <- factor(indep_var)
@@ -31,14 +31,14 @@ pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
     dep_var <- factor(dep_var)
   }
   if (is.ordered(indep_var)) {
-    indep_var <- factor(indep_var, ordered = F)
+    indep_var <- factor(indep_var, ordered = FALSE)
   }
 
 
   ngroups <- length(levels(indep_var))
   pft_data <- data.frame(dep_var, indep_var)
   pft_data <- na.omit(pft_data)
-  # print(pft_data)
+
   p_unadj <- matrix(
     nrow = ngroups - 1, ncol = ngroups - 1,
     dimnames = list(c(2:ngroups), c(1:(ngroups - 1)))
@@ -53,16 +53,16 @@ pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
         p_unadj[secondgroup - 1, firstgroup] <-
           try(
             fisher.test(tempdata$dep_var, tempdata$indep_var,
-              simulate.p.value = T, B = 10^5
+              simulate.p.value = TRUE, B = 10^5
             )$p.value,
-            silent = T
+            silent = TRUE
           )
       } else {
         p_unadj[secondgroup - 1, firstgroup] <- 1
       }
     }
   }
-  # print(p_unadj)
+
   sign_colwise <- character()
   if (!ref) {
     p_adj <- matrix(p.adjust(as.vector(p_unadj), method = adjmethod),
@@ -70,10 +70,10 @@ pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
       nrow = ngroups - 1, ncol = ngroups - 1,
       dimnames = list(c(2:ngroups), c(1:(ngroups - 1)))
     )
-    for (col_i in 1:ncol(p_adj)) {
+    for (col_i in seq_len(ncol(p_adj))) {
       temp <- " "
       for (row_i in col_i:nrow(p_adj)) {
-        if (!is.na(p_adj[row_i, col_i]) & p_adj[row_i, col_i] < plevel) {
+        if (!is.na(p_adj[row_i, col_i]) && p_adj[row_i, col_i] < plevel) {
           temp <- paste0(temp, symbols[row_i])
         }
       }
@@ -81,7 +81,7 @@ pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
     }
   } else {
     p_adj <- p.adjust(as.vector(p_unadj[, 1]), method = adjmethod)
-    sign_colwise <- markSign(p_adj) # sapply(p_adj,markSign)
+    sign_colwise <- markSign(p_adj)
   }
   return(list(
     method = adjmethod,
@@ -100,7 +100,7 @@ pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 #' @param indep_var independent variable, should be factor
 #' @param adjmethod method for adjusting p values (see [p.adjust])
 #' @param plevel threshold for significance
-#' @param symbols predefined as b,c, d...;  provides footnotes to mark group
+#' @param symbols predefined as b, c, d...;  provides footnotes to mark group
 #' differences, e.g. b means different from group 2
 #' @param ref is the 1st subgroup the reference (like in Dunnett test)
 #' @param cmh Should  Cochran-Mantel-Haenszel test ([coin::cmh_test]) be used for
@@ -115,7 +115,7 @@ pairwise_fisher_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 #' # All pairwise comparisons
 #' mtcars2 <- dplyr::mutate(mtcars, cyl = factor(cyl, ordered = TRUE))
 #' pairwise_ordcat_test(dep_var = mtcars2$cyl, indep_var = mtcars2$gear)
-#' # Only comparison against reference gear=3
+#' # Only comparison against reference gear = 3
 #' pairwise_ordcat_test(dep_var = mtcars2$cyl, indep_var = mtcars2$gear, ref = TRUE)
 #' @export
 pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
@@ -137,11 +137,9 @@ pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
       ), ]
       if (min(dim(table(tempdata))) > 1) {
         if (cmh) {
-          # print('cmh_test')#(x~group,data=tempdata))
           p_unadj[secondgroup - 1, firstgroup] <-
             coin::pvalue(coin::cmh_test(dep_var ~ indep_var, data = tempdata))
         } else {
-          # print('lbl_test')#(x~group,data=tempdata))
           p_unadj[secondgroup - 1, firstgroup] <-
             coin::pvalue(coin::lbl_test(dep_var ~ indep_var, data = tempdata))
         }
@@ -157,10 +155,10 @@ pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
       nrow = ngroups - 1, ncol = ngroups - 1,
       dimnames = list(c(2:ngroups), c(1:(ngroups - 1)))
     )
-    for (col_i in 1:ncol(p_adj)) {
+    for (col_i in seq_len(ncol(p_adj))) {
       temp <- " "
       for (row_i in col_i:nrow(p_adj)) {
-        if (!is.na(p_adj[row_i, col_i]) & p_adj[row_i, col_i] < plevel) {
+        if (!is.na(p_adj[row_i, col_i]) && p_adj[row_i, col_i] < plevel) {
           temp <- paste0(temp, symbols[row_i])
         }
       }
@@ -202,7 +200,7 @@ pairwise_ordcat_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel =
 ksnormal <- function(x, lillie = TRUE) {
   x <- na.omit(x)
   if (length(x) > 1) {
-    if (lillie & length(x) > 4) {
+    if (lillie && length(x) > 4) {
       assign(
         "ksout",
         nortest::lillie.test(x)$p.value
@@ -230,7 +228,7 @@ ksnormal <- function(x, lillie = TRUE) {
 #'
 #' \code{glm_CI} computes and formats CIs for glm.
 #'
-#' @usage glmCI(model, min = .01, max = 100, cisep = '\U000022ef', ndigit=2)
+#' @usage glmCI(model, min = .01, max = 100, cisep = '\U000022ef', ndigit = 2)
 #'
 #' @return A list with coefficient, CIs, and pasted coef(\[CIs\]).
 #'
@@ -249,8 +247,7 @@ glmCI <- function(model, min = .01, max = 100, cisep = "\U000022ef", ndigit = 2)
     c_ci = NA
   )
   pvTmp <- labels(model$terms)
-  for (pv_i in 1:length(pvTmp))
-  {
+  for (pv_i in seq_along(pvTmp)) {
     rows <- grep(pvTmp[pv_i], names(model$coefficients))
     coeffTmp <- as.character(as.vector(round(exp(model$coefficients[rows]), ndigit)))
     coeffTmp[which(as.numeric(coeffTmp) < min)] <- paste0("<", min)
@@ -258,8 +255,7 @@ glmCI <- function(model, min = .01, max = 100, cisep = "\U000022ef", ndigit = 2)
     glmReturn$coeff <- c(glmReturn$coeff, paste(coeffTmp, collapse = "/"))
     ciModel <- as.matrix(exp(confint(model)))
     ciTmp <- character(0)
-    for (row_i in rows)
-    {
+    for (row_i in rows) {
       ciRow <- as.character(as.vector(round(ciModel[row_i, ], ndigit)))
       ciRow[which(as.numeric(ciRow) < min)] <- paste0("<", min)
       ciRow[which(as.numeric(ciRow) > max)] <- paste0(">", max)
@@ -459,11 +455,9 @@ compare2numvars <- function(data, dep_vars, indep_var,
   if (gaussian) {
     DESC <- wrappedtools::meansd
     COMP <- t_var_test
-    DESC_CI <- wrappedtools::mean_cl_boot
   } else {
     DESC <- median_quart
     COMP <- wilcox.test
-    DESC_CI <- median_cl_boot
   }
 
   data_l <- data |>
@@ -474,7 +468,6 @@ compare2numvars <- function(data, dep_vars, indep_var,
     mutate(Group = fct_drop(factor(Group))) |>
     pivot_longer(-Group, names_to = "Variable", values_to = "Value") |>
     mutate(Variable = forcats::fct_inorder(Variable)) |>
-    # na.omit() |>
     tibble::as_tibble() |>
     dplyr::filter(!is.na(Group))
 
@@ -627,7 +620,6 @@ compare2numvars <- function(data, dep_vars, indep_var,
                 na.omit()
             )
         ) |>
-        # select(-starts_with("n")) |>
         select(Stats, desc_all, g1, g2, p) |>
         rename(Variable = Stats)
     }
@@ -697,7 +689,6 @@ compare2qualvars <- function(data, dep_vars, indep_var,
                              round_p = 3, round_desc = 2,
                              pretext = FALSE, mark = FALSE,
                              singleline = FALSE,
-                             # newline=TRUE,
                              spacer = " ",
                              linebreak = "\n",
                              p_subgroups = FALSE) {
@@ -907,7 +898,6 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
                                round_p = 3, round_desc = 2,
                                pretext = FALSE, mark = FALSE,
                                singleline = FALSE,
-                               # newline=TRUE,
                                spacer = " ",
                                linebreak = "\n",
                                prettynum = FALSE) {
@@ -916,7 +906,6 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
   if (!(is.factor(data |> pull(indep_var)))) {
     data <- data |> mutate(!!indep_var := factor(!!sym(indep_var)))
   }
-  # groups <- levels(data[[indep_var]])
   freq <-
     purrr::map(data[dep_vars],
       .f = function(x) {
@@ -969,14 +958,15 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
             ),
             mark = mark, pretext = pretext
           ),
-          silent = T
+          silent = TRUE
         ) |>
           tidyr::replace_na("")
       }
     )
 
   out <- tibble(Variable = character(), desc_all = character()) |>
-    cross_join(freqBYgroup[[1]] |> slice(0)) |>
+    cross_join(freqBYgroup[[1]] |>
+                 slice(0)) |>
     mutate(p = character())
   out_template <- out
   groupcols <- 3:(ncol(out) - 1)
@@ -1007,8 +997,6 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
       out_tmp <- add_row(out_template,
         Variable = paste(
           dep_vars[var_i],
-          # rep(spacer,
-          # nrow(freqBYgroup[[var_i]])-1),
           levels[[var_i]][[1]]
         ),
         desc_all = freq[[var_i]][[1]]
@@ -1035,7 +1023,7 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
 #' @param adjmethod method for adjusting p values (see [p.adjust])
 #' @param distr Computation of p-values, see [coin::wilcox_test].
 #' @param plevel threshold for significance.
-#' @param symbols predefined as b,c, d...;  provides footnotes to mark group
+#' @param symbols predefined as b, c, d...;  provides footnotes to mark group
 #' differences, e.g. b means different from group 2.
 #' @param sep text between statistics and range or other elements.
 #'
@@ -1049,10 +1037,7 @@ pairwise_wilcox_test <-
            adjmethod = "fdr", distr = "exact", plevel = .05,
            symbols = letters[-1],
            sep = "") {
-    # if (!is.factor(indep_var))
-    # {
     indep_var <- factor(indep_var)
-    # }
     ngroups <- length(levels(indep_var))
     if (length(strat_var) == 1) {
       strat_var <- rep(1, length(dep_var))
@@ -1075,7 +1060,6 @@ pairwise_wilcox_test <-
           which(pwt_data$indep_var == secondgroup)
         ), ]
         tempdata$indep_var <- factor(tempdata$indep_var)
-        # print(tempdata)
         if (length(levels(as.factor(tempdata$dep_var))) > 1) {
           p_unadj[secondgroup - 1, firstgroup] <-
             coin::pvalue(coin::wilcox_test(
@@ -1097,10 +1081,10 @@ pairwise_wilcox_test <-
       )
     )
     sign_colwise <- character()
-    for (col_i in 1:ncol(p_adj)) {
+    for (col_i in seq_len(ncol(p_adj))) {
       temp <- " "
       for (row_i in col_i:nrow(p_adj)) {
-        if (!is.na(p_adj[row_i, col_i]) &
+        if (!is.na(p_adj[row_i, col_i]) &&
           p_adj[row_i, col_i] < plevel) {
           temp <- paste(temp, symbols[row_i], sep = sep)
         }
@@ -1123,7 +1107,7 @@ pairwise_wilcox_test <-
 #' @param indep_var independent variable, should be factor
 #' @param adjmethod method for adjusting p values (see [p.adjust])
 #' @param plevel threshold for significance
-#' @param symbols predefined as b,c, d...;  provides footnotes to mark group
+#' @param symbols predefined as b, c, d...;  provides footnotes to mark group
 #' differences, e.g. b means different from group 2
 #' @return
 #' A list with method output of pairwise.t.test,
@@ -1136,10 +1120,10 @@ pairwise_t_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
   t_out <- pairwise.t.test(x = dep_var, g = indep_var, p.adjust.method = adjmethod)
   p_colwise <- t_out$p.value
   sign_colwise <- character()
-  for (col_i in 1:ncol(p_colwise)) {
+  for (col_i in seq_len(ncol(p_colwise))) {
     temp <- " "
     for (row_i in col_i:nrow(p_colwise)) {
-      if (!is.na(p_colwise[row_i, col_i]) &
+      if (!is.na(p_colwise[row_i, col_i]) &&
         p_colwise[row_i, col_i] < plevel) {
         temp <- paste0(temp, symbols[row_i])
       }
@@ -1167,7 +1151,8 @@ pairwise_t_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
 #' @param round_desc number of significant digits for rounding of descriptive stats.
 #' @param range include min/max?
 #' @param rangesep text between statistics and range or other elements.
-#' @param pretext,mark for function formatP.
+#' @param pretext argument for function formatP, adding = or <.
+#' @param mark argument for formatP, adding significance indicators.
 #' @param ci include bootstrap CI for descriptive statistics? Defaults to FALSE
 #' @param add_n add n to descriptive statistics?
 #'
@@ -1179,7 +1164,7 @@ pairwise_t_test <- function(dep_var, indep_var, adjmethod = "fdr", plevel = .05,
 #' "raw": nested list with output from all underlying analyses.
 #'
 #' @examples
-#' # Usually,only the result table is relevant:
+#' # Usually, only the result table is relevant:
 #' compare_n_numvars(
 #'   .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
 #'   indep_var = "cyl",
@@ -1203,13 +1188,10 @@ compare_n_numvars <- function(.data = rawdata,
   value <- Variable <- lm_out <- p_tout <- pANOVA <- NULL
   if (gaussian) {
     desc_fun <- wrappedtools::meansd
-    grptest <- stats::lm
   } else {
     desc_fun <- wrappedtools::median_quart
-    grptest <- stats::kruskal.test
   }
-  # if (gaussian) {
-  if (!is.factor(.data[[indep_var]]) |
+  if (!is.factor(.data[[indep_var]]) ||
     is.ordered(.data[[indep_var]])) {
     .data[[indep_var]] <- factor(.data[[indep_var]],
       ordered = FALSE
@@ -1313,18 +1295,18 @@ compare_n_numvars <- function(.data = rawdata,
             "Variable",
             paste(indep_var, glevel)
           ))) |>
-        full_join(purrr::map_df(t$anova_out, p_results) |> slice(1) |>
+        full_join(purrr::map_df(t$anova_out, p_results) |>
+                    slice(1) |>
           pivot_longer(everything(),
             names_to = "Variable",
             values_to = "multivar_p"
           ) |>
-          # gather(key = "Variable", value = multivar_p)|>
           mutate(Variable = forcats::fct_inorder(Variable)) |>
           mutate(multivar_p = formatP(multivar_p,
             ndigits = round_p,
             pretext = pretext,
             mark = mark
-          ))) |> # as.vector()|>
+          ))) |>
         full_join(purrr::map_df(t$`p_wcox/t_out`, ~ paste(
           formatP(
             p.adjust(.x[lower.tri(.x, TRUE)], method = "fdr")
@@ -1352,7 +1334,6 @@ compare_n_numvars <- function(.data = rawdata,
             values_to = "p vs.ref"
           ))
     )
-  # gather(key = "Variable", value = "p vs.ref"))
   results <- cbind(
     results,
     purrr::map2_df(
@@ -1360,7 +1341,7 @@ compare_n_numvars <- function(.data = rawdata,
       .y = dplyr::select(results, starts_with("sign")),
       .f = ~ paste(.x, .y, sep = " ") |> str_squish()
     ) |>
-      rename_all(paste, "fn")
+      rename_with(.fn = ~paste(.x, "fn"))
   ) |>
     as_tibble(.name_repair = "unique")
   # todo: p vs. ref symbol

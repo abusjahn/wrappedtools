@@ -23,7 +23,7 @@ pairwise_ordcat_test(
 
 \item{plevel}{threshold for significance}
 
-\item{symbols}{predefined as b,c, d...;  provides footnotes to mark group
+\item{symbols}{predefined as b, c, d...;  provides footnotes to mark group
 differences, e.g. b means different from group 2}
 
 \item{ref}{is the 1st subgroup the reference (like in Dunnett test)}
@@ -44,6 +44,6 @@ categories between all group levels with corrections for multiple testing.
 # All pairwise comparisons
 mtcars2 <- dplyr::mutate(mtcars, cyl = factor(cyl, ordered = TRUE))
 pairwise_ordcat_test(dep_var = mtcars2$cyl, indep_var = mtcars2$gear)
-# Only comparison against reference gear=3
+# Only comparison against reference gear = 3
 pairwise_ordcat_test(dep_var = mtcars2$cyl, indep_var = mtcars2$gear, ref = TRUE)
 }

@@ -4,17 +4,17 @@
 \alias{tab.search}
 \title{Search within data.frame or tibble}
 \usage{
-tab.search(searchdata = rawdata, pattern, find.all = T, names.only = FALSE)
+tab.search(searchdata = rawdata, pattern, find.all = TRUE, names.only = FALSE)
 }
 \arguments{
 \item{searchdata}{table to search in, predefined as rawdata}
 
 \item{pattern}{regex, for exact matches add ^findme$}
 
-\item{find.all}{return all row indices or only 1st per column,default=TRUE}
+\item{find.all}{return all row indices or only 1st per column, default = TRUE}
 
 \item{names.only}{return only vector of colnames rather than list with names
-and rows, default=FALSE}
+and rows, default = FALSE}
 }
 \value{
 A list with numeric vectors for each column giving row numbers

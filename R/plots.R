@@ -1,7 +1,7 @@
 utils::globalVariables(".")
 #' Print graphical representation of a correlation matrix.
 #'
-#'\code{ggcormat} makes the same correlation matrix as \link{cortestR} 
+#'\code{ggcormat} makes the same correlation matrix as \link{cortestR}
 #' and graphically represents it in a plot
 #'
 #' @param cor_mat correlation matrix as produced by cor.
@@ -31,7 +31,7 @@ utils::globalVariables(".")
 #' ggcormat(
 #'   cor_mat = coeff_pvalues$corout,
 #'   p_mat = coeff_pvalues$pout, maxpoint = 5)
-#' 
+#'
 #' @export
 ggcormat <- function(cor_mat, p_mat = NULL,
                      method = "Correlation", title = "",
@@ -42,9 +42,6 @@ ggcormat <- function(cor_mat, p_mat = NULL,
                      .legendtitle = NULL) {
   `.` <- Variable1 <- Variable2 <- value <- size <- x <- y <- NULL
   rownames(cor_mat) <- colnames(cor_mat)
-  # dd <- as.dist((1-cor_mat)/2)
-  # hc <- hclust(dd)
-  # cor_mat <-cor_mat[hc$order, hc$order]
   var_order <- rownames(cor_mat)
   if (lower_only) {
     cor_mat[upper.tri(cor_mat)] <- NA
@@ -52,8 +49,7 @@ ggcormat <- function(cor_mat, p_mat = NULL,
   melted_cor_mat <- cor_mat |>
     as_tibble() |>
     mutate(Variable1 = colnames(cor_mat)) |>
-    pivot_longer(-Variable1,names_to = 'Variable2') |> 
-    # gather(key = Variable2, value = value, -Variable1) |>
+    pivot_longer(-Variable1, names_to = "Variable2") |>
     na.omit() |>
     mutate(
       Variable1 = factor(Variable1, levels = var_order),
@@ -63,13 +59,12 @@ ggcormat <- function(cor_mat, p_mat = NULL,
     )
   corvar_count <- nrow(cor_mat)
   if (!is.null(p_mat)) {
-    melted_p_mat <- 
+    melted_p_mat <-
       suppressWarnings(
         p_mat |>
           as_tibble() |>
           mutate(Variable1 = colnames(p_mat)) |>
-          pivot_longer(-Variable1,names_to = 'Variable2', values_to = 'size') |>
-          # gather(key = Variable2, value = size, -Variable1) |>
+          pivot_longer(-Variable1, names_to = "Variable2", values_to = "size") |>
           mutate(
             Variable1 = factor(Variable1, levels = var_order),
             Variable2 = factor(Variable2, levels = var_order),
@@ -114,7 +109,7 @@ ggcormat <- function(cor_mat, p_mat = NULL,
   if (is.null(breaklabels)) {
     breaklabels <- levels(melted_cor_mat$Variable1)
   }
-  
+
   ggheatmap <- ggplot(
     melted_cor_mat,
     aes(Variable2, Variable1)
@@ -123,11 +118,11 @@ ggcormat <- function(cor_mat, p_mat = NULL,
     geom_point(aes(Variable2, Variable1,
                    size = size, color = value
     )) +
-    geom_vline(xintercept = seq(0.5, corvar_count + 1, by = 1), 
+    geom_vline(xintercept = seq(0.5, corvar_count + 1, by = 1),
                color = "grey", linewidth = .25) +
-    geom_hline(yintercept = seq(0.5, corvar_count + 1, by = 1), 
+    geom_hline(yintercept = seq(0.5, corvar_count + 1, by = 1),
                color = "grey", linewidth = .25) +
-    # geom_point(aes(Variable2, Variable1, size=abs(value),color=value))+
+    # geom_point(aes(Variable2, Variable1, size = abs(value), color = value))+
     scale_color_gradient2(
       low = .low, high = .high, mid = "lightgrey",
       midpoint = 0, limit = c(-1, 1), space = "Lab",
@@ -150,11 +145,8 @@ ggcormat <- function(cor_mat, p_mat = NULL,
       plot.title = element_text(size = rel(titlesize), face = "bold"),
       legend.text = element_text(size = rel(1.25)),
       legend.title = element_text(size = rel(1.65))
-      # legend.key.size = unit(.5,'lines'),
-      # legend.key.width=unit(5.5,'cm'),
     ) +
     coord_fixed() +
-    # theme(legend.position = "right")+
     scale_y_discrete(
       limits = rev(levels(melted_cor_mat$Variable1)),
       labels = rev(breaklabels)
@@ -219,8 +211,8 @@ ggcormat <- function(cor_mat, p_mat = NULL,
 #' Add labels to outliers in boxplot/beeswarm.
 #'
 #' @description
-#' `r lifecycle::badge('experimental')`
-#' 
+#' `r lifecycle::badge("experimental")`
+#'
 #'\code{label_outliers} adds a text_repel  layer to an existing ggplot object. It is intended to be used with boxplots or beeswarm plots. Faceting will result in separate computations for outliers.
 #' It requires the \code{ggrepel} package.
 #'
@@ -241,10 +233,10 @@ ggcormat <- function(cor_mat, p_mat = NULL,
 # ' @examples
 # todo: group by facet variables
 #' @export
-label_outliers <- function(plotbase, labelvar=NULL, #xvar, #yvar,
-                           coef=1.5, nudge_x=0, nudge_y=0,
-                           color="darkred", size=3, hjust=0,
-                           face="bold") {
+label_outliers <- function(plotbase, labelvar = NULL, #xvar, #yvar,
+                           coef = 1.5, nudge_x = 0, nudge_y = 0,
+                           color = "darkred", size = 3, hjust = 0,
+                           face = "bold") {
   if (!requireNamespace("ggrepel", quietly = TRUE)) {
     stop("ggrepel package is required")
   }
@@ -253,69 +245,55 @@ label_outliers <- function(plotbase, labelvar=NULL, #xvar, #yvar,
     labelvar <- "Position"
     plotdata <- mutate(plotdata, Position = row.names(plotdata))
   }
-  
+
   plotlist <- ggplot_build(plotbase)
   xvar <- plotbase$mapping[["x"]] |> as_label()
-  # plotlist[["plot"]][["layers"]][[1]][["computed_mapping"]][1] |> 
-  # as.character() |>
-  # str_remove("~")
   yvar <- plotbase$mapping[["y"]] |> as_label()
-  #plotbase$layers[[1]]$computed_mapping[2] |> 
-  # plotlist[["plot"]][["layers"]][[1]][["computed_mapping"]][2] |> 
-  # as.character() |> 
-  # str_replace_all(
-  #   c('^.+\\"(.+)\\".*'="\\1",
-  #     "~"=""))
-  # groupvars <- xvar
-  # if (!is.null(plotlist$layout$facet$params$row)){
   facet_rows <- names(plotlist$layout$facet$params$row)
-  # groupvars <- c(groupvars,facet_rows)
-  # }
-  # if (!is.null(plotlist$layout$facet$params$col)){
   facet_cols <- names(plotlist$layout$facet$params$col)
   facet_wraps <- names(plotlist$layout$facet$params$facets)
-  groupvars <- c(xvar,facet_rows,facet_cols,facet_wraps)
-  outpositions <- 
-    plotbase$data |> 
-    group_by(across(all_of(groupvars))) |> 
+  groupvars <- c(xvar, facet_rows, facet_cols, facet_wraps)
+  outpositions <-
+    plotbase$data |>
+    group_by(across(all_of(groupvars))) |>
     reframe(across(all_of(yvar),
-                   ~detect_outliers(.x, coef=coef)$outliers)) |> 
-    left_join(plotdata) |> 
+                   ~detect_outliers(.x, coef = coef)$outliers)) |>
+    left_join(plotdata) |>
     unique()
-  plotbase + 
-    ggrepel::geom_text_repel(data=outpositions,
-                             aes(label=!!sym(labelvar)),
-                             nudge_x=nudge_x,
-                             nudge_y=nudge_y, 
-                             color=color, 
-                             size=size, 
-                             hjust=hjust,
-                             fontface=face) 
+  plotbase +
+    ggrepel::geom_text_repel(data = outpositions,
+                             aes(label = !!sym(labelvar)),
+                             nudge_x = nudge_x,
+                             nudge_y = nudge_y,
+                             color = color,
+                             size = size,
+                             hjust = hjust,
+                             fontface = face)
 }
 
 
 #' Find outliers based on IQR
 #'
 #' @description
-#' `r lifecycle::badge('experimental')`
-#' 
+#' `r lifecycle::badge("experimental")`
+#'
 #'\code{detect_outliers} computes IQR and finds outliers. It gives the same results as \code{geom_boxplot} and thus differs slightly from \code{boxplot.stats}.
 #'
 #' @param x numeric vector.
-#' @param coef coefficient for boxplot.stats, defaults to 1.5. 
+#' @param coef coefficient for boxplot.stats, defaults to 1.5.
 #'
 #' @return A list with elements positions and outliers as numeric vectors.
-#' 
+#'
 #' @examples
 #' detect_outliers(rnorm(100))
 #' @export
-detect_outliers <- function(x, coef=1.5) {
-  qnt <- quantile(x, probs=c(.25, .75), na.rm = TRUE)
+detect_outliers <- function(x, coef = 1.5) {
+  qnt <- quantile(x, probs = c(.25, .75), na.rm = TRUE)
   iqr <- diff(qnt)
   upper <- qnt[2] + coef * iqr
   lower <- qnt[1] - coef * iqr
   o_pos <- which(x > upper | x < lower)
-  out <- list("positions"=o_pos,
-              "outliers"=x[o_pos])
+  out <- list("positions" = o_pos,
+              "outliers" = x[o_pos])
   return(out)
 }

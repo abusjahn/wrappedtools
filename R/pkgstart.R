@@ -2,7 +2,6 @@
   packageStartupMessage("Package wrappedtools is still maturing, so please report any inconveniences...")
 }
 .onLoad <- function(libname, pkgname) {
-  # options(stringsAsFactors=F)
 }
 #' @import tibble
 NULL
@@ -52,7 +51,7 @@ NULL
 #' @importFrom flextable flextable_to_rmd
 NULL
 
-#' @importFrom stringr str_glue str_detect
+#' @importFrom stringr str_glue str_detect str_which
 NULL
 
 #' @importFrom readr parse_number
