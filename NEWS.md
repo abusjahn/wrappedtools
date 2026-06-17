@@ -2,6 +2,7 @@
 - compare_n_qualvars updated to dplyr 1.1.0 syntax
 - formatP and markSign now use readr::parse_number rather than as.numeric
 - compare_n_numvars gains option for CI on mean and median
+- bugfix str_squish would remove linebreaks within output together with multiple spaces
 
 #wrappedtools 0.9.9
 - change in flex2rmd with explicit printing in interactive mode

@@ -790,7 +790,7 @@ compare2qualvars <- function(data, dep_vars, indep_var,
         if (singleline) {
           freqBYgroup[[var_i]]$p <-
             paste(na.omit(freqBYgroup[[var_i]]$p), p_sg) |>
-            str_squish()
+            str_trim() |> str_replace_all(" {2,}", " ")
         } else {
           freqBYgroup[[var_i]]$p[sg_i] <- p_sg
         }
@@ -966,7 +966,7 @@ compare_n_qualvars <- function(data, dep_vars, indep_var,
 
   out <- tibble(Variable = character(), desc_all = character()) |>
     cross_join(freqBYgroup[[1]] |>
-                 slice(0)) |>
+      slice(0)) |>
     mutate(p = character())
   out_template <- out
   groupcols <- 3:(ncol(out) - 1)
@@ -1296,7 +1296,7 @@ compare_n_numvars <- function(.data = rawdata,
             paste(indep_var, glevel)
           ))) |>
         full_join(purrr::map_df(t$anova_out, p_results) |>
-                    slice(1) |>
+          slice(1) |>
           pivot_longer(everything(),
             names_to = "Variable",
             values_to = "multivar_p"
@@ -1339,9 +1339,10 @@ compare_n_numvars <- function(.data = rawdata,
     purrr::map2_df(
       .x = dplyr::select(results, starts_with(indep_var)),
       .y = dplyr::select(results, starts_with("sign")),
-      .f = ~ paste(.x, .y, sep = " ") |> str_squish()
+      .f = ~ paste(.x, .y, sep = " ") |>
+        str_trim() |> str_replace_all(" {2,}", " ")
     ) |>
-      rename_with(.fn = ~paste(.x, "fn"))
+      rename_with(.fn = ~ paste(.x, "fn"))
   ) |>
     as_tibble(.name_repair = "unique")
   # todo: p vs. ref symbol
