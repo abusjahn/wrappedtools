@@ -141,6 +141,9 @@ meansd <- function(x,
       }
     } #   }
     return(out)
+
+  } else    {
+    return("")
   }
 }
 

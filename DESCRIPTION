@@ -57,9 +57,9 @@ Imports:
 Depends: 
     R (>= 4.2)
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 8.0.0
 LazyData: true
 VignetteBuilder: knitr
 Suggests: rmarkdown, testthat, ggrepel
 URL: https://github.com/abusjahn/wrappedtools
 BugReports: https://github.com/abusjahn/wrappedtools/issues
+Config/roxygen2/version: 8.1.0

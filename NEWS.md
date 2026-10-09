@@ -3,6 +3,7 @@
 - formatP and markSign now use readr::parse_number rather than as.numeric
 - compare_n_numvars gains option for CI on mean and median
 - bugfix str_squish would remove linebreaks within output together with multiple spaces
+- meansd returns empty str rather than NULL on empty input
 
 #wrappedtools 0.9.9
 - change in flex2rmd with explicit printing in interactive mode
